@@ -1,4 +1,5 @@
 ﻿using System;
+using UnityEditor.Timeline;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -10,7 +11,7 @@ public class HoldInput : InputComponent
     public float holdTime = 0.5f;
     
     private float _holdStartTime; 
-    private bool _isHolding = false;
+    private bool _isHolding;
     private bool _wasTriggered;
 
     public override void Initialize(WeaponContext weapon)
@@ -37,6 +38,11 @@ public class HoldInput : InputComponent
             _holdStartTime = Time.time;
             _isHolding = true;
         }
+    }
+    
+    public override bool IsExecuting()
+    {
+        return CanExecute();
     }
     
     private void OnActionCanceled(InputAction.CallbackContext context)

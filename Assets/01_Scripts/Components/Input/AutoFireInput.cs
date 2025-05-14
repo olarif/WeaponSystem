@@ -47,6 +47,11 @@ public class AutoFireInput : InputComponent
         return false;
     }
     
+    public override bool IsExecuting()
+    {
+        return CanExecute();
+    }
+
     private void OnDisable()
     {
         if (inputAction != null && inputAction.action != null)

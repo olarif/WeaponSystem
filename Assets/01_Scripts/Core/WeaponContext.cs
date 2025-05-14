@@ -6,6 +6,7 @@ public struct WeaponContext
     public Transform FirePoint;
     public Animator Animator;
     public AudioSource AudioSource;
+    public LineRenderer LineRenderer;
     
     public List<IInputComponent> InputComponents;
     public List<IExecuteComponent> ExecuteComponents;

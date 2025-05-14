@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: RaycastData
   m_EditorClassIdentifier: 
   range: 1000
-  collisionMask:
+  hitLayers:
     serializedVersion: 2
     m_Bits: 64
   damage: 5

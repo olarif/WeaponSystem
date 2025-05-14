@@ -1,44 +1,54 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
+using UnityEngine.PlayerLoop;
 
 public class RaycastExecute : ExecuteComponent
 {
     public RaycastDataSO raycastData;
     
+    private LineRenderer _lineRenderer;
+    
     public override void Initialize(WeaponContext context)
     {
          WeaponContext = context;
+         _lineRenderer = context.LineRenderer;
     }
-    
+
     public override void Execute()
     {
-        if (raycastData == null)
-        {
-            Debug.LogError("RaycastData is not assigned.");
-            return;
-        }
-        
         Ray ray = new Ray(WeaponContext.FirePoint.position, WeaponContext.FirePoint.forward);
         RaycastHit hit;
 
-        if (Physics.Raycast(ray, out hit, raycastData.range, raycastData.collisionMask, QueryTriggerInteraction.Ignore))
+        if (Physics.Raycast(ray, out hit, raycastData.range, raycastData.hitLayers, QueryTriggerInteraction.Ignore))
         {
-            Debug.Log("Hit detected: " + hit.collider.name);
-            
             if (hit.collider.TryGetComponent(out IDamageable damageable))
             {
                 damageable.ApplyDamage(raycastData.damage);
-            }
-            
-            foreach (var hitComp in WeaponContext.OnHitComponents)
-            {
-                hitComp.OnHit(new CollisionInfo(hit));
+                
+                foreach (var hitComp in WeaponContext.OnHitComponents)
+                {
+                    hitComp.OnHit(new CollisionInfo(hit));
+                }
             }
         }
-        else
-        {
-            Debug.Log("No hit detected.");
-        }
+        Linecast();
+    }
+    
+    public override void CancelExecute()
+    {
+        _lineRenderer.enabled = false;
+    }
+
+    private void Linecast()
+    {
+        _lineRenderer.enabled = true;
         
-        Debug.DrawRay(ray.origin, ray.direction * raycastData.range, Color.red, 1f, false);
+        _lineRenderer.positionCount = 2;
+        _lineRenderer.startWidth = 0.05f;
+        _lineRenderer.endWidth = 0.05f;
+        var targetPosition = WeaponContext.FirePoint.position;
+            
+        _lineRenderer.SetPosition(0, targetPosition);
+        _lineRenderer.SetPosition(1, targetPosition + (WeaponContext.FirePoint.forward * raycastData.range));
     }
 }

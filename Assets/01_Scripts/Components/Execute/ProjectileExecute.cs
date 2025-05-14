@@ -24,7 +24,11 @@ public class ProjectileExecute : ExecuteComponent
         }
         
         GameObject projectile = Instantiate(projectileData.projectilePrefab, WeaponContext.FirePoint.position, WeaponContext.FirePoint.rotation);
-        
         projectile.GetComponent<Projectile>().Initialize(projectileData, WeaponContext, WeaponContext.FirePoint.forward);
+    }
+    
+    public override void CancelExecute()
+    {
+        // Implement cancel logic if needed
     }
 }

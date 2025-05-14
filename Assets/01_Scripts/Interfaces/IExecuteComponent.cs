@@ -2,4 +2,5 @@
 {
     void Initialize(WeaponContext context);
     void Execute();
+    void CancelExecute();
 }

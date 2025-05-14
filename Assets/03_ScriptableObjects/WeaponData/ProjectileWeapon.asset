@@ -1,5 +1,19 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-7566606403734791485
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f812e904142c4942b622a710e133dd0d, type: 3}
+  m_Name: ActionInput
+  m_EditorClassIdentifier: 
+  inputReference: {fileID: 2158980376108856071, guid: 6eaff8a1080c3b64bba326ccc7407a63, type: 3}
+  cooldownTime: 0.35
 --- !u!114 &-7184124961644842349
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -13,6 +27,19 @@ MonoBehaviour:
   m_Name: StatusEffectOnHit
   m_EditorClassIdentifier: 
   statusEffectData: {fileID: 11400000, guid: 85f073f69af6ba949bf5e7771e3c6cfb, type: 2}
+--- !u!114 &-6704197312204406693
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cab6bd0450b2483eb88c2eecbf8d23f7, type: 3}
+  m_Name: ExplodeOnHit
+  m_EditorClassIdentifier: 
+  aoeData: {fileID: 11400000, guid: 97eec7c61aee6e24aa52e5c4c79fc8e7, type: 2}
 --- !u!114 &-4762575740209495352
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -38,22 +65,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c632aebf02b4072aa70ad2fe2b2ba09, type: 3}
   m_Name: ProjectileWeapon
   m_EditorClassIdentifier: 
+  weaponName: 
+  weaponDescription: 
   inputComponents:
-  - {fileID: 7204250448655970528}
+  - {fileID: -7566606403734791485}
   executeComponents:
   - {fileID: -4762575740209495352}
   onHitComponents:
   - {fileID: -7184124961644842349}
---- !u!114 &7204250448655970528
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f812e904142c4942b622a710e133dd0d, type: 3}
-  m_Name: ActionInput
-  m_EditorClassIdentifier: 
-  inputReference: {fileID: 2158980376108856071, guid: 6eaff8a1080c3b64bba326ccc7407a63, type: 3}
+  - {fileID: -6704197312204406693}

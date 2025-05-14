@@ -4,6 +4,9 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Weapons/WeaponData")]
 public class WeaponDataSO : ScriptableObject
 {
+    public string weaponName;
+    public string weaponDescription;
+
     public List<ScriptableObject> inputComponents;
     public List<ScriptableObject> executeComponents;
     public List<ScriptableObject> onHitComponents;

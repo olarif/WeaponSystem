@@ -61,6 +61,11 @@ public class DoubleTapInput : InputComponent
         return false;
     }
     
+    public override bool IsExecuting()
+    {
+        return CanExecute();
+    }
+    
     private void OnDisable()
     {
         if (inputReference != null && inputReference.action != null)

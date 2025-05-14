@@ -22,4 +22,9 @@ public class MeleeExecute : ExecuteComponent
            c.GetComponent<IDamageable>()?.ApplyDamage(meleeData.damage);
        }
     }
+    
+    public override void CancelExecute()
+    {
+        // Implement cancel logic if needed
+    }
 }

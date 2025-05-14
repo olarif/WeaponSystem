@@ -13,6 +13,7 @@ public class WeaponController : MonoBehaviour
     [SerializeField] private Transform firePoint;
     [SerializeField] private Animator animator;
     [SerializeField] private AudioSource audioSource;
+    [SerializeField] private LineRenderer lineRenderer;
 
     private void Awake()
     {
@@ -20,7 +21,8 @@ public class WeaponController : MonoBehaviour
         {
             FirePoint = firePoint,
             Animator = animator,
-            AudioSource = audioSource
+            AudioSource = audioSource,
+            LineRenderer = lineRenderer
         };
         
         // Instantiate all your IOnHitComponent instances
@@ -44,7 +46,9 @@ public class WeaponController : MonoBehaviour
     
     private void Update()
     {
-        if(_inputs.Any(input => input.CanExecute()))
+        if (_inputs.Any(input => input.CanExecute()))
+        {
             _executes.ForEach(execute => execute.Execute());
+        }
     }
 }

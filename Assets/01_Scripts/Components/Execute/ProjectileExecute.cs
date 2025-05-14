@@ -23,10 +23,6 @@ public class ProjectileExecute : ExecuteComponent
             return;
         }
         
-        Debug.Log("Executing projectile attack with data: " + projectileData.name);
-
-        
-        
         GameObject projectile = Instantiate(projectileData.projectilePrefab, WeaponContext.FirePoint.position, WeaponContext.FirePoint.rotation);
         
         projectile.GetComponent<Projectile>().Initialize(projectileData, WeaponContext, WeaponContext.FirePoint.forward);

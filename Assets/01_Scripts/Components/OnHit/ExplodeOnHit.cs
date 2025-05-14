@@ -11,6 +11,8 @@ public class ExplodeOnHit : OnHitComponent
     
     public override void OnHit(CollisionInfo info)
     {
-        Debug.Log("ExplodeOnHit triggered! ");
+        GameObject explosion = Instantiate(aoeData.explosionPrefab, info.Point, Quaternion.identity);
+        
+        
     }
 }

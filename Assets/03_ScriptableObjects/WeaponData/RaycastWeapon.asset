@@ -26,6 +26,19 @@ MonoBehaviour:
   m_Name: ActionInput
   m_EditorClassIdentifier: 
   inputReference: {fileID: 2158980376108856071, guid: 6eaff8a1080c3b64bba326ccc7407a63, type: 3}
+--- !u!114 &-461348243639129764
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cab6bd0450b2483eb88c2eecbf8d23f7, type: 3}
+  m_Name: ExplodeOnHit
+  m_EditorClassIdentifier: 
+  aoeData: {fileID: 11400000, guid: 97eec7c61aee6e24aa52e5c4c79fc8e7, type: 2}
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -42,4 +55,5 @@ MonoBehaviour:
   - {fileID: -1030676660015783191}
   executeComponents:
   - {fileID: -6293742435060125522}
-  onHitComponents: []
+  onHitComponents:
+  - {fileID: -461348243639129764}

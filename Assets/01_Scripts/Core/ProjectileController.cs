@@ -19,46 +19,28 @@ public class Projectile : MonoBehaviour
         _bouncesLeft = _data.maxBounces;
         _rigidbody.useGravity = _data.enableGravity;
         
-        if (_rigidbody == null)
-        {
-            Debug.LogError("Projectile requires a Rigidbody component!");
-            return;
-        }
-        
         // set initial velocity
         _rigidbody.linearVelocity = direction.normalized * _data.speed;
-    }
-    
-    private void Start()
-    {
-        // set initial velocity
-        //_rigidbody.linearVelocity = _context.FirePoint.forward * _data.speed;
-        
-        // set lifetime
-        //Destroy(gameObject, _data.lifetime);
-    }
-
-    private void Update()
-    {
-        // Handle lifetime
-        _lifeTimer += Time.deltaTime;
-        if (_lifeTimer >= _data.lifetime)
-        {
-            //OnExpire();
-        }
-        
-        //handle guided projectiles
     }
 
     private void OnCollisionEnter(Collision col)
     {
-        // Notify any IOnHitComponents
-        foreach (var hitComp in GetComponents<IOnHitComponent>())
+        foreach (var hitComp in _context.OnHitComponents)
+        {
+            Debug.Log( "Hit component: " + hitComp.GetType().Name + " on " + gameObject.name);
             hitComp.OnHit(new CollisionInfo(col));
+        }
 
         // Check if this layer is *in* our mask and we still have bounces left
         bool shouldBounce = ((_data.collisionMask & (1 << col.gameObject.layer)) != 0)
                             && (_bouncesLeft-- > 0);
+        
+        IDamageable damageable = col.gameObject.GetComponent<IDamageable>();
+        if (damageable != null)
+        {
+            // Apply damage to the hit object
+            damageable.ApplyDamage(_data.damage);
+        }
 
         if (shouldBounce)
         {

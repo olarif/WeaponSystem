@@ -28,6 +28,11 @@ public class RaycastExecute : ExecuteComponent
             {
                 damageable.ApplyDamage(raycastData.damage);
             }
+            
+            foreach (var hitComp in WeaponContext.OnHitComponents)
+            {
+                hitComp.OnHit(new CollisionInfo(hit));
+            }
         }
         else
         {

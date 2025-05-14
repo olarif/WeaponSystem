@@ -10,9 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a0a1db536136477087899b84e8c601bf, type: 3}
-  m_Name: Status Effect Data SO
+  m_Name: StatusEffectData
   m_EditorClassIdentifier: 
-  statusEffectType: 0
-  duration: 0
-  tickRate: 0
-  tickDamage: 0
+  statusEffectType: 2
+  duration: 5
+  tickRate: 1
+  tickDamage: 1
+  impactDamage: 2

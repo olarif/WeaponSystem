@@ -9,16 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2b1aa7fc09b94152884f1055b7311b3b, type: 3}
-  m_Name: ProjectileSO
+  m_Script: {fileID: 11500000, guid: 2e9c50b400094172bd5aa7312d18af25, type: 3}
+  m_Name: RaycastData
   m_EditorClassIdentifier: 
-  projectilePrefab: {fileID: 1930107923466689315, guid: 4e885ba61be83f74e8f8ffea31d676cd, type: 3}
+  range: 1000
   collisionMask:
     serializedVersion: 2
-    m_Bits: 127
-  speed: 10
-  damage: 10
-  lifetime: 5
-  turnSpeed: 0
-  enableGravity: 1
-  maxBounces: 1
+    m_Bits: 64
+  damage: 5

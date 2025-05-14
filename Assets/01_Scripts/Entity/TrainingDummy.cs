@@ -32,5 +32,6 @@ public class TrainingDummy : EnemyBase
         _isStunned = false;
         Animator.SetBool("isDead", false);
         HealthComponent.Heal(HealthComponent.GetMaxHealth());
+        StatusEffectsManager.ClearAllEffects();
     }
 }

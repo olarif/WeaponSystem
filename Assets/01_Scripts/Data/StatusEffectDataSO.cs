@@ -18,4 +18,6 @@ public class StatusEffectDataSO : ScriptableObject
     public float duration;
     public float tickRate;
     public float tickDamage;
+    public float impactDamage;
+
 }

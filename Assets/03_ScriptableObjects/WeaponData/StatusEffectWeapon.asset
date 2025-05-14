@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-7184124961644842349
+--- !u!114 &-5077362727585698798
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -10,22 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 44236a7a16ef4e4d8c6397ad0f225649, type: 3}
-  m_Name: StatusEffectOnHit
+  m_Name: StatusEffectOnHitSO
   m_EditorClassIdentifier: 
   statusEffectData: {fileID: 11400000, guid: 85f073f69af6ba949bf5e7771e3c6cfb, type: 2}
---- !u!114 &-4762575740209495352
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a28764d73d134afbadc69678fc6d9f1c, type: 3}
-  m_Name: ProjectileExecute
-  m_EditorClassIdentifier: 
-  projectileData: {fileID: 11400000, guid: 6cfa19f752b53634e850643f88dce08e, type: 2}
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -36,15 +23,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6c632aebf02b4072aa70ad2fe2b2ba09, type: 3}
-  m_Name: ProjectileWeapon
+  m_Name: StatusEffectWeapon
   m_EditorClassIdentifier: 
   inputComponents:
-  - {fileID: 7204250448655970528}
+  - {fileID: 872484166693567067}
   executeComponents:
-  - {fileID: -4762575740209495352}
+  - {fileID: 6895666392300353170}
   onHitComponents:
-  - {fileID: -7184124961644842349}
---- !u!114 &7204250448655970528
+  - {fileID: -5077362727585698798}
+--- !u!114 &872484166693567067
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -57,3 +44,16 @@ MonoBehaviour:
   m_Name: ActionInput
   m_EditorClassIdentifier: 
   inputReference: {fileID: 2158980376108856071, guid: 6eaff8a1080c3b64bba326ccc7407a63, type: 3}
+--- !u!114 &6895666392300353170
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a28764d73d134afbadc69678fc6d9f1c, type: 3}
+  m_Name: ProjectileExecute
+  m_EditorClassIdentifier: 
+  projectileData: {fileID: 11400000, guid: 6cfa19f752b53634e850643f88dce08e, type: 2}

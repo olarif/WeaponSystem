@@ -3,13 +3,15 @@
 public abstract class EnemyBase : Entity, IDamageable
 {
     [SerializeField] private EnemyStatsSO _enemyStats;
-
-    public Animator Animator;
+    
+    protected StatusEffectManager StatusEffectsManager;
+    protected Animator Animator;
 
     protected void Awake()
     {
         Animator = GetComponent<Animator>();
         HealthComponent = GetComponent<HealthComponent>();
+        StatusEffectsManager = GetComponent<StatusEffectManager>();
     }
     
     public virtual void ApplyDamage(float damage) { }

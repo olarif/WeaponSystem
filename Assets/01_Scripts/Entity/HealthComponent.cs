@@ -18,22 +18,6 @@ public class HealthComponent : MonoBehaviour
 
     public int GetCurrentHealth() => _currentHealth;
     public int GetMaxHealth() => _maxHealth;
-
-    public bool TakeDamage(DamageInfo damageInfo)
-    {
-        _currentHealth -= Mathf.RoundToInt(damageInfo.damageAmount);
-        _currentHealth = Mathf.Clamp(_currentHealth, 0, _maxHealth);
-        
-        OnHealthChanged?.Invoke(_currentHealth);
-
-        if (_currentHealth <= 0)
-        {
-            Die();
-            return false;
-        }
-        
-        return true;
-    }
     
     public void Heal(int amount)
     {
@@ -47,9 +31,22 @@ public class HealthComponent : MonoBehaviour
     private void Die()
     {
         OnDeath?.Invoke();
-
-        //gameObject.SetActive(false);
     }
     
     public bool IsAlive() => _currentHealth > 0;
+
+    public void TakeDamage(float damage)
+    {
+         Debug.Log($"Applying {damage} damage to {gameObject.name}");
+        
+        _currentHealth -= Mathf.RoundToInt(damage);
+        _currentHealth = Mathf.Clamp(_currentHealth, 0, _maxHealth);
+        
+        OnHealthChanged?.Invoke(_currentHealth);
+
+        if (_currentHealth <= 0)
+        {
+            Die();
+        }
+    }
 }

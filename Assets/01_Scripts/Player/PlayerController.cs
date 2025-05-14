@@ -4,9 +4,10 @@ using UnityEngine;
 [RequireComponent(typeof(CharacterController))]
 public class PlayerController : MonoBehaviour
 {
-    private Player _player;
+    private Player _player;  
+    [SerializeField] private PlayerStatsSO _stats;
+    // Player stats
     
-    private PlayerScriptableStats _stats;
     [SerializeField] public Transform _groundCheck;
     
     // Components
@@ -27,7 +28,7 @@ public class PlayerController : MonoBehaviour
     public event Action<bool> OnJump;
     public event Action<bool> OnSprint;
     
-    public PlayerScriptableStats Stats => _stats;
+    public PlayerStatsSO Stats => _stats;
     public bool IsGrounded { get; private set; }
     public bool IsSprinting { get; private set; }
     public bool IsJumping { get; private set; }
@@ -36,7 +37,6 @@ public class PlayerController : MonoBehaviour
     private void Awake()
     {
         _player = GetComponent<Player>();
-        _stats = _player._playerStats;
         _controller = GetComponent<CharacterController>();
         _input = GetComponent<PlayerInputHandler>();
         _playerCamera = GetComponentInChildren<Camera>();

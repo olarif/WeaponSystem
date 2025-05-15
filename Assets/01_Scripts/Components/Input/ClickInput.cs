@@ -5,10 +5,15 @@ public class ClickInput : InputComponent
 {
     public InputActionReference inputAction;
     
+    public float coolDownTime = 0.1f;
+    private float _lastFireTime;
     private bool _consumed;
     
     public override void Initialize(WeaponContext context)
     {
+        _consumed = false;
+        _lastFireTime = Time.time - coolDownTime;
+
         if (inputAction != null && inputAction.action != null)
         {
             if (!inputAction.action.enabled) { inputAction.action.Enable(); }
@@ -40,9 +45,9 @@ public class ClickInput : InputComponent
     
     public override bool CanExecute()
     {
-        if (_consumed)
+        if (_consumed && Time.time - _lastFireTime >= coolDownTime)
         {
-            _consumed = false;
+            _lastFireTime = Time.time;
             return true;
         }
         

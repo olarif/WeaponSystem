@@ -16,4 +16,4 @@ MonoBehaviour:
   hitLayers:
     serializedVersion: 2
     m_Bits: 64
-  damage: 5
+  damage: 1

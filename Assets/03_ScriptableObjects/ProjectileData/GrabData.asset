@@ -12,11 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 965d58469d8c41bcb4521035c06d9904, type: 3}
   m_Name: GrabData
   m_EditorClassIdentifier: 
-  targetLayer:
-    serializedVersion: 2
-    m_Bits: 1600
   grabDamage: 1
   grabDistance: 1000
   grabDuration: 5
   grabForce: 5
-  grabSpeed: 10
+  grabSpeed: 5

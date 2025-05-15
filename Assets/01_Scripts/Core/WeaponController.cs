@@ -10,6 +10,7 @@ public class WeaponController : MonoBehaviour
     public WeaponDataSO weaponData;
     [Tooltip("Transform for spawning rays/projectiles")]
     public Transform firePoint;
+    public LineRenderer lineRenderer;
     [Tooltip("Seconds between successive fires")]
     public float cooldownTime = 0.1f;
 
@@ -28,7 +29,7 @@ public class WeaponController : MonoBehaviour
         // 1) Build the shared context
         _ctx = new WeaponContext {
             FirePoint       = firePoint,
-            LineRenderer    = GetComponent<LineRenderer>(),
+            LineRenderer    = lineRenderer,
             PlayerCamera    = Camera.main,
             OnHitComponents = new List<IOnHitComponent>()
         };
@@ -62,43 +63,55 @@ public class WeaponController : MonoBehaviour
 
     private void Update()
     {
-        // A) Did the player press/hold? If so, we’ll transition from Idle → Firing
+        // 1) Check if any input is currently active
         bool anyInput = _inputComps.Any(i => i.CanExecute());
-        switch (CurrentState)
-        {
-            case WeaponState.Idle:
-                if (anyInput) ChangeState(WeaponState.Firing);
-                break;
 
-            case WeaponState.Firing:
-                // fire once, then go to cooldown
-                _nextFireTime = Time.time + cooldownTime;
-                ChangeState(WeaponState.CoolingDown);
-                break;
-
-            case WeaponState.CoolingDown:
-                if (Time.time >= _nextFireTime)
-                    ChangeState(anyInput ? WeaponState.Firing : WeaponState.Idle);
-                break;
-        }
-
-        // B) Now drive OnStart/OnUpdate/OnStop for each component
+        // 2) Drive lifecycle on every ILifecycleComponent
         foreach (var comp in _lifecycleComps)
         {
-            bool want = (comp is IInputComponent ic && ic.CanExecute());
-            bool was  = _activeMap[comp];
+            bool want = false;
 
-            if (want && !was) comp.OnStart();
-            if (want)         comp.OnUpdate();
-            if (!want && was) comp.OnStop();
+            // Inputs want() whenever their button/action is down
+            if (comp is IInputComponent inp)
+            {
+                want = inp.CanExecute();
+            }
+            // Execute modules want() *exactly* when input is down as well
+            else if (comp is IExecuteComponent)
+            {
+                want = anyInput;
+            }
+            // OnHitComponents are passive (they just sit in context), 
+            // so they never get their own start/stop here.
+
+            bool was = _activeMap[comp];
+
+            if (want && !was)
+            {
+                Debug.Log($"OnStart: {comp.GetType().Name}");
+                comp.OnStart();
+            }
+
+            if (want)
+            {
+                comp.OnUpdate();
+            }
+
+            if (!want && was)
+            {
+                Debug.Log($"OnStop: {comp.GetType().Name}");
+                comp.OnStop();
+            }
 
             _activeMap[comp] = want;
         }
 
-        // C) Finally, if we’re in Firing state, actually Execute()
-        if (CurrentState == WeaponState.Firing)
+        // 3) We still call Execute() ourselves, if you’re using ExecuteComponent.Execute()
+        if (anyInput)
+        {
             foreach (var exec in _execComps)
                 exec.Execute();
+        }
     }
 
     private void ChangeState(WeaponState next)

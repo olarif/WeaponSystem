@@ -43,7 +43,7 @@ GameObject:
   - component: {fileID: 8266767242560328857}
   - component: {fileID: 2744664776512533842}
   m_Layer: 9
-  m_Name: BasicWand
+  m_Name: RaycastWand
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -77,8 +77,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 25a2c512721946e48d02ad108ca380a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weaponData: {fileID: 11400000, guid: d6512c5656f642041b691ad01faba705, type: 2}
+  weaponData: {fileID: 11400000, guid: 705b8319d3c1b5241ab5928f5543762f, type: 2}
   firePoint: {fileID: 6087581573200896119}
+  lineRenderer: {fileID: 2744664776512533842}
+  cooldownTime: 0
 --- !u!120 &2744664776512533842
 LineRenderer:
   serializedVersion: 2

@@ -1,36 +1,57 @@
 using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.UI;
 
 public class HealthComponent : MonoBehaviour
 {
     [SerializeField] private int _maxHealth = 100;
     private int _currentHealth;
+
+    public int GetMaxHealth() => _maxHealth;
+    public int GetCurrentHealth => _currentHealth;
+    public int GetCurrentHealthPercentage => Mathf.RoundToInt((float)_currentHealth / _maxHealth * 100);
     
-    public UnityEvent<int> OnHealthChanged;
-    public UnityEvent OnDeath;
-    
+    public GameObject healthBar;
+    public Slider slider;
+    public Gradient gradient;
+
     private void Awake()
     {
         _currentHealth = _maxHealth;
-        OnHealthChanged?.Invoke(_currentHealth);
+    }
+    
+    private void Start()
+    {
+        if (healthBar != null)
+        {
+            slider = healthBar.GetComponent<Slider>();
+            slider.maxValue = _maxHealth;
+            slider.value = _currentHealth;
+            slider.fillRect.GetComponentInChildren<Image>().color = gradient.Evaluate(slider.normalizedValue);
+        }
+    }
+    
+    private void SetHealthBar()
+    {
+        if (healthBar != null)
+        {
+            slider.value = _currentHealth;
+            slider.fillRect.GetComponentInChildren<Image>().color = gradient.Evaluate(slider.normalizedValue);
+        }
     }
 
-    public int GetCurrentHealth() => _currentHealth;
-    public int GetMaxHealth() => _maxHealth;
-    
     public void Heal(int amount)
     {
         _currentHealth += amount;
         _currentHealth = Mathf.Clamp(_currentHealth, 0, _maxHealth);
         
-        //broadcast heal event for UI etc.
-        OnHealthChanged?.Invoke(_currentHealth);
+        SetHealthBar();
     }
 
     private void Die()
     {
-        OnDeath?.Invoke();
+        //OnDeath?.Invoke();
     }
     
     public bool IsAlive() => _currentHealth > 0;
@@ -42,8 +63,8 @@ public class HealthComponent : MonoBehaviour
         _currentHealth -= Mathf.RoundToInt(damage);
         _currentHealth = Mathf.Clamp(_currentHealth, 0, _maxHealth);
         
-        OnHealthChanged?.Invoke(_currentHealth);
-
+        SetHealthBar();
+        
         if (_currentHealth <= 0)
         {
             Die();

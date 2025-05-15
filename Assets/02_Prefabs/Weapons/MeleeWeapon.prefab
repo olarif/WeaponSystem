@@ -48,6 +48,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weaponData: {fileID: 11400000, guid: 2f42ca90e05e8ad4692fd9bcdb03853d, type: 2}
   firePoint: {fileID: 3299328082603299558}
+  lineRenderer: {fileID: 2744664776512533842}
+  cooldownTime: 0.1
 --- !u!120 &2744664776512533842
 LineRenderer:
   serializedVersion: 2

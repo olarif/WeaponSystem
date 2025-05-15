@@ -2,13 +2,14 @@
 using UnityEditor.Timeline;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Serialization;
 
-public class HoldInput : InputComponent
+public class ChargeInput : InputComponent
 {
     public InputActionReference inputReference;
 
     [Tooltip( "Time in seconds to hold the input before it is considered a valid action.")]
-    public float holdTime = 0.5f;
+    public float chargeTime = 0.5f;
     
     private float _holdStartTime; 
     private bool _isHolding;
@@ -45,7 +46,7 @@ public class HoldInput : InputComponent
         if (context.canceled)
         {
             _isHolding = false;
-            if (context.time - _holdStartTime >= holdTime)
+            if (context.time - _holdStartTime >= chargeTime)
             {
                 _wasTriggered = true;
             }

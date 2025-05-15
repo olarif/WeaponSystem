@@ -9,7 +9,6 @@ public class WeaponManager : MonoBehaviour
     private void Awake()
     {
         // Instantiate the weapon prefab
-        GameObject weaponPrefab = Instantiate(weaponData.weaponPrefab, weaponHolder.position, weaponHolder.rotation, weaponHolder);
-        weaponPrefab.transform.localPosition = Vector3.zero;
+        //GameObject weaponPrefab = Instantiate(weaponData.weaponPrefab, weaponHolder);
     }
 }

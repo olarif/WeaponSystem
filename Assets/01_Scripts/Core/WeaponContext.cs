@@ -1,15 +1,12 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public struct WeaponContext
+public class WeaponContext
 {
     public Transform FirePoint;
     public Animator Animator;
     public AudioSource AudioSource;
     public LineRenderer LineRenderer;
     public Camera PlayerCamera;
-    
-    public List<IInputComponent> InputComponents;
-    public List<IExecuteComponent> ExecuteComponents;
-    public List<IOnHitComponent> OnHitComponents;
+    public List<IOnHitComponent> OnHitComponents = new List<IOnHitComponent>();
 }

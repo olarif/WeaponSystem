@@ -1,7 +1,16 @@
 ﻿using UnityEngine;
 
-public abstract class WeaponComponent : ScriptableObject
+public abstract class WeaponComponent : ScriptableObject, ILifeCycleComponent
 { 
-    protected WeaponContext WeaponContext;
-    public abstract void Initialize(WeaponContext context);
+    protected WeaponContext ctx;
+
+    public virtual void Initialize(WeaponContext context)
+    {
+        ctx = context;
+    }
+    
+    public virtual void OnStart() { }
+    public virtual void OnUpdate() { }
+    public virtual void OnStop() { }
+    public virtual void Cleanup() { }
 }

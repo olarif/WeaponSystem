@@ -6,27 +6,12 @@ public class ProjectileExecute : ExecuteComponent
 {
     public ProjectileDataSO projectileData;
 
-    public override void Initialize(WeaponContext context)
-    {
-        WeaponContext = context;
-    }
-    
     public override void Execute()
     {
-        if (projectileData == null)
-        {
-            Debug.LogError("Projectile data is not set.");
-            return;
-        }
+        Debug.Log( $"Executing {GetType().Name} for {projectileData.name} with projectile data: {projectileData}" );
         
-        if (projectileData.projectilePrefab == null)
-        {
-            Debug.LogError("Projectile prefab is not set.");
-            return;
-        }
-        
-        GameObject projectile = Instantiate(projectileData.projectilePrefab, WeaponContext.FirePoint.position, WeaponContext.FirePoint.rotation);
-        projectile.GetComponent<Projectile>().Initialize(projectileData, WeaponContext, WeaponContext.FirePoint.forward);
+        GameObject projectile = Instantiate(projectileData.projectilePrefab, ctx.FirePoint.position, ctx.FirePoint.rotation);
+        projectile.GetComponent<Projectile>().Initialize(projectileData, ctx, ctx.FirePoint.forward);
         
         iTween.PunchPosition(projectile, new Vector3 (Random.Range(-projectileData.arcRange, projectileData.arcRange), Random.Range(-projectileData.arcRange, projectileData.arcRange), 0), projectileData.lifetime);
     }

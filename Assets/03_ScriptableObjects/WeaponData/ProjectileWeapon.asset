@@ -27,6 +27,19 @@ MonoBehaviour:
   m_Name: StatusEffectOnHit
   m_EditorClassIdentifier: 
   statusEffectData: {fileID: 11400000, guid: 85f073f69af6ba949bf5e7771e3c6cfb, type: 2}
+--- !u!114 &-6970311314401850573
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 216fbff1268e4ec5accf76ab33d56f14, type: 3}
+  m_Name: MeleeExecute
+  m_EditorClassIdentifier: 
+  meleeData: {fileID: 0}
 --- !u!114 &-6704197312204406693
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -40,6 +53,20 @@ MonoBehaviour:
   m_Name: ExplodeOnHit
   m_EditorClassIdentifier: 
   aoeData: {fileID: 11400000, guid: 97eec7c61aee6e24aa52e5c4c79fc8e7, type: 2}
+--- !u!114 &-6440203653402919235
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f812e904142c4942b622a710e133dd0d, type: 3}
+  m_Name: TapInput
+  m_EditorClassIdentifier: 
+  inputReference: {fileID: 0}
+  cooldownTime: 0.2
 --- !u!114 &-4762575740209495352
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -65,13 +92,83 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c632aebf02b4072aa70ad2fe2b2ba09, type: 3}
   m_Name: ProjectileWeapon
   m_EditorClassIdentifier: 
-  weaponName: 
-  weaponDescription: 
+  Components:
+  - {fileID: 0}
+  - {fileID: 8772691435566545809}
+  weaponName: Weapon
+  weaponDescription: Weapon
   weaponPrefab: {fileID: 6888727773174072129, guid: 174f609dffdb2b0408656b8edec0f173, type: 3}
   inputComponents:
-  - {fileID: -7566606403734791485}
+  - {fileID: 488504872104168753}
   executeComponents:
-  - {fileID: -4762575740209495352}
+  - {fileID: 2893651404453343197}
   onHitComponents:
-  - {fileID: -7184124961644842349}
-  - {fileID: -6704197312204406693}
+  - {fileID: 5868040661816927560}
+--- !u!114 &488504872104168753
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 99bcc553b54043c0bf55dd7330466633, type: 3}
+  m_Name: ClickInput
+  m_EditorClassIdentifier: 
+  inputAction: {fileID: 2158980376108856071, guid: 6eaff8a1080c3b64bba326ccc7407a63, type: 3}
+--- !u!114 &2893651404453343197
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a28764d73d134afbadc69678fc6d9f1c, type: 3}
+  m_Name: ProjectileExecute
+  m_EditorClassIdentifier: 
+  projectileData: {fileID: 11400000, guid: 6cfa19f752b53634e850643f88dce08e, type: 2}
+--- !u!114 &4221378888057082778
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f812e904142c4942b622a710e133dd0d, type: 3}
+  m_Name: TapInput
+  m_EditorClassIdentifier: 
+  inputReference: {fileID: 2158980376108856071, guid: 6eaff8a1080c3b64bba326ccc7407a63, type: 3}
+  cooldownTime: 0.2
+  _lastTapTime: -Infinity
+  _wasTriggered: 0
+--- !u!114 &5868040661816927560
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44236a7a16ef4e4d8c6397ad0f225649, type: 3}
+  m_Name: StatusEffectOnHit
+  m_EditorClassIdentifier: 
+  statusEffectData: {fileID: 11400000, guid: 85f073f69af6ba949bf5e7771e3c6cfb, type: 2}
+--- !u!114 &8772691435566545809
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a28764d73d134afbadc69678fc6d9f1c, type: 3}
+  m_Name: ProjectileExecute
+  m_EditorClassIdentifier: 
+  projectileData: {fileID: 0}

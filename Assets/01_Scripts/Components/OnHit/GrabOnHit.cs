@@ -11,7 +11,6 @@ public class GrabOnHit : OnHitComponent
 
     public override void Initialize(WeaponContext context)
     {
-        WeaponContext = context;
         _lr = context.LineRenderer;
     }
 
@@ -32,7 +31,7 @@ public class GrabOnHit : OnHitComponent
 
     private IEnumerator PullObject(GameObject target)
     {
-        Transform firePoint = WeaponContext.FirePoint;
+        Transform firePoint = ctx.FirePoint;
 
         while (Vector3.Distance(target.transform.position, firePoint.position) > 0.1f && _isGrabbing)
         {

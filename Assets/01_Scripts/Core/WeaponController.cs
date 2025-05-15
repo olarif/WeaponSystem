@@ -1,52 +1,117 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
 public class WeaponController : MonoBehaviour
 {
-    [SerializeField] private WeaponDataSO weaponData;
-    private List<IInputComponent> _inputs;
-    private List<IExecuteComponent> _executes;
-    private List<IOnHitComponent> _onHitComponents;
-    WeaponContext _context;
-    
-    [SerializeField] private Transform firePoint;
-    private Animator animator;
-    private AudioSource audioSource;
+    [Header("Data & References")]
+    [Tooltip("WeaponDataSO with three lists: inputComponents, executeComponents, onHitComponents")]
+    public WeaponDataSO weaponData;
+    [Tooltip("Transform for spawning rays/projectiles")]
+    public Transform firePoint;
+    [Tooltip("Seconds between successive fires")]
+    public float cooldownTime = 0.1f;
+
+    public WeaponState CurrentState { get; private set; } = WeaponState.Idle;
+    public event Action<WeaponState, WeaponState> OnStateChanged;
+
+    private WeaponContext _ctx;
+    private List<ILifeCycleComponent> _lifecycleComps;
+    private Dictionary<ILifeCycleComponent, bool> _activeMap;
+    private List<IInputComponent>   _inputComps;
+    private List<IExecuteComponent> _execComps;
+    private float _nextFireTime;
 
     private void Awake()
     {
-        _context = new WeaponContext
-        {
-            FirePoint = firePoint,
-            Animator = animator,
-            AudioSource = audioSource,
+        // 1) Build the shared context
+        _ctx = new WeaponContext {
+            FirePoint       = firePoint,
+            LineRenderer    = GetComponent<LineRenderer>(),
+            PlayerCamera    = Camera.main,
+            OnHitComponents = new List<IOnHitComponent>()
         };
-        
-        _context.LineRenderer = GetComponent<LineRenderer>();
 
-        //Instantiate the weapon data
-        _onHitComponents = weaponData.onHitComponents
-            .Select(so => Instantiate(so))
-            .Cast<IOnHitComponent>()
-            .ToList();
-        
-        _context.OnHitComponents = _onHitComponents;
-        
-        _inputs = weaponData.inputComponents.Select(so => Instantiate(so)).Cast<IInputComponent>().ToList();
-        _executes = weaponData.executeComponents.Select(so => Instantiate(so)).Cast<IExecuteComponent>().ToList();
+        // 2) Initialize lists
+        _lifecycleComps = new List<ILifeCycleComponent>();
+        _activeMap      = new Dictionary<ILifeCycleComponent,bool>();
 
-        // Initialize all components
-        _inputs.ForEach(i => i.Initialize(_context));
-        _executes.ForEach(e => e.Initialize(_context));
-        _onHitComponents.ForEach(h => h.Initialize(_context));
+        // 3) Register EVERYTHING from your three lists
+        void Register(ScriptableObject so)
+        {
+            if (so is ILifeCycleComponent lc)
+            {
+                lc.Initialize(_ctx);
+                _lifecycleComps.Add(lc);
+                _activeMap[lc] = false;
+
+                if (so is IOnHitComponent hitComp)
+                    _ctx.OnHitComponents.Add(hitComp);
+            }
+        }
+
+        foreach (var so in weaponData.inputComponents    ?? Enumerable.Empty<ScriptableObject>()) Register(so);
+        foreach (var so in weaponData.executeComponents  ?? Enumerable.Empty<ScriptableObject>()) Register(so);
+        foreach (var so in weaponData.onHitComponents    ?? Enumerable.Empty<ScriptableObject>()) Register(so);
+
+        // 4) Cache the IInput and IExecute lists
+        _inputComps = _lifecycleComps.OfType<IInputComponent>().ToList();
+        _execComps  = _lifecycleComps.OfType<IExecuteComponent>().ToList();
     }
-    
+
     private void Update()
     {
-        if (_inputs.Any(input => input.CanExecute()))
+        // A) Did the player press/hold? If so, we’ll transition from Idle → Firing
+        bool anyInput = _inputComps.Any(i => i.CanExecute());
+        switch (CurrentState)
         {
-            _executes.ForEach(execute => execute.Execute());
+            case WeaponState.Idle:
+                if (anyInput) ChangeState(WeaponState.Firing);
+                break;
+
+            case WeaponState.Firing:
+                // fire once, then go to cooldown
+                _nextFireTime = Time.time + cooldownTime;
+                ChangeState(WeaponState.CoolingDown);
+                break;
+
+            case WeaponState.CoolingDown:
+                if (Time.time >= _nextFireTime)
+                    ChangeState(anyInput ? WeaponState.Firing : WeaponState.Idle);
+                break;
         }
+
+        // B) Now drive OnStart/OnUpdate/OnStop for each component
+        foreach (var comp in _lifecycleComps)
+        {
+            bool want = (comp is IInputComponent ic && ic.CanExecute());
+            bool was  = _activeMap[comp];
+
+            if (want && !was) comp.OnStart();
+            if (want)         comp.OnUpdate();
+            if (!want && was) comp.OnStop();
+
+            _activeMap[comp] = want;
+        }
+
+        // C) Finally, if we’re in Firing state, actually Execute()
+        if (CurrentState == WeaponState.Firing)
+            foreach (var exec in _execComps)
+                exec.Execute();
+    }
+
+    private void ChangeState(WeaponState next)
+    {
+        var prev = CurrentState;
+        CurrentState = next;
+        OnStateChanged?.Invoke(prev, next);
+    }
+
+    private void OnDestroy()
+    {
+        // Cleanup subscriptions, etc.
+        foreach (var comp in _lifecycleComps)
+            comp.Cleanup();
     }
 }

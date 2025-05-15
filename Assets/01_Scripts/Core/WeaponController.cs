@@ -11,9 +11,8 @@ public class WeaponController : MonoBehaviour
     [Tooltip("Transform for spawning rays/projectiles")]
     public Transform firePoint;
     public LineRenderer lineRenderer;
-    [Tooltip("Seconds between successive fires")]
-    public float cooldownTime = 0.1f;
 
+    
     public WeaponState CurrentState { get; private set; } = WeaponState.Idle;
     public event Action<WeaponState, WeaponState> OnStateChanged;
 
@@ -88,7 +87,7 @@ public class WeaponController : MonoBehaviour
 
             if (want && !was)
             {
-                Debug.Log($"OnStart: {comp.GetType().Name}");
+                //Debug.Log($"OnStart: {comp.GetType().Name}");
                 comp.OnStart();
             }
 
@@ -99,7 +98,7 @@ public class WeaponController : MonoBehaviour
 
             if (!want && was)
             {
-                Debug.Log($"OnStop: {comp.GetType().Name}");
+                //Debug.Log($"OnStop: {comp.GetType().Name}");
                 comp.OnStop();
             }
 

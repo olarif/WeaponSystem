@@ -7,7 +7,6 @@ public class Projectile : MonoBehaviour
     ProjectileDataSO _data; WeaponContext _context;
     
     private Rigidbody _rigidbody;
-    private float _lifeTimer;
     private int _bouncesLeft;
 
     public void Initialize(ProjectileDataSO data, WeaponContext context, Vector3 direction)
@@ -21,6 +20,9 @@ public class Projectile : MonoBehaviour
         
         // set initial velocity
         _rigidbody.linearVelocity = direction.normalized * _data.speed;
+        
+        // set lifetime
+        Destroy(gameObject, data.lifetime);
     }
 
     private void OnCollisionEnter(Collision col)
@@ -49,6 +51,7 @@ public class Projectile : MonoBehaviour
         }
         else
         {
+            // Destroy the projectile if it doesn't bounce
             OnExpire();
         }
     }

@@ -14,7 +14,14 @@ public class ProjectileExecute : ExecuteComponent
         _playerCamera = context.PlayerCamera;
     }
 
-    public override void Execute()
+    public override void OnStart()
+    {
+        SpawnProjectile();
+    }
+
+    public override void Execute() { }
+
+    private void SpawnProjectile()
     {
         // 1) Cast a ray from the center of the screen
         Vector2 screenCenter = new Vector2(Screen.width / 2f, Screen.height / 2f);

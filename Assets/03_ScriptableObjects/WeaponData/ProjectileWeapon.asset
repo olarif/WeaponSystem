@@ -67,7 +67,7 @@ MonoBehaviour:
   m_Name: ProjectileExecute
   m_EditorClassIdentifier: 
   projectileData: {fileID: 11400000, guid: 6cfa19f752b53634e850643f88dce08e, type: 2}
---- !u!114 &-734587289266468049
+--- !u!114 &-4252433534947329180
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -80,6 +80,33 @@ MonoBehaviour:
   m_Name: ExplodeOnHit
   m_EditorClassIdentifier: 
   aoeData: {fileID: 11400000, guid: 97eec7c61aee6e24aa52e5c4c79fc8e7, type: 2}
+--- !u!114 &-3616865017487137926
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a5c498acbc6c437b97d559d2c1f3e5e9, type: 3}
+  m_Name: AutoFireInput
+  m_EditorClassIdentifier: 
+  inputAction: {fileID: 2158980376108856071, guid: 6eaff8a1080c3b64bba326ccc7407a63, type: 3}
+  fireRate: 0.1
+--- !u!114 &-750810366644919183
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44236a7a16ef4e4d8c6397ad0f225649, type: 3}
+  m_Name: StatusEffectOnHit
+  m_EditorClassIdentifier: 
+  statusEffectData: {fileID: 11400000, guid: 85f073f69af6ba949bf5e7771e3c6cfb, type: 2}
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -99,12 +126,13 @@ MonoBehaviour:
   weaponDescription: Weapon
   weaponPrefab: {fileID: 6888727773174072129, guid: 174f609dffdb2b0408656b8edec0f173, type: 3}
   inputComponents:
-  - {fileID: 5262754196834561385}
+  - {fileID: -3616865017487137926}
   executeComponents:
   - {fileID: 8729970236913907361}
   onHitComponents:
-  - {fileID: 5868040661816927560}
-  - {fileID: -734587289266468049}
+  - {fileID: 0}
+  - {fileID: -4252433534947329180}
+  - {fileID: -750810366644919183}
 --- !u!114 &4221378888057082778
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -121,33 +149,6 @@ MonoBehaviour:
   cooldownTime: 0.2
   _lastTapTime: -Infinity
   _wasTriggered: 0
---- !u!114 &5262754196834561385
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4d922aed752c4fb8b2f98ace17f688d3, type: 3}
-  m_Name: HoldInput
-  m_EditorClassIdentifier: 
-  inputReference: {fileID: 2158980376108856071, guid: 6eaff8a1080c3b64bba326ccc7407a63, type: 3}
-  chargeTime: 0.6
---- !u!114 &5868040661816927560
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 44236a7a16ef4e4d8c6397ad0f225649, type: 3}
-  m_Name: StatusEffectOnHit
-  m_EditorClassIdentifier: 
-  statusEffectData: {fileID: 11400000, guid: 85f073f69af6ba949bf5e7771e3c6cfb, type: 2}
 --- !u!114 &8729970236913907361
 MonoBehaviour:
   m_ObjectHideFlags: 1

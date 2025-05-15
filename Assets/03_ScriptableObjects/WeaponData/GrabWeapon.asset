@@ -1,0 +1,64 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-6926140122902043312
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f812e904142c4942b622a710e133dd0d, type: 3}
+  m_Name: TapInput
+  m_EditorClassIdentifier: 
+  inputReference: {fileID: 2158980376108856071, guid: 6eaff8a1080c3b64bba326ccc7407a63, type: 3}
+  cooldownTime: 0.2
+--- !u!114 &-6293742435060125522
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a2be492f9494542b1baa76371f45ff0, type: 3}
+  m_Name: RaycastExecute
+  m_EditorClassIdentifier: 
+  raycastData: {fileID: 11400000, guid: 91637fbbb2cbc1b4ebfa94e8ba64867d, type: 2}
+  isLinecast: 0
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c632aebf02b4072aa70ad2fe2b2ba09, type: 3}
+  m_Name: GrabWeapon
+  m_EditorClassIdentifier: 
+  weaponName: Grab Wand
+  weaponDescription: Wand that grabs objects and pulls them towards the player
+  weaponPrefab: {fileID: 6888727773174072129, guid: 8e5e09616ba694f4eaa5dcbf86872211, type: 3}
+  inputComponents:
+  - {fileID: -6926140122902043312}
+  executeComponents:
+  - {fileID: -6293742435060125522}
+  onHitComponents:
+  - {fileID: 3243035632589098564}
+--- !u!114 &3243035632589098564
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0bf749408ac1422eadeb35d9f178fce1, type: 3}
+  m_Name: GrabOnHit
+  m_EditorClassIdentifier: 
+  grabData: {fileID: 11400000, guid: f03533dcccb52714193901fd8b6c5dc9, type: 2}

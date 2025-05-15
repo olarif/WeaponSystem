@@ -45,11 +45,6 @@ public class TapInput : InputComponent
         }
         return false;
     }
-    
-    public override bool IsExecuting()
-    {
-        return CanExecute();
-    }
 
     private void OnDisable()
     {

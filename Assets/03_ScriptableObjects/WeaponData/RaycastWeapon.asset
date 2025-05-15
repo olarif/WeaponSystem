@@ -12,7 +12,34 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a2be492f9494542b1baa76371f45ff0, type: 3}
   m_Name: RaycastExecute
   m_EditorClassIdentifier: 
-  raycastData: {fileID: 11400000, guid: 91637fbbb2cbc1b4ebfa94e8ba64867d, type: 2}
+  raycastData: {fileID: 11400000, guid: 97ecbd2351d5a0b4b8333fb0541a1fd0, type: 2}
+  isLinecast: 1
+--- !u!114 &-4764115446689952554
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cab6bd0450b2483eb88c2eecbf8d23f7, type: 3}
+  m_Name: ExplodeOnHit
+  m_EditorClassIdentifier: 
+  aoeData: {fileID: 11400000, guid: 97eec7c61aee6e24aa52e5c4c79fc8e7, type: 2}
+--- !u!114 &-4738776894567159642
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44236a7a16ef4e4d8c6397ad0f225649, type: 3}
+  m_Name: StatusEffectOnHit
+  m_EditorClassIdentifier: 
+  statusEffectData: {fileID: 11400000, guid: 85f073f69af6ba949bf5e7771e3c6cfb, type: 2}
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -31,7 +58,9 @@ MonoBehaviour:
   - {fileID: 378264648557478050}
   executeComponents:
   - {fileID: -6293742435060125522}
-  onHitComponents: []
+  onHitComponents:
+  - {fileID: -4738776894567159642}
+  - {fileID: -4764115446689952554}
 --- !u!114 &378264648557478050
 MonoBehaviour:
   m_ObjectHideFlags: 1

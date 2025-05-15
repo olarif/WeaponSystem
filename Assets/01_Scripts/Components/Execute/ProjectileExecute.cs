@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class ProjectileExecute : ExecuteComponent
 {
@@ -25,10 +27,7 @@ public class ProjectileExecute : ExecuteComponent
         
         GameObject projectile = Instantiate(projectileData.projectilePrefab, WeaponContext.FirePoint.position, WeaponContext.FirePoint.rotation);
         projectile.GetComponent<Projectile>().Initialize(projectileData, WeaponContext, WeaponContext.FirePoint.forward);
-    }
-    
-    public override void CancelExecute()
-    {
-        // Implement cancel logic if needed
+        
+        iTween.PunchPosition(projectile, new Vector3 (Random.Range(-projectileData.arcRange, projectileData.arcRange), Random.Range(-projectileData.arcRange, projectileData.arcRange), 0), projectileData.lifetime);
     }
 }

@@ -6,6 +6,7 @@ public class WeaponDataSO : ScriptableObject
 {
     public string weaponName;
     public string weaponDescription;
+    public GameObject weaponPrefab;
 
     public List<ScriptableObject> inputComponents;
     public List<ScriptableObject> executeComponents;

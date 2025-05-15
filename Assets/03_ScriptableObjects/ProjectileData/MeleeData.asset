@@ -15,8 +15,8 @@ MonoBehaviour:
   targetLayer:
     serializedVersion: 2
     m_Bits: 64
-  damage: 5
-  range: 5
+  damage: 2
+  range: 1
   cooldown: 2
   attackSpeed: 10
   knockbackForce: 10

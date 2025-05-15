@@ -7,6 +7,7 @@ public struct WeaponContext
     public Animator Animator;
     public AudioSource AudioSource;
     public LineRenderer LineRenderer;
+    public Camera PlayerCamera;
     
     public List<IInputComponent> InputComponents;
     public List<IExecuteComponent> ExecuteComponents;

@@ -1,6 +1,6 @@
 ﻿
 public interface IOnHitComponent
 {
-        void Initialize(WeaponContext context);
-        void OnHit(CollisionInfo info);
+    void Initialize(WeaponContext context);
+    void OnHit(CollisionInfo info);
 }

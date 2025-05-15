@@ -8,6 +8,7 @@ public class ProjectileDataSO : ScriptableObject
     public float speed = 10f;
     public float damage = 10f;
     public float lifetime = 5f;
+    public float arcRange = 1f;
 
     public float turnSpeed; //for guided projectiles
     public bool enableGravity; //for gravity projectiles

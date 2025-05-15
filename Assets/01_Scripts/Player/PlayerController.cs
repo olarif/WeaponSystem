@@ -40,7 +40,10 @@ public class PlayerController : MonoBehaviour
         _controller = GetComponent<CharacterController>();
         _input = GetComponent<PlayerInputHandler>();
         _playerCamera = GetComponentInChildren<Camera>();
-        
+    }
+
+    private void Start()
+    {
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }

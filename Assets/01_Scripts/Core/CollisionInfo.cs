@@ -16,4 +16,10 @@ public struct CollisionInfo
         Point = col.contacts[0].point;
         HitObject = col.gameObject;
     }
+    
+    public CollisionInfo(Collider col)
+    {
+        Point = col.bounds.center;
+        HitObject = col.gameObject;
+    }
 }

@@ -18,12 +18,12 @@ MonoBehaviour:
   GroundLayer:
     serializedVersion: 2
     m_Bits: 8
-  WalkSpeed: 7
-  SprintSpeed: 12
-  MoveSmoothTime: 10
+  WalkSpeed: 6
+  SprintSpeed: 9
+  MoveSmoothTime: 8
   Gravity: -20
   JumpForce: 3
-  JumpBufferTime: 0.05
+  JumpBufferTime: 0.1
   GroundDistance: 0.3
   RotationSpeed: 35
   MinLookAngle: -90

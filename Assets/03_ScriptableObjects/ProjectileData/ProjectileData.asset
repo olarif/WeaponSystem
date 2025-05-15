@@ -15,10 +15,11 @@ MonoBehaviour:
   projectilePrefab: {fileID: 1930107923466689315, guid: 4e885ba61be83f74e8f8ffea31d676cd, type: 3}
   collisionMask:
     serializedVersion: 2
-    m_Bits: 127
+    m_Bits: 73
   speed: 10
   damage: 5
   lifetime: 5
+  arcRange: 1
   turnSpeed: 0
   enableGravity: 0
   maxBounces: 0

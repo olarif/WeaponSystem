@@ -6,13 +6,13 @@ public class ExplodeOnHit : OnHitComponent
     
     public override void Initialize(WeaponContext context)
     {
-        Debug.Log("ExplodeOnHit initialized! ");
+        WeaponContext = context;
     }
     
     public override void OnHit(CollisionInfo info)
     {
         GameObject explosion = Instantiate(aoeData.explosionPrefab, info.Point, Quaternion.identity);
         
-        
+        //explosion
     }
 }

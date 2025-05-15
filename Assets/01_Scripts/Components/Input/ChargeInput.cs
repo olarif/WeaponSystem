@@ -40,11 +40,6 @@ public class HoldInput : InputComponent
         }
     }
     
-    public override bool IsExecuting()
-    {
-        return CanExecute();
-    }
-    
     private void OnActionCanceled(InputAction.CallbackContext context)
     {
         if (context.canceled)

@@ -9,16 +9,16 @@ public class AutoFireInput : InputComponent
     
     private float _lastFireTime;
     private bool _isPressed;
-    
+
     public override void Initialize(WeaponContext context)
     {
-        _lastFireTime = -fireRate;
+        _lastFireTime = Time.time - fireRate;
         
         if (inputAction != null && inputAction.action != null)
         {
             if (!inputAction.action.enabled) { inputAction.action.Enable(); }
             
-            inputAction.action.started += OnActionStarted;
+            inputAction.action.performed += OnActionStarted;
             inputAction.action.canceled += OnActionCanceled;
         }
         else
@@ -29,12 +29,18 @@ public class AutoFireInput : InputComponent
     
     private void OnActionStarted(InputAction.CallbackContext context)
     {
-        _isPressed = true;
+        if (context.performed)
+        {
+            _isPressed = true;
+        }
     }
     
     private void OnActionCanceled(InputAction.CallbackContext context)
     {
-        _isPressed = false;
+        if (context.canceled)
+        {
+            _isPressed = false;
+        }
     }
     
     public override bool CanExecute()
@@ -44,19 +50,15 @@ public class AutoFireInput : InputComponent
             _lastFireTime = Time.time;
             return true;
         }
+        
         return false;
-    }
-    
-    public override bool IsExecuting()
-    {
-        return CanExecute();
     }
 
     private void OnDisable()
     {
         if (inputAction != null && inputAction.action != null)
         {
-            inputAction.action.started -= OnActionStarted;
+            inputAction.action.performed -= OnActionStarted;
             inputAction.action.canceled -= OnActionCanceled;
         }
     }

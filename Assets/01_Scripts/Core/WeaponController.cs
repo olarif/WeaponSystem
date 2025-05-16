@@ -11,17 +11,13 @@ public class WeaponController : MonoBehaviour
     [Tooltip("Transform for spawning rays/projectiles")]
     public Transform firePoint;
     public LineRenderer lineRenderer;
-
+    [HideInInspector] public bool isEquipped = false;
     
-    public WeaponState CurrentState { get; private set; } = WeaponState.Idle;
-    public event Action<WeaponState, WeaponState> OnStateChanged;
-
     private WeaponContext _ctx;
     private List<ILifeCycleComponent> _lifecycleComps;
     private Dictionary<ILifeCycleComponent, bool> _activeMap;
     private List<IInputComponent>   _inputComps;
     private List<IExecuteComponent> _execComps;
-    private float _nextFireTime;
 
     private void Awake()
     {
@@ -61,7 +57,9 @@ public class WeaponController : MonoBehaviour
     }
 
     private void Update()
-    {
+    { 
+        if (!isEquipped) return;
+        
         // 1) Check if any input is currently active
         bool anyInput = _inputComps.Any(i => i.CanExecute());
 
@@ -113,16 +111,33 @@ public class WeaponController : MonoBehaviour
         }
     }
 
-    private void ChangeState(WeaponState next)
-    {
-        var prev = CurrentState;
-        CurrentState = next;
-        OnStateChanged?.Invoke(prev, next);
-    }
-
     private void OnDestroy()
     {
         // Cleanup subscriptions, etc.
+        foreach (var comp in _lifecycleComps)
+            comp.Cleanup();
+    }
+    
+    public void EquipWeapon()
+    {
+        if (isEquipped) return;
+        
+        // 1) Set the weapon as equipped
+        isEquipped = true;
+
+        // 2) Initialize all components
+        foreach (var comp in _lifecycleComps)
+            comp.Initialize(_ctx);
+    }
+    
+    public void UnequipWeapon()
+    {
+        if (!isEquipped) return;
+
+        // 1) Set the weapon as unequipped
+        isEquipped = false;
+
+        // 2) Cleanup all components
         foreach (var comp in _lifecycleComps)
             comp.Cleanup();
     }

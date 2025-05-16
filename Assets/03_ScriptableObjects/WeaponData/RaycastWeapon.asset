@@ -42,7 +42,8 @@ MonoBehaviour:
   Components: []
   weaponName: Raycast Weapon
   weaponDescription: 
-  weaponPrefab: {fileID: 6888727773174072129, guid: f4de5824397a2364b8eb0b19792a9664, type: 3}
+  weaponPrefab: {fileID: 6888727773174072129, guid: 7fd1af676f85c714b8f19aa95de24f6b, type: 3}
+  weaponModel: {fileID: 0}
   inputComponents:
   - {fileID: -7507124486738964873}
   executeComponents:

@@ -5,12 +5,12 @@ using UnityEngine.UI;
 
 public class HealthComponent : MonoBehaviour
 {
-    [SerializeField] private int _maxHealth = 100;
-    private int _currentHealth;
+    [SerializeField] private float _maxHealth = 100;
+    private float _currentHealth;
 
-    public int GetMaxHealth() => _maxHealth;
-    public int GetCurrentHealth => _currentHealth;
-    public int GetCurrentHealthPercentage => Mathf.RoundToInt((float)_currentHealth / _maxHealth * 100);
+    public float GetMaxHealth() => _maxHealth;
+    public float GetCurrentHealth => _currentHealth;
+    public float GetCurrentHealthPercentage => _currentHealth / _maxHealth;
     
     public GameObject healthBar;
     public Slider slider;
@@ -41,7 +41,7 @@ public class HealthComponent : MonoBehaviour
         }
     }
 
-    public void Heal(int amount)
+    public void Heal(float amount)
     {
         _currentHealth += amount;
         _currentHealth = Mathf.Clamp(_currentHealth, 0, _maxHealth);
@@ -59,8 +59,8 @@ public class HealthComponent : MonoBehaviour
     public void TakeDamage(float damage)
     {
          Debug.Log($"Applying {damage} damage to {gameObject.name}");
-        
-        _currentHealth -= Mathf.RoundToInt(damage);
+
+        _currentHealth -= damage;
         _currentHealth = Mathf.Clamp(_currentHealth, 0, _maxHealth);
         
         SetHealthBar();

@@ -93,7 +93,7 @@ MonoBehaviour:
   m_Name: AutoFireInput
   m_EditorClassIdentifier: 
   inputAction: {fileID: 2158980376108856071, guid: 6eaff8a1080c3b64bba326ccc7407a63, type: 3}
-  fireRate: 0.1
+  fireRate: 0.2
 --- !u!114 &-750810366644919183
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -125,6 +125,7 @@ MonoBehaviour:
   weaponName: Weapon
   weaponDescription: Weapon
   weaponPrefab: {fileID: 6888727773174072129, guid: 174f609dffdb2b0408656b8edec0f173, type: 3}
+  weaponModel: {fileID: 0}
   inputComponents:
   - {fileID: -3616865017487137926}
   executeComponents:

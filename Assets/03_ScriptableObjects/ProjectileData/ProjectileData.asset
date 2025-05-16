@@ -16,10 +16,10 @@ MonoBehaviour:
   collisionMask:
     serializedVersion: 2
     m_Bits: 73
-  speed: 10
-  damage: 5
+  speed: 7
+  damage: 1
   lifetime: 5
-  arcRange: 1
+  arcRange: 0.8
   turnSpeed: 0
   enableGravity: 0
   maxBounces: 0

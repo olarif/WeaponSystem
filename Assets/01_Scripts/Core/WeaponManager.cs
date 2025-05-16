@@ -64,7 +64,12 @@ public class WeaponManager : MonoBehaviour
         }
         
         _weaponInstance.transform.SetParent(null);
-        _weaponInstance.transform.position = transform.position + transform.forward * 2;
+        
+        // Optionally, you can add logic to drop the weapon in the world
+        // For example, instantiate the weapon prefab at the player's position
+        
+        //drop at feet
+        _weaponInstance.transform.position = transform.position + Vector3.down * 0.5f;
         _weaponInstance.GetComponent<WeaponController>().UnequipWeapon();
 
         // Optionally, you can add logic to drop the weapon in the world

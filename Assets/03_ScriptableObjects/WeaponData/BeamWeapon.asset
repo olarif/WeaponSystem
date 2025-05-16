@@ -37,12 +37,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6c632aebf02b4072aa70ad2fe2b2ba09, type: 3}
-  m_Name: RaycastWeapon
+  m_Name: BeamWeapon
   m_EditorClassIdentifier: 
   Components: []
-  weaponName: Raycast Weapon
+  weaponName: Beam Weapon
   weaponDescription: 
-  weaponPrefab: {fileID: 6888727773174072129, guid: 7fd1af676f85c714b8f19aa95de24f6b, type: 3}
+  weaponPrefab: {fileID: 6664467674714522818, guid: 3541b7e3548de384eafb240f734bb491, type: 3}
   weaponModel: {fileID: 0}
   inputComponents:
   - {fileID: -7507124486738964873}

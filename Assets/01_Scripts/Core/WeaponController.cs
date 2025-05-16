@@ -28,6 +28,11 @@ public class WeaponController : MonoBehaviour
             PlayerCamera    = Camera.main,
             OnHitComponents = new List<IOnHitComponent>()
         };
+        
+        var playerEntity = FindFirstObjectByType<Player>();
+        if (playerEntity == null)
+            Debug.LogError("WeaponController: no Player(Entity) found in scene!");
+        _ctx.Player = playerEntity;
 
         // 2) Initialize lists
         _lifecycleComps = new List<ILifeCycleComponent>();
@@ -122,22 +127,18 @@ public class WeaponController : MonoBehaviour
     {
         if (isEquipped) return;
         
-        // 1) Set the weapon as equipped
         isEquipped = true;
-
-        // 2) Initialize all components
+        
         foreach (var comp in _lifecycleComps)
             comp.Initialize(_ctx);
     }
     
-    public void UnequipWeapon()
+    public void UnEquipWeapon()
     {
         if (!isEquipped) return;
-
-        // 1) Set the weapon as unequipped
+        
         isEquipped = false;
-
-        // 2) Cleanup all components
+        
         foreach (var comp in _lifecycleComps)
             comp.Cleanup();
     }

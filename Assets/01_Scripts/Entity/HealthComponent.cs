@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class HealthComponent : MonoBehaviour
 {
-    [SerializeField] private float _maxHealth = 100;
+    [SerializeField] float _maxHealth = 100;
     private float _currentHealth;
 
     public float GetMaxHealth() => _maxHealth;
@@ -13,15 +13,17 @@ public class HealthComponent : MonoBehaviour
     public float GetCurrentHealthPercentage => _currentHealth / _maxHealth;
     
     public GameObject healthBar;
-    public Slider slider;
-    public Gradient gradient;
+    public Slider     slider;
+    public Gradient   gradient;
+    
+    public UnityEvent OnDeath;
 
-    private void Awake()
+    void Awake()
     {
         _currentHealth = _maxHealth;
     }
     
-    private void Start()
+    void Start()
     {
         if (healthBar != null)
         {
@@ -32,13 +34,11 @@ public class HealthComponent : MonoBehaviour
         }
     }
     
-    private void SetHealthBar()
+    void UpdateBar()
     {
-        if (healthBar != null)
-        {
-            slider.value = _currentHealth;
-            slider.fillRect.GetComponentInChildren<Image>().color = gradient.Evaluate(slider.normalizedValue);
-        }
+        if (slider == null) return;
+        slider.value = _currentHealth;
+        slider.fillRect.GetComponentInChildren<Image>().color = gradient.Evaluate(slider.normalizedValue);
     }
 
     public void Heal(float amount)
@@ -46,12 +46,12 @@ public class HealthComponent : MonoBehaviour
         _currentHealth += amount;
         _currentHealth = Mathf.Clamp(_currentHealth, 0, _maxHealth);
         
-        SetHealthBar();
+        UpdateBar();
     }
 
     private void Die()
     {
-        //OnDeath?.Invoke();
+        OnDeath?.Invoke();
     }
     
     public bool IsAlive() => _currentHealth > 0;
@@ -63,7 +63,7 @@ public class HealthComponent : MonoBehaviour
         _currentHealth -= damage;
         _currentHealth = Mathf.Clamp(_currentHealth, 0, _maxHealth);
         
-        SetHealthBar();
+        UpdateBar();
         
         if (_currentHealth <= 0)
         {

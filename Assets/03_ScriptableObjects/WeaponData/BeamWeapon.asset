@@ -48,4 +48,18 @@ MonoBehaviour:
   - {fileID: -7507124486738964873}
   executeComponents:
   - {fileID: -6293742435060125522}
+  - {fileID: 790390012760974408}
   onHitComponents: []
+--- !u!114 &790390012760974408
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4fd0a0cfc6864e8588d5c3512709c229, type: 3}
+  m_Name: LineRenderExecute
+  m_EditorClassIdentifier: 
+  lrData: {fileID: 11400000, guid: d7701d6fb0592864f8b84086db8f1408, type: 2}

@@ -14,7 +14,7 @@ public class PlayerController : MonoBehaviour
     private Camera _playerCamera;
     private PlayerInputHandler _input;
     private CharacterController _controller;
-    
+
     // Movement variables
     private bool _hasControl = true;
     private Vector3 _moveDirection;
@@ -171,5 +171,22 @@ public class PlayerController : MonoBehaviour
     public void ReturnControl()
     {
         _hasControl = true;
+    }
+    
+    public void ResetVelocity()
+    {
+        _velocity = Vector3.zero;
+        _yVelocity = 0f;
+    }
+    
+    public void ApplyForce(Vector3 force)
+    {
+        _velocity += force;
+    }
+
+    public void Die()
+    {
+        Debug.Log("Player died! Resetting game...");
+        GameManager.Instance.ResetGame();
     }
 }

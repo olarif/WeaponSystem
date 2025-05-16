@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class WeaponContext
 {
+    public Entity Player;
     public Transform FirePoint;
     public Animator Animator;
     public AudioSource AudioSource;

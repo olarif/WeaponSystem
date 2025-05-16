@@ -1,0 +1,51 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-6262347226233693946
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b3278f83d41742a1a9aa6a0ec0b9cb10, type: 3}
+  m_Name: UseConsumableExecute
+  m_EditorClassIdentifier: 
+  consumableData: {fileID: 11400000, guid: 19639dbb8deecf44ba6545329d3425ab, type: 2}
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c632aebf02b4072aa70ad2fe2b2ba09, type: 3}
+  m_Name: HealthConsumable
+  m_EditorClassIdentifier: 
+  Components: []
+  weaponName: Health Consumable
+  weaponDescription: 
+  weaponPrefab: {fileID: 4433644318165709800, guid: d64b4d738536e954f809ef75578117f3, type: 3}
+  weaponModel: {fileID: 0}
+  inputComponents:
+  - {fileID: 9057416459510099995}
+  executeComponents:
+  - {fileID: -6262347226233693946}
+  onHitComponents: []
+--- !u!114 &9057416459510099995
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 99bcc553b54043c0bf55dd7330466633, type: 3}
+  m_Name: ClickInput
+  m_EditorClassIdentifier: 
+  inputAction: {fileID: 2158980376108856071, guid: 6eaff8a1080c3b64bba326ccc7407a63, type: 3}
+  coolDownTime: 0.1

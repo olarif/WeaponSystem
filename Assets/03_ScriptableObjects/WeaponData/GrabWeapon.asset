@@ -42,7 +42,8 @@ MonoBehaviour:
   Components: []
   weaponName: Grab Wand
   weaponDescription: Wand that grabs objects and pulls them towards the player
-  weaponPrefab: {fileID: 6888727773174072129, guid: 8e5e09616ba694f4eaa5dcbf86872211, type: 3}
+  weaponPrefab: {fileID: 7254108396587407467, guid: c844e4d81cea2f041b0da7790aae0b5e, type: 3}
+  weaponModel: {fileID: 0}
   inputComponents:
   - {fileID: -6926140122902043312}
   - {fileID: 4991334423852823616}

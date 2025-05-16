@@ -3,11 +3,11 @@ using UnityEngine.InputSystem;
 
 public class WeaponManager : MonoBehaviour
 {
-    [SerializeField] private WeaponDataSO weaponData;
     [SerializeField] private Transform weaponHolder;
     public InputActionReference dropWeaponAction;
     
     private GameObject _weaponInstance;
+    public GameObject WeaponInstance => _weaponInstance;
     
     public bool CanEquipWeapon => weaponHolder.childCount == 0;
     
@@ -20,7 +20,7 @@ public class WeaponManager : MonoBehaviour
         }
     }
     
-    public void EquipWeapon(WeaponDataSO weaponData, bool forceEquip = false)
+    public void EquipWeapon(WeaponDataSO data, bool forceEquip = false)
     {
         if (weaponHolder.childCount > 0)
         {
@@ -29,7 +29,7 @@ public class WeaponManager : MonoBehaviour
         }
         
         // Instantiate the weapon prefab
-        GameObject weaponPrefab = weaponData.weaponPrefab;
+        GameObject weaponPrefab = data.weaponPrefab;
         if (weaponPrefab == null)
         {
             Debug.LogError("Weapon prefab is null");
@@ -44,7 +44,7 @@ public class WeaponManager : MonoBehaviour
         
         _weaponInstance.GetComponent<WeaponController>().EquipWeapon();
         
-        Debug.Log("Weapon equipped: " + weaponData.weaponName);
+        Debug.Log("Weapon equipped: " + data.weaponName);
     }
     
     private void OnDropWeapon(InputAction.CallbackContext context)
@@ -55,26 +55,23 @@ public class WeaponManager : MonoBehaviour
         }
     }
     
-    private void UnequipWeapon()
+    public void UnequipWeapon()
     {
-        if (weaponHolder.childCount == 0)
-        {
-            Debug.Log("No weapon to unequip");
-            return;
-        }
+        if (weaponHolder.childCount == 0) { return; }
+        if (_weaponInstance == null) { return; }
         
+        // Detach the weapon from the holder
         _weaponInstance.transform.SetParent(null);
         
-        // Optionally, you can add logic to drop the weapon in the world
-        // For example, instantiate the weapon prefab at the player's position
-        
-        //drop at feet
-        _weaponInstance.transform.position = transform.position + Vector3.down * 0.5f;
-        _weaponInstance.GetComponent<WeaponController>().UnequipWeapon();
+        // Drop the weapon in the world
+        RaycastHit hit;
+        Physics.Raycast(transform.position, -Vector3.up, out hit, 10f);
+        if (hit.collider != null)
+        {
+            _weaponInstance.transform.position = hit.point + Vector3.up * 0.05f; // Adjust height to avoid clipping
+            _weaponInstance.transform.rotation = Quaternion.Euler(90, 0, 0);
+        }
 
-        // Optionally, you can add logic to drop the weapon in the world
-        // For example, instantiate the weapon prefab at the player's position
-        
-        
+        _weaponInstance.GetComponent<WeaponController>().UnEquipWeapon();
     }
 }

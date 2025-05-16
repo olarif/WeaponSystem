@@ -1,11 +1,8 @@
 ﻿using UnityEngine;
-using UnityEngine.InputSystem;
 
-public class RaycastExecute : ExecuteComponent
+public class LineRenderExecute : ExecuteComponent
 {
-    [Tooltip("All your raycast settings")]
-    public RaycastDataSO raycastData;
-    [Tooltip("How long the ray will be visible")]
+    public LineRendererDataSO lrData;
     
     LineRenderer _lr;
     Camera _camera;
@@ -15,24 +12,28 @@ public class RaycastExecute : ExecuteComponent
         base.Initialize(ctx);
         _lr     = ctx.LineRenderer;
         _camera = ctx.PlayerCamera;
+        
         if (_lr != null)
         {
-            // we need two points!
             _lr.positionCount = 2;
             _lr.enabled       = false;
+            _lr.startWidth    = lrData.lineWidth;
+            _lr.endWidth      = lrData.lineWidth;
         }
     }
 
-    public override void OnStart()   => DrawRay();
-    public override void OnUpdate()  => DrawRay();
+    
     public override void OnStop() { _lr.enabled = false; }
 
     public override void Cleanup()
     {
         if (_lr != null) _lr.enabled = false;
     }
-    
-    public override void Execute() { }
+
+    public override void Execute()
+    {
+        DrawRay();
+    }
 
     void DrawRay()
     {
@@ -40,16 +41,13 @@ public class RaycastExecute : ExecuteComponent
         var center = new Vector2(Screen.width/2f, Screen.height/2f);
         var ray    = _camera.ScreenPointToRay(center);
 
-        if (Physics.Raycast(ray, out var hit, raycastData.range, raycastData.hitLayers))
+        if (Physics.Raycast(ray, out var hit, lrData.range))
         {
-            hit.collider.GetComponent<IDamageable>()?.ApplyDamage(raycastData.damage);
-            foreach (var h in ctx.OnHitComponents)
-                h.OnHit(new CollisionInfo(hit));
             UpdateLine(origin, hit.point);
         }
         else
         {
-            UpdateLine(origin, ray.origin + ray.direction * raycastData.range);
+            UpdateLine(origin, ray.origin + ray.direction * lrData.range);
         }
     }
 
@@ -60,5 +58,4 @@ public class RaycastExecute : ExecuteComponent
         _lr.SetPosition(0, start);
         _lr.SetPosition(1, end);
     }
-    
 }

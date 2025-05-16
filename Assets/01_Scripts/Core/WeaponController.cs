@@ -6,140 +6,113 @@ using UnityEngine;
 public class WeaponController : MonoBehaviour
 {
     [Header("Data & References")]
-    [Tooltip("WeaponDataSO with three lists: inputComponents, executeComponents, onHitComponents")]
     public WeaponDataSO weaponData;
-    [Tooltip("Transform for spawning rays/projectiles")]
-    public Transform firePoint;
-    public LineRenderer lineRenderer;
-    [HideInInspector] public bool isEquipped = false;
-    
-    private WeaponContext _ctx;
-    private List<ILifeCycleComponent> _lifecycleComps;
-    private Dictionary<ILifeCycleComponent, bool> _activeMap;
-    private List<IInputComponent>   _inputComps;
-    private List<IExecuteComponent> _execComps;
+    public Transform     firePoint;
+    public LineRenderer  lineRenderer;
+    public bool          isEquipped;
 
-    private void Awake()
+    WeaponContext        _ctx;
+    List<InputComponent>   _inputClones;
+    List<ExecuteComponent> _execClones;
+    List<OnHitComponent>   _hitClones;
+    
+    void Awake()
     {
-        // 1) Build the shared context
         _ctx = new WeaponContext {
             FirePoint       = firePoint,
             LineRenderer    = lineRenderer,
             PlayerCamera    = Camera.main,
-            OnHitComponents = new List<IOnHitComponent>()
+            OnHitComponents = new List<OnHitComponent>(),
+            Player          = FindFirstObjectByType<Player>()
         };
+
+        // Clone each SO so we get a fresh instance per‐weapon
+        _inputClones = weaponData.inputComponents
+            .Cast<InputComponent>()
+            .Select(Instantiate)
+            .ToList();
+        _execClones = weaponData.executeComponents
+            .Cast<ExecuteComponent>()
+            .Select(Instantiate)
+            .ToList();
+        _hitClones = weaponData.onHitComponents
+            .Cast<OnHitComponent>()
+            .Select(Instantiate)
+            .ToList();
         
-        var playerEntity = FindFirstObjectByType<Player>();
-        if (playerEntity == null)
-            Debug.LogError("WeaponController: no Player(Entity) found in scene!");
-        _ctx.Player = playerEntity;
+        // 2) Populate the context’s OnHitComponents list
+        foreach (var hitSo in _hitClones)
+            _ctx.OnHitComponents.Add(hitSo);
 
-        // 2) Initialize lists
-        _lifecycleComps = new List<ILifeCycleComponent>();
-        _activeMap      = new Dictionary<ILifeCycleComponent,bool>();
-
-        // 3) Register EVERYTHING from your three lists
-        void Register(ScriptableObject so)
-        {
-            if (so is ILifeCycleComponent lc)
-            {
-                lc.Initialize(_ctx);
-                _lifecycleComps.Add(lc);
-                _activeMap[lc] = false;
-
-                if (so is IOnHitComponent hitComp)
-                    _ctx.OnHitComponents.Add(hitComp);
-            }
-        }
-
-        foreach (var so in weaponData.inputComponents    ?? Enumerable.Empty<ScriptableObject>()) Register(so);
-        foreach (var so in weaponData.executeComponents  ?? Enumerable.Empty<ScriptableObject>()) Register(so);
-        foreach (var so in weaponData.onHitComponents    ?? Enumerable.Empty<ScriptableObject>()) Register(so);
-
-        // 4) Cache the IInput and IExecute lists
-        _inputComps = _lifecycleComps.OfType<IInputComponent>().ToList();
-        _execComps  = _lifecycleComps.OfType<IExecuteComponent>().ToList();
+        // 3) Initialize everything with ctx
+        foreach (var inp in _inputClones)  inp.Initialize(_ctx);
+        foreach (var ex  in _execClones)  ex .Initialize(_ctx);
+        foreach (var hit in _hitClones)   hit.Initialize(_ctx);
     }
 
-    private void Update()
-    { 
+    void Update()
+    {
         if (!isEquipped) return;
         
-        // 1) Check if any input is currently active
-        bool anyInput = _inputComps.Any(i => i.CanExecute());
-
-        // 2) Drive lifecycle on every ILifecycleComponent
-        foreach (var comp in _lifecycleComps)
-        {
-            bool want = false;
-
-            // Inputs want() whenever their button/action is down
-            if (comp is IInputComponent inp)
-            {
-                want = inp.CanExecute();
-            }
-            // Execute modules want() *exactly* when input is down as well
-            else if (comp is IExecuteComponent)
-            {
-                want = anyInput;
-            }
-            // OnHitComponents are passive (they just sit in context), 
-            // so they never get their own start/stop here.
-
-            bool was = _activeMap[comp];
-
-            if (want && !was)
-            {
-                //Debug.Log($"OnStart: {comp.GetType().Name}");
-                comp.OnStart();
-            }
-
-            if (want)
-            {
-                comp.OnUpdate();
-            }
-
-            if (!want && was)
-            {
-                //Debug.Log($"OnStop: {comp.GetType().Name}");
-                comp.OnStop();
-            }
-
-            _activeMap[comp] = want;
-        }
-
-        // 3) We still call Execute() ourselves, if you’re using ExecuteComponent.Execute()
-        if (anyInput)
-        {
-            foreach (var exec in _execComps)
-                exec.Execute();
-        }
+        foreach (var inp in _inputClones)
+            inp.Poll();
     }
 
-    private void OnDestroy()
-    {
-        // Cleanup subscriptions, etc.
-        foreach (var comp in _lifecycleComps)
-            comp.Cleanup();
-    }
-    
     public void EquipWeapon()
     {
         if (isEquipped) return;
-        
         isEquipped = true;
         
-        foreach (var comp in _lifecycleComps)
-            comp.Initialize(_ctx);
+        // Enable all input SOs
+        foreach (var inp in _inputClones)
+            inp.EnableInput();
+
+        // Hook up input → exec/onHit events
+        foreach (var inp in _inputClones)
+        {
+            // Press
+            foreach (var h in _execClones.OfType<IPressHandler>())
+                inp.Pressed += h.OnPress;
+            foreach (var h in _hitClones.OfType<IPressHandler>())
+                inp.Pressed += h.OnPress;
+
+            // Hold
+            foreach (var h in _execClones.OfType<IHoldHandler>())
+                inp.Held += h.OnHold;
+
+            // Release
+            foreach (var h in _execClones.OfType<IReleaseHandler>())
+                inp.Released += h.OnRelease;
+        }
     }
-    
+
     public void UnEquipWeapon()
     {
         if (!isEquipped) return;
-        
         isEquipped = false;
         
-        foreach (var comp in _lifecycleComps)
-            comp.Cleanup();
+        // Disable all input SOs
+        foreach (var inp in _inputClones)
+            inp.DisableInput();
+
+        // Unsubscribe all handlers and cleanup
+        foreach (var inp in _inputClones)
+        {
+            foreach (var h in _execClones.OfType<IPressHandler>())
+                inp.Pressed -= h.OnPress;
+            foreach (var h in _hitClones.OfType<IPressHandler>())
+                inp.Pressed -= h.OnPress;
+
+            foreach (var h in _execClones.OfType<IHoldHandler>())
+                inp.Held -= h.OnHold;
+
+            foreach (var h in _execClones.OfType<IReleaseHandler>())
+                inp.Released -= h.OnRelease;
+
+            inp.Cleanup();
+        }
+
+        // disable any ongoing beams or coroutines
+        lineRenderer.enabled = false;
     }
 }

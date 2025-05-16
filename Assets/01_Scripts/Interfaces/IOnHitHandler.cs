@@ -1,4 +1,4 @@
-﻿public interface IOnHitComponent
+﻿public interface IOnHitHandler
 {
     void OnHit(CollisionInfo info);
 }

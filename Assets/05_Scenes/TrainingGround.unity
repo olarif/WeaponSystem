@@ -5754,6 +5754,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: BeamWeapon
       objectReference: {fileID: 0}
+    - target: {fileID: 6664467674714522818, guid: 3541b7e3548de384eafb240f734bb491, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -6115,6 +6119,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: ProjectileWeapon
       objectReference: {fileID: 0}
+    - target: {fileID: 1467819138738470339, guid: cb2afbb7826959748b92d5a36a2b146e, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6064118000254991874, guid: cb2afbb7826959748b92d5a36a2b146e, type: 3}
       propertyPath: m_LocalPosition.x
       value: -18.948792
@@ -6450,6 +6458,18 @@ PrefabInstance:
     - target: {fileID: 7844017749525587249, guid: 6c0364780052b7c4aa3c8bc2a4d92282, type: 3}
       propertyPath: _maxHealth
       value: 200
+      objectReference: {fileID: 0}
+    - target: {fileID: 7844017749525587249, guid: 6c0364780052b7c4aa3c8bc2a4d92282, type: 3}
+      propertyPath: gradient.ctime0
+      value: 18890
+      objectReference: {fileID: 0}
+    - target: {fileID: 7844017749525587249, guid: 6c0364780052b7c4aa3c8bc2a4d92282, type: 3}
+      propertyPath: gradient.ctime1
+      value: 40285
+      objectReference: {fileID: 0}
+    - target: {fileID: 7844017749525587249, guid: 6c0364780052b7c4aa3c8bc2a4d92282, type: 3}
+      propertyPath: gradient.m_Mode
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

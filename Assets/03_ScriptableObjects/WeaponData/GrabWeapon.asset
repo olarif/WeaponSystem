@@ -26,7 +26,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a2be492f9494542b1baa76371f45ff0, type: 3}
   m_Name: RaycastExecute
   m_EditorClassIdentifier: 
-  raycastData: {fileID: 11400000, guid: 91637fbbb2cbc1b4ebfa94e8ba64867d, type: 2}
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -45,7 +44,6 @@ MonoBehaviour:
   weaponPrefab: {fileID: 7254108396587407467, guid: c844e4d81cea2f041b0da7790aae0b5e, type: 3}
   weaponModel: {fileID: 0}
   inputComponents:
-  - {fileID: -6926140122902043312}
   - {fileID: 4991334423852823616}
   executeComponents:
   - {fileID: -2735947218102098478}
@@ -63,11 +61,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0bf749408ac1422eadeb35d9f178fce1, type: 3}
   m_Name: GrabOnHit
   m_EditorClassIdentifier: 
-  grabReleaseAction: {fileID: 2158980376108856071, guid: 6eaff8a1080c3b64bba326ccc7407a63, type: 3}
-  grabSpeed: 5
-  grabLayerMask:
-    serializedVersion: 2
-    m_Bits: 0
 --- !u!114 &4991334423852823616
 MonoBehaviour:
   m_ObjectHideFlags: 1

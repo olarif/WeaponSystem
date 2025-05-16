@@ -1,11 +1,10 @@
 ﻿using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class RaycastDamageExecute : ExecuteComponent
+public class RaycastExecute : ExecuteComponent, IHoldHandler, IPressHandler
 {
     [Tooltip("All your raycast settings")]
     public RaycastDataSO raycastData;
-    [Tooltip("How long the ray will be visible")]
 
     Camera _camera;
 
@@ -15,11 +14,8 @@ public class RaycastDamageExecute : ExecuteComponent
         _camera = ctx.PlayerCamera;
     }
 
-    public override void OnStart()   => CastRay();
-    public override void OnUpdate()  => CastRay();
-    public override void OnStop() {}
-
-    public override void Execute() { }
+    public void OnHold() { CastRay(); }
+    public void OnPress() { CastRay(); }
 
     void CastRay()
     {
@@ -28,9 +24,10 @@ public class RaycastDamageExecute : ExecuteComponent
 
         if (Physics.Raycast(ray, out var hit, raycastData.range, raycastData.hitLayers))
         {
-            hit.collider.GetComponent<IDamageable>()?.ApplyDamage(raycastData.damage);
+            // Dispatch to all OnHitComponents
             foreach (var h in ctx.OnHitComponents)
                 h.OnHit(new CollisionInfo(hit));
+                
         }
     }
 }

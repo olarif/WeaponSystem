@@ -2,51 +2,58 @@
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-public class ProjectileExecute : ExecuteComponent
+public class ProjectileExecute : ExecuteComponent, IPressHandler, IHoldHandler, IReleaseHandler
 {
+    [Tooltip("Projectile settings)")]
     public ProjectileDataSO projectileData;
+
+    public float fireRate = 0.1f;
+    private float _nextFireTime;
     
-    private Camera _playerCamera;
-    
-    public override void Initialize(WeaponContext context)
+    Camera _playerCamera;
+
+    public override void Initialize(WeaponContext ctx)
     {
-        base.Initialize(context);
-        _playerCamera = context.PlayerCamera;
+        base.Initialize(ctx);
+        _playerCamera = ctx.PlayerCamera;
     }
 
-    public override void OnStart()
+    public void OnHold()
     {
+        if (Time.time < _nextFireTime) return;
+        _nextFireTime = Time.time + fireRate;
+        
         SpawnProjectile();
     }
-
-    public override void Execute() { }
-
+    
+    public void OnPress(){ SpawnProjectile(); }
+    
+    public void OnRelease() { SpawnProjectile();}
+    
     private void SpawnProjectile()
     {
-        // 1) Cast a ray from the center of the screen
-        Vector2 screenCenter = new Vector2(Screen.width / 2f, Screen.height / 2f);
-        Ray ray = _playerCamera.ScreenPointToRay(screenCenter);
+        var screenCenter = new Vector2(Screen.width/2f, Screen.height/2f);
+        var ray          = _playerCamera.ScreenPointToRay(screenCenter);
+        var spawnRot     = Quaternion.LookRotation(ray.direction, Vector3.up);
 
-        // 2) Decide spawn rotation so projectile faces the ray
-        Quaternion spawnRot = Quaternion.LookRotation(ray.direction, Vector3.up);
+        // offset forward a bit so you don't intersect yourself
+        var spawnPos = ctx.FirePoint.position + ray.direction * 0.5f;
 
-        // 3) Instantiate at your fire point
-        GameObject projGO = Instantiate(
-            projectileData.projectilePrefab, 
-            ctx.FirePoint.position, 
+        GameObject go = Instantiate(
+            projectileData.projectilePrefab,
+            spawnPos,
             spawnRot
         );
 
-        // 4) Initialize its logic with the exact ray direction
-        projGO.GetComponent<Projectile>()
+        go.GetComponent<Projectile>()
             .Initialize(projectileData, ctx, ray.direction);
 
-        // 5) Add a little random arc punch if desired
-        Vector3 arc = new Vector3(
+        // optional arc punch
+        var arc = new Vector3(
             Random.Range(-projectileData.arcRange, projectileData.arcRange),
             Random.Range(-projectileData.arcRange, projectileData.arcRange),
             0
         );
-        iTween.PunchPosition(projGO, arc, projectileData.lifetime);
+        iTween.PunchPosition(go, arc, projectileData.lifetime);
     }
 }

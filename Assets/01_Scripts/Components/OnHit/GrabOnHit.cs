@@ -5,6 +5,13 @@ using UnityEngine.UI;
 
 public class GrabOnHit : OnHitComponent
 {
+    public override void OnHit(CollisionInfo info)
+    {
+        // This is a placeholder for the actual implementation
+        // of the OnHit method. The original code is commented out.
+    }
+    
+    /*
     [Tooltip("The Input Action you hold to grab")]
     public InputActionReference grabReleaseAction;
 
@@ -102,4 +109,5 @@ public class GrabOnHit : OnHitComponent
         _target     = null;
         _isGrabbing = false;
     }
+    */
 }

@@ -4,53 +4,49 @@ using UnityEngine.InputSystem;
 public class ClickInput : InputComponent
 {
     public InputActionReference inputAction;
-    
-    public float coolDownTime = 0.1f;
-    private float _lastFireTime;
-    private bool _consumed;
-    
-    public override void Initialize(WeaponContext context)
-    {
-        _consumed = false;
-        _lastFireTime = Time.time - coolDownTime;
+    [Tooltip("Minimum time between clicks")]
+    public float cooldownTime = 0.1f;
+    float _lastFireTime = -Mathf.Infinity;
 
-        if (inputAction != null && inputAction.action != null)
-        {
-            if (!inputAction.action.enabled) { inputAction.action.Enable(); }
-            
-            inputAction.action.performed += OnActionStarted;
-            inputAction.action.canceled += OnActionCanceled;
-        }
-        else
-        {
-            Debug.LogError($"Input Action is not set on {name} ClickInputComponent");
-        }
+    public override void Initialize(WeaponContext ctx)
+    {
+        base.Initialize(ctx);
+    }
+
+    private void OnPerformed(InputAction.CallbackContext context)
+    {
+        if (Time.time - _lastFireTime < cooldownTime) return;
+        _lastFireTime = Time.time;
+
+        RaisePressed();
     }
     
-    private void OnActionStarted(InputAction.CallbackContext context)
-    {
-        if (context.performed)
-        {
-            _consumed = true;
-        }
-    }
+    public override bool CanExecute() => false;
     
-    private void OnActionCanceled(InputAction.CallbackContext context)
+    public override void EnableInput()
     {
-        if (context.canceled)
-        {
-            _consumed = false;
-        }
-    }
-    
-    public override bool CanExecute()
-    {
-        if (_consumed && Time.time - _lastFireTime >= coolDownTime)
-        {
-            _lastFireTime = Time.time;
-            return true;
-        }
+        Debug.Log("Enabling ClickInput");
         
-        return false;
+        if (inputAction == null)
+        {
+            Debug.LogError($"[{name}] ClickInput missing action!");
+            return;
+        }
+        inputAction.action.Enable();
+        inputAction.action.performed += OnPerformed;
+    }
+    
+    public override void DisableInput()
+    {
+        if (inputAction != null)
+        {
+            inputAction.action.performed -= OnPerformed;
+            inputAction.action.Disable();
+        }
+    }
+    
+    public override void Cleanup()
+    {
+        DisableInput();
     }
 }

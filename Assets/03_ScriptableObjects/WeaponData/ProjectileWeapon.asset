@@ -1,5 +1,18 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-7806378122271170484
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cab6bd0450b2483eb88c2eecbf8d23f7, type: 3}
+  m_Name: ExplodeOnHit
+  m_EditorClassIdentifier: 
+  aoeData: {fileID: 11400000, guid: 97eec7c61aee6e24aa52e5c4c79fc8e7, type: 2}
 --- !u!114 &-7566606403734791485
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -67,19 +80,7 @@ MonoBehaviour:
   m_Name: ProjectileExecute
   m_EditorClassIdentifier: 
   projectileData: {fileID: 11400000, guid: 6cfa19f752b53634e850643f88dce08e, type: 2}
---- !u!114 &-4252433534947329180
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cab6bd0450b2483eb88c2eecbf8d23f7, type: 3}
-  m_Name: ExplodeOnHit
-  m_EditorClassIdentifier: 
-  aoeData: {fileID: 11400000, guid: 97eec7c61aee6e24aa52e5c4c79fc8e7, type: 2}
+  fireRate: 0.1
 --- !u!114 &-3141320970930769765
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -93,7 +94,21 @@ MonoBehaviour:
   m_Name: ClickInput
   m_EditorClassIdentifier: 
   inputAction: {fileID: 0}
-  coolDownTime: 0.1
+  cooldownTime: 0.1
+--- !u!114 &-18061931731801461
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4d922aed752c4fb8b2f98ace17f688d3, type: 3}
+  m_Name: ChargeInput
+  m_EditorClassIdentifier: 
+  inputReference: {fileID: 2158980376108856071, guid: 6eaff8a1080c3b64bba326ccc7407a63, type: 3}
+  chargeTime: 0.5
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -114,27 +129,11 @@ MonoBehaviour:
   weaponPrefab: {fileID: 1467819138738470339, guid: cb2afbb7826959748b92d5a36a2b146e, type: 3}
   weaponModel: {fileID: 0}
   inputComponents:
-  - {fileID: 0}
-  - {fileID: 2277670147764588382}
+  - {fileID: -18061931731801461}
   executeComponents:
   - {fileID: 8729970236913907361}
   onHitComponents:
-  - {fileID: 0}
-  - {fileID: -4252433534947329180}
---- !u!114 &2277670147764588382
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a5c498acbc6c437b97d559d2c1f3e5e9, type: 3}
-  m_Name: AutoFireInput
-  m_EditorClassIdentifier: 
-  inputAction: {fileID: 2158980376108856071, guid: 6eaff8a1080c3b64bba326ccc7407a63, type: 3}
-  fireRate: 0.1
+  - {fileID: -7806378122271170484}
 --- !u!114 &4221378888057082778
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -164,6 +163,7 @@ MonoBehaviour:
   m_Name: ProjectileExecute
   m_EditorClassIdentifier: 
   projectileData: {fileID: 11400000, guid: 6cfa19f752b53634e850643f88dce08e, type: 2}
+  fireRate: 0.1
 --- !u!114 &8772691435566545809
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -177,3 +177,4 @@ MonoBehaviour:
   m_Name: ProjectileExecute
   m_EditorClassIdentifier: 
   projectileData: {fileID: 0}
+  fireRate: 0.1

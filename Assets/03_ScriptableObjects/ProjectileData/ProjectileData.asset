@@ -17,7 +17,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 73
   speed: 7
-  damage: 1
+  damage: 5
   lifetime: 5
   arcRange: 0.8
   turnSpeed: 0

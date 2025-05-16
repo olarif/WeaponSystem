@@ -1,36 +1,39 @@
 ﻿using UnityEngine;
 
-public class UseConsumableExecute : ExecuteComponent
+public class UseConsumableExecute : ExecuteComponent, IPressHandler
 {
     public ConsumableDataSO consumableData;
 
     private Entity _player;
     private int _charges;
-    private bool _hasInitialized;
+    private bool _initialized;
 
     public override void Initialize(WeaponContext context)
     {
         base.Initialize(context);
         _player = context.Player;
         
-        if(!_hasInitialized)
+        if(!_initialized)
         {
-            _charges = consumableData != null ? consumableData.charges : 0;
-            _hasInitialized = true;
+            if (consumableData == null)
+                Debug.LogError($"[{name}] missing ConsumableDataSO!");
+            _charges      = consumableData?.charges ?? 0;
+            _initialized  = true;
         }
     }
     
-    public override void OnStart()
+    public void OnPress()
     {
+        if (_charges <= 0)
+        {
+            _player.GetComponent<WeaponManager>().UnequipWeapon();
+            return;
+        }
         
+        Execute();
     }
-
-    public override void OnStop()
-    {
-        
-    }
-
-    public override void Execute()
+    
+    void Execute()
     {
         if (_charges <= 0)
         {

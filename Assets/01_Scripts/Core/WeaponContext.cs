@@ -9,5 +9,5 @@ public class WeaponContext
     public AudioSource AudioSource;
     public LineRenderer LineRenderer;
     public Camera PlayerCamera;
-    public List<IOnHitComponent> OnHitComponents = new List<IOnHitComponent>();
+    public List<OnHitComponent> OnHitComponents = new List<OnHitComponent>();
 }

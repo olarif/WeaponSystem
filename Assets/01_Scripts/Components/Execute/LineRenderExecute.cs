@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 
-public class LineRenderExecute : ExecuteComponent
+public class LineRenderExecute : ExecuteComponent, IHoldHandler, IPressHandler, IReleaseHandler
 {
+    [Tooltip("Projectile data for the line renderer")]
     public LineRendererDataSO lrData;
     
     LineRenderer _lr;
@@ -22,17 +23,17 @@ public class LineRenderExecute : ExecuteComponent
         }
     }
 
+    public void OnHold() { DrawRay(); }
     
-    public override void OnStop() { _lr.enabled = false; }
+    public void OnPress() { DrawRay(); }
+    
+    public void OnRelease(){ DisableRay(); }
+    
+    public override void Cleanup() { DisableRay(); }
 
-    public override void Cleanup()
+    void DisableRay()
     {
         if (_lr != null) _lr.enabled = false;
-    }
-
-    public override void Execute()
-    {
-        DrawRay();
     }
 
     void DrawRay()

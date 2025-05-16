@@ -3,6 +3,7 @@ using UnityEngine.Rendering;
 
 public class MeleeExecute : ExecuteComponent
 {
+    /*
     public MeleeDataSO meleeData;
 
     public override void OnStart()
@@ -28,4 +29,5 @@ public class MeleeExecute : ExecuteComponent
             }
         } 
     }
+    */
 }

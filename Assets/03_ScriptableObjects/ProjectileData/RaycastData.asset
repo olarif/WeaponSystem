@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2e9c50b400094172bd5aa7312d18af25, type: 3}
-  m_Name: RaycastDamageData
+  m_Name: RaycastData
   m_EditorClassIdentifier: 
   range: 1000
   hitLayers:

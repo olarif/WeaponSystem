@@ -1,74 +1,60 @@
-﻿using System;
-using UnityEditor.Timeline;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.Serialization;
 
 public class ChargeInput : InputComponent
 {
     public InputActionReference inputReference;
-
     [Tooltip( "Time in seconds to hold the input before it is considered a valid action.")]
     public float chargeTime = 0.5f;
     
     private float _holdStartTime; 
-    private bool _isHolding;
-    private bool _wasTriggered;
 
     public override void Initialize(WeaponContext weapon)
     {
-        _isHolding = false;
-        
-        if (inputReference != null && inputReference.action != null)
-        {
-            if (!inputReference.action.enabled) { inputReference.action.Enable(); }
-            
-            inputReference.action.performed += OnActionStarted;
-            inputReference.action.canceled += OnActionCanceled;
-        } 
-        else
-        {
-            Debug.LogError("Input action reference is not set or action is null.");
-        }
+        base.Initialize(weapon);
     }
     
-    private void OnActionStarted(InputAction.CallbackContext context)
+    private void OnStarted(InputAction.CallbackContext context)
     {
-        if (context.performed)
-        {
-            _holdStartTime = Time.time;
-            _isHolding = true;
-        }
+        _holdStartTime = Time.time;
+        //RaiseHeld();
     }
     
-    private void OnActionCanceled(InputAction.CallbackContext context)
+    private void OnCanceled(InputAction.CallbackContext context)
     {
-        if (context.canceled)
+        if (Time.time - _holdStartTime >= chargeTime)
         {
-            _isHolding = false;
-            if (context.time - _holdStartTime >= chargeTime)
-            {
-                _wasTriggered = true;
-            }
+            RaiseReleased();
         }
     }
-    
-    public override bool CanExecute()
+
+    public override bool CanExecute() => false;
+
+    public override void EnableInput()
     {
-        if (_wasTriggered)
+        if (inputReference == null)
         {
-            _wasTriggered = false;
-            return true;
+            Debug.LogError($"[{name}] ChargeInput: missing InputActionReference!");
+            return;
         }
-        return false;
+
+        inputReference.action.Enable();
+        inputReference.action.started += OnStarted;
+        inputReference.action.canceled += OnCanceled;
     }
     
-    private void OnDisable()
+    public override void DisableInput()
     {
-        if (inputReference != null && inputReference.action != null)
+        if (inputReference != null)
         {
-            inputReference.action.performed -= OnActionStarted;
-            inputReference.action.canceled -= OnActionCanceled;
+            inputReference.action.started -= OnStarted;
+            inputReference.action.canceled -= OnCanceled;
+            inputReference.action.Disable();
         }
+    }
+
+    public override void Cleanup()
+    {
+        DisableInput();
     }
 }

@@ -5,7 +5,7 @@ public class LineRenderExecute : ExecuteComponent, IHoldHandler, IPressHandler, 
     [Tooltip("Projectile data for the line renderer")]
     public LineRendererDataSO lrData;
     
-    //how long to keep ray active after cast
+    [Tooltip("How long the ray should be visible after release")]
     public float rayDuration = 0.1f;
     
     LineRenderer _lr;

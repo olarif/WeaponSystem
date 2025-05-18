@@ -1,33 +1,31 @@
 ﻿using UnityEngine;
 using UnityEngine.Rendering;
 
-public class MeleeExecute : ExecuteComponent
+public class MeleeExecute : ExecuteComponent, IHoldHandler, IPressHandler, IReleaseHandler
 {
-    /*
+    [Tooltip("All your melee settings")]
     public MeleeDataSO meleeData;
 
-    public override void OnStart()
+    public override void Initialize(WeaponContext ctx)
     {
-        MeleeHit();
+        base.Initialize(ctx);
     }
+
+    public void OnHold() { }
     
-    public override void Execute() { }
+    public void OnPress() { MeleeHit(); }
     
+    public void OnRelease() { }
+
     private void MeleeHit()
     {
-        Debug.Log("Melee attack");
-        
         Collider[] hits = Physics.OverlapSphere(ctx.FirePoint.position, meleeData.range, meleeData.targetLayer, QueryTriggerInteraction.Ignore);
         foreach (var c in hits)
-        { 
-            //Debug.Log("Hit detected: " + c.name);
-            c.GetComponent<IDamageable>()?.ApplyDamage(meleeData.damage);
-           
+        {
             foreach (var hitComp in ctx.OnHitComponents)
             { 
                 hitComp.OnHit(new CollisionInfo(c));
             }
-        } 
+        }
     }
-    */
 }

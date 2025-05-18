@@ -95,20 +95,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inputAction: {fileID: 0}
   cooldownTime: 0.1
---- !u!114 &-18061931731801461
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4d922aed752c4fb8b2f98ace17f688d3, type: 3}
-  m_Name: ChargeInput
-  m_EditorClassIdentifier: 
-  inputReference: {fileID: 2158980376108856071, guid: 6eaff8a1080c3b64bba326ccc7407a63, type: 3}
-  chargeTime: 0.5
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -129,11 +115,25 @@ MonoBehaviour:
   weaponPrefab: {fileID: 1467819138738470339, guid: cb2afbb7826959748b92d5a36a2b146e, type: 3}
   weaponModel: {fileID: 0}
   inputComponents:
-  - {fileID: -18061931731801461}
+  - {fileID: 742538502349525460}
   executeComponents:
   - {fileID: 8729970236913907361}
   onHitComponents:
   - {fileID: -7806378122271170484}
+--- !u!114 &742538502349525460
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 99bcc553b54043c0bf55dd7330466633, type: 3}
+  m_Name: ClickInput
+  m_EditorClassIdentifier: 
+  inputAction: {fileID: 2158980376108856071, guid: 6eaff8a1080c3b64bba326ccc7407a63, type: 3}
+  cooldownTime: 0.2
 --- !u!114 &4221378888057082778
 MonoBehaviour:
   m_ObjectHideFlags: 1

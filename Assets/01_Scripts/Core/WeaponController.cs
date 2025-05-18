@@ -56,6 +56,10 @@ public class WeaponController : MonoBehaviour
         
         foreach (var inp in _inputClones)
             inp.Poll();
+
+        float dt = Time.deltaTime;
+        foreach (var ex in _execClones)
+            ex.Tick(dt);
     }
 
     public void EquipWeapon()

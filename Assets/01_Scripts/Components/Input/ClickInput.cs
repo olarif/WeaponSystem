@@ -21,12 +21,15 @@ public class ClickInput : InputComponent
         RaisePressed();
     }
     
+    private void OnRelease(InputAction.CallbackContext context)
+    {
+        RaiseReleased();
+    }
+    
     public override bool CanExecute() => false;
     
     public override void EnableInput()
     {
-        Debug.Log("Enabling ClickInput");
-        
         if (inputAction == null)
         {
             Debug.LogError($"[{name}] ClickInput missing action!");
@@ -34,6 +37,7 @@ public class ClickInput : InputComponent
         }
         inputAction.action.Enable();
         inputAction.action.performed += OnPerformed;
+        inputAction.action.canceled += OnRelease;
     }
     
     public override void DisableInput()
@@ -41,6 +45,7 @@ public class ClickInput : InputComponent
         if (inputAction != null)
         {
             inputAction.action.performed -= OnPerformed;
+            inputAction.action.canceled -= OnRelease;
             inputAction.action.Disable();
         }
     }

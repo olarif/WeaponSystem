@@ -5,17 +5,31 @@ public class MeleeExecute : ExecuteComponent, IHoldHandler, IPressHandler, IRele
 {
     [Tooltip("All your melee settings")]
     public MeleeDataSO meleeData;
+    
+    public FireTrigger fireTrigger = FireTrigger.OnPress;
 
     public override void Initialize(WeaponContext ctx)
     {
         base.Initialize(ctx);
     }
 
-    public void OnHold() { }
-    
-    public void OnPress() { MeleeHit(); }
-    
-    public void OnRelease() { }
+    public void OnHold()
+    {
+        if (!fireTrigger.HasFlag(FireTrigger.OnHold)) return;
+        MeleeHit();
+    }
+
+    public void OnPress()
+    {
+        if (!fireTrigger.HasFlag(FireTrigger.OnPress)) return;
+        MeleeHit();
+    }
+
+    public void OnRelease()
+    {
+        if (!fireTrigger.HasFlag(FireTrigger.OnRelease)) return;
+        MeleeHit();
+    }
 
     private void MeleeHit()
     {

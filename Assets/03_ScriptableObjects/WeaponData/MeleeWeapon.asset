@@ -63,6 +63,7 @@ MonoBehaviour:
   m_Name: MeleeExecute
   m_EditorClassIdentifier: 
   meleeData: {fileID: 11400000, guid: baa7ea03b40b5a94da5c089e4f303e2e, type: 2}
+  fireTrigger: 1
 --- !u!114 &7551240039181919589
 MonoBehaviour:
   m_ObjectHideFlags: 1

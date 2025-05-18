@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -7,85 +6,92 @@ public class WeaponController : MonoBehaviour
 {
     [Header("Data & References")]
     public WeaponDataSO weaponData;
-    public Transform     firePoint;
-    public LineRenderer  lineRenderer;
-    public bool          isEquipped;
+    public Transform    firePoint;
+    public LineRenderer lineRenderer;
+    public bool         isEquipped;
 
-    WeaponContext        _ctx;
-    List<InputComponent>   _inputClones;
-    List<ExecuteComponent> _execClones;
-    List<OnHitComponent>   _hitClones;
-    
+    private WeaponContext            _ctx;
+    private List<InputComponent>     _inputClones;
+    private List<ExecuteComponent>   _execClones;
+    private List<OnHitComponent>     _hitClones;
+    private List<WeaponComponent>    _componentClones;
+
     void Awake()
     {
-        _ctx = new WeaponContext {
+        // Build context for components
+        _ctx = new WeaponContext
+        {
             FirePoint       = firePoint,
             LineRenderer    = lineRenderer,
             PlayerCamera    = Camera.main,
             OnHitComponents = new List<OnHitComponent>(),
-            Player          = FindFirstObjectByType<Player>()
+            Player          = FindObjectOfType<Player>()
         };
 
-        // Clone each SO so we get a fresh instance per‐weapon
+        // Clone ScriptableObjects so each weapon has its own instance
         _inputClones = weaponData.inputComponents
             .Cast<InputComponent>()
             .Select(Instantiate)
             .ToList();
+
         _execClones = weaponData.executeComponents
             .Cast<ExecuteComponent>()
             .Select(Instantiate)
             .ToList();
+
         _hitClones = weaponData.onHitComponents
             .Cast<OnHitComponent>()
             .Select(Instantiate)
             .ToList();
-        
-        // 2) Populate the context’s OnHitComponents list
+
+        // Populate OnHit list in context
         foreach (var hitSo in _hitClones)
             _ctx.OnHitComponents.Add(hitSo);
 
-        // 3) Initialize everything with ctx
+        // Combine all execute- and on-hit components for event subscription
+        _componentClones = new List<WeaponComponent>();
+        _componentClones.AddRange(_execClones.Cast<WeaponComponent>());
+        _componentClones.AddRange(_hitClones.Cast<WeaponComponent>());
+
+        // Initialize all components with the shared context
         foreach (var inp in _inputClones)  inp.Initialize(_ctx);
-        foreach (var ex  in _execClones)  ex .Initialize(_ctx);
-        foreach (var hit in _hitClones)   hit.Initialize(_ctx);
+        foreach (var ex  in _execClones)    ex.Initialize(_ctx);
+        foreach (var hit in _hitClones)     hit.Initialize(_ctx);
     }
 
     void Update()
     {
         if (!isEquipped) return;
-        
+
+        // Poll all inputs
         foreach (var inp in _inputClones)
             inp.Poll();
 
+        // Drive time-based logic in execute components
         float dt = Time.deltaTime;
-        foreach (var ex in _execClones)
-            ex.Tick(dt);
+        foreach (var exec in _execClones)
+            exec.Tick(dt);
     }
 
     public void EquipWeapon()
     {
         if (isEquipped) return;
         isEquipped = true;
-        
-        // Enable all input SOs
-        foreach (var inp in _inputClones)
-            inp.EnableInput();
 
-        // Hook up input → exec/onHit events
         foreach (var inp in _inputClones)
         {
-            // Press
-            foreach (var h in _execClones.OfType<IPressHandler>())
-                inp.Pressed += h.OnPress;
-            foreach (var h in _hitClones.OfType<IPressHandler>())
+            inp.EnableInput();
+
+            // Subscribe Press handlers
+            foreach (var h in _componentClones.OfType<IPressHandler>())
                 inp.Pressed += h.OnPress;
 
-            // Hold
-            foreach (var h in _execClones.OfType<IHoldHandler>())
+            // Subscribe Hold handlers
+            foreach (var h in _componentClones.OfType<IHoldHandler>())
                 inp.Held += h.OnHold;
 
-            // Release
-            foreach (var h in _execClones.OfType<IReleaseHandler>())
+            // Subscribe Release handlers
+            foreach (var h in _componentClones.OfType<IReleaseHandler>())
                 inp.Released += h.OnRelease;
         }
     }
@@ -94,29 +100,28 @@ public class WeaponController : MonoBehaviour
     {
         if (!isEquipped) return;
         isEquipped = false;
-        
-        // Disable all input SOs
-        foreach (var inp in _inputClones)
-            inp.DisableInput();
 
-        // Unsubscribe all handlers and cleanup
         foreach (var inp in _inputClones)
         {
-            foreach (var h in _execClones.OfType<IPressHandler>())
-                inp.Pressed -= h.OnPress;
-            foreach (var h in _hitClones.OfType<IPressHandler>())
+            inp.DisableInput();
+
+            // Unsubscribe Press handlers
+            foreach (var h in _componentClones.OfType<IPressHandler>())
                 inp.Pressed -= h.OnPress;
 
-            foreach (var h in _execClones.OfType<IHoldHandler>())
+            // Unsubscribe Hold handlers
+            foreach (var h in _componentClones.OfType<IHoldHandler>())
                 inp.Held -= h.OnHold;
 
-            foreach (var h in _execClones.OfType<IReleaseHandler>())
+            // Unsubscribe Release handlers
+            foreach (var h in _componentClones.OfType<IReleaseHandler>())
                 inp.Released -= h.OnRelease;
 
             inp.Cleanup();
         }
 
-        // disable any ongoing beams or coroutines
-        lineRenderer.enabled = false;
+        // Disable any ongoing visuals
+        if (lineRenderer != null)
+            lineRenderer.enabled = false;
     }
 }

@@ -2,10 +2,11 @@
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-public class ProjectileExecute : ExecuteComponent, IPressHandler, IHoldHandler, IReleaseHandler
+public class ProjectileExecute : ExecuteComponent
 {
     [Tooltip("Projectile settings)")]
     public ProjectileDataSO projectileData;
+    public FireTrigger fireTrigger = FireTrigger.OnPress;
 
     public float fireRate = 0.1f;
     private float _nextFireTime;
@@ -18,17 +19,26 @@ public class ProjectileExecute : ExecuteComponent, IPressHandler, IHoldHandler, 
         _playerCamera = ctx.PlayerCamera;
     }
 
-    public void OnHold()
+    public override void OnHold()
     {
+        if (!fireTrigger.HasFlag(FireTrigger.OnHold)) return;
         if (Time.time < _nextFireTime) return;
         _nextFireTime = Time.time + fireRate;
         
         SpawnProjectile();
     }
-    
-    public void OnPress(){ SpawnProjectile(); }
-    
-    public void OnRelease() { SpawnProjectile();}
+
+    public override void OnPress()
+    {
+        if (!fireTrigger.HasFlag(FireTrigger.OnPress)) return;
+        SpawnProjectile();
+    }
+
+    public override void OnRelease()
+    {
+        if (!fireTrigger.HasFlag(FireTrigger.OnRelease)) return;
+        SpawnProjectile();
+    }
     
     private void SpawnProjectile()
     {

@@ -1,9 +1,11 @@
 ﻿using UnityEngine;
 
-public class LineRenderExecute : ExecuteComponent, IHoldHandler, IPressHandler, IReleaseHandler
+public class LineRenderExecute : ExecuteComponent
 {
     [Tooltip("Projectile data for the line renderer")]
     public LineRendererDataSO lrData;
+    public FireTrigger fireTrigger = FireTrigger.OnHold;
+
     
     [Tooltip("How long the ray should be visible after release")]
     public float rayDuration = 0.1f;
@@ -31,11 +33,23 @@ public class LineRenderExecute : ExecuteComponent, IHoldHandler, IPressHandler, 
         _timeSinceLastRay = rayDuration;
     }
 
-    public void OnPress() { _isHolding = true; DrawRay(); }
-    public void OnHold()  { _isHolding = true; DrawRay(); }
-
-    public void OnRelease()
+    public override void OnPress()
     {
+        if (!fireTrigger.HasFlag(FireTrigger.OnPress)) return;
+        _isHolding = true; 
+        DrawRay();
+    }
+
+    public override void OnHold()
+    {
+        if (!fireTrigger.HasFlag(FireTrigger.OnHold)) return;
+        _isHolding = true; 
+        DrawRay();
+    }
+
+    public override void OnRelease()
+    {
+        if (!fireTrigger.HasFlag(FireTrigger.OnRelease)) return;
         _isHolding = false;
         if (rayDuration <= 0f)
         {

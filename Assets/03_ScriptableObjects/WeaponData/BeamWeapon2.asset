@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: LineRenderExecute
   m_EditorClassIdentifier: 
   lrData: {fileID: 11400000, guid: d7701d6fb0592864f8b84086db8f1408, type: 2}
+  fireTrigger: 4
   rayDuration: 0.5
 --- !u!114 &-2565017838309152688
 MonoBehaviour:
@@ -78,4 +79,5 @@ MonoBehaviour:
   m_Name: RaycastExecute
   m_EditorClassIdentifier: 
   raycastData: {fileID: 11400000, guid: 97ecbd2351d5a0b4b8333fb0541a1fd0, type: 2}
+  fireTrigger: 4
   fireRate: 0

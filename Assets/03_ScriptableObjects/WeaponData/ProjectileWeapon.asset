@@ -80,6 +80,7 @@ MonoBehaviour:
   m_Name: ProjectileExecute
   m_EditorClassIdentifier: 
   projectileData: {fileID: 11400000, guid: 6cfa19f752b53634e850643f88dce08e, type: 2}
+  fireTrigger: 1
   fireRate: 0.1
 --- !u!114 &-3141320970930769765
 MonoBehaviour:
@@ -163,6 +164,7 @@ MonoBehaviour:
   m_Name: ProjectileExecute
   m_EditorClassIdentifier: 
   projectileData: {fileID: 11400000, guid: 6cfa19f752b53634e850643f88dce08e, type: 2}
+  fireTrigger: 1
   fireRate: 0.1
 --- !u!114 &8772691435566545809
 MonoBehaviour:
@@ -177,4 +179,5 @@ MonoBehaviour:
   m_Name: ProjectileExecute
   m_EditorClassIdentifier: 
   projectileData: {fileID: 0}
+  fireTrigger: 1
   fireRate: 0.1

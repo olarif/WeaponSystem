@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.Rendering;
 
-public class MeleeExecute : ExecuteComponent, IHoldHandler, IPressHandler, IReleaseHandler
+public class MeleeExecute : ExecuteComponent
 {
     [Tooltip("All your melee settings")]
     public MeleeDataSO meleeData;
@@ -13,19 +13,19 @@ public class MeleeExecute : ExecuteComponent, IHoldHandler, IPressHandler, IRele
         base.Initialize(ctx);
     }
 
-    public void OnHold()
+    public override void OnHold()
     {
         if (!fireTrigger.HasFlag(FireTrigger.OnHold)) return;
         MeleeHit();
     }
 
-    public void OnPress()
+    public override void OnPress()
     {
         if (!fireTrigger.HasFlag(FireTrigger.OnPress)) return;
         MeleeHit();
     }
 
-    public void OnRelease()
+    public override void OnRelease()
     {
         if (!fireTrigger.HasFlag(FireTrigger.OnRelease)) return;
         MeleeHit();

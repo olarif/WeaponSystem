@@ -4,6 +4,7 @@ using UnityEngine.InputSystem;
 public class ClickInput : InputComponent
 {
     public InputActionReference inputAction;
+    
     [Tooltip("Minimum time between clicks")]
     public float cooldownTime = 0.1f;
     float _lastFireTime = -Mathf.Infinity;

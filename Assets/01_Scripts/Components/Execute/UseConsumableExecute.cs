@@ -1,8 +1,9 @@
 ﻿using UnityEngine;
 
-public class UseConsumableExecute : ExecuteComponent, IPressHandler
+public class UseConsumableExecute : ExecuteComponent
 {
     public ConsumableDataSO consumableData;
+    public FireTrigger fireTrigger = FireTrigger.OnPress;
 
     private Entity _player;
     private int _charges;
@@ -22,8 +23,9 @@ public class UseConsumableExecute : ExecuteComponent, IPressHandler
         }
     }
     
-    public void OnPress()
+    public override void OnPress()
     {
+        if (!fireTrigger.HasFlag(FireTrigger.OnPress)) return;
         if (_charges <= 0)
         {
             _player.GetComponent<WeaponManager>().UnequipWeapon();

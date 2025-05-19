@@ -1,4 +1,4 @@
 ﻿public interface IHoldHandler
 {
-    void OnHold();
+    void OnHold() { }
 }

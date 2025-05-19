@@ -2,10 +2,11 @@
 using UnityEngine.InputSystem;
 using UnityEngine.PlayerLoop;
 
-public class RaycastExecute : ExecuteComponent, IHoldHandler, IPressHandler, IReleaseHandler
+public class RaycastExecute : ExecuteComponent
 {
     [Tooltip("All your raycast settings")]
     public RaycastDataSO raycastData;
+    public FireTrigger fireTrigger = FireTrigger.OnPress;
     
     public float fireRate = 0.1f;
     float _timeSinceLastShot;
@@ -19,18 +20,29 @@ public class RaycastExecute : ExecuteComponent, IHoldHandler, IPressHandler, IRe
         _timeSinceLastShot = 0f;
     }
 
-    public void OnHold()
+    public override void OnHold()
     {
+        if (!fireTrigger.HasFlag(FireTrigger.OnHold)) return;
         _timeSinceLastShot += Time.deltaTime;
         
         if (_timeSinceLastShot < fireRate) return;
         _timeSinceLastShot = 0f;
         CastRay();
     }
-    
-    public void OnPress() { CastRay(); _timeSinceLastShot = 0f; }
-    
-    public void OnRelease() { CastRay() ;_timeSinceLastShot = 0f; }
+
+    public override void OnPress()
+    {
+        if (!fireTrigger.HasFlag(FireTrigger.OnPress)) return;
+        CastRay(); 
+        _timeSinceLastShot = 0f;
+    }
+
+    public override void OnRelease()
+    {
+        if (!fireTrigger.HasFlag(FireTrigger.OnRelease)) return;
+        CastRay() ;
+        _timeSinceLastShot = 0f;
+    }
 
     void CastRay()
     {

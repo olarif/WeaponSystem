@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26ff9699aceb4775ae90c8cd27b6f15b, type: 3}
   m_Name: AoEData
   m_EditorClassIdentifier: 
-  radius: 5
-  damage: 5
-  duration: 1
+  radius: 50
+  damage: 10
+  duration: 2
   targetLayer:
     serializedVersion: 2
     m_Bits: 64

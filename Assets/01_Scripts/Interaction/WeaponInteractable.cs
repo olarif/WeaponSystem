@@ -10,7 +10,7 @@ public class WeaponInteractable : BaseInteractable
     {
         base.Awake();
         _weaponController = GetComponent<WeaponController>();
-        _weaponData = _weaponController.weaponData;
+        //_weaponData = _weaponController.weaponData;
     }
 
     public override void Interact(WeaponManager weaponManager)

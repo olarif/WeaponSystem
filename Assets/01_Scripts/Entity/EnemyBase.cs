@@ -16,5 +16,5 @@ public abstract class EnemyBase : Entity, IDamageable
         StatusEffectsManager = GetComponent<StatusEffectManager>();
     }
     
-    public virtual void ApplyDamage(float damage) { }
+    public virtual void TakeDamage(float damage, DamageType damageType) { }
 }

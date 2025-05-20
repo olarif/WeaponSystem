@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class StatusEffectManager : MonoBehaviour
 {
+    /*
     List <StatusEffect> activeEffects = new();
     
     public void Apply(StatusEffectDataSO statusEffectData, float impactDamage = 0f)
@@ -15,7 +16,7 @@ public class StatusEffectManager : MonoBehaviour
             var damageable = GetComponent<IDamageable>();
             if (damageable != null)
             {
-                damageable.ApplyDamage(impactDamage);
+                damageable.TakeDamage(impactDamage);
             } 
             else
             {
@@ -44,4 +45,6 @@ public class StatusEffectManager : MonoBehaviour
     {
         activeEffects.Clear();
     }
+    
+    */
 }

@@ -27,7 +27,7 @@ public class WeaponManager : MonoBehaviour
             Debug.Log("Already have weapon equipped");
             return;
         }
-        
+        /*
         // Instantiate the weapon prefab
         GameObject weaponPrefab = data.weaponPrefab;
         if (weaponPrefab == null)
@@ -43,6 +43,7 @@ public class WeaponManager : MonoBehaviour
         _weaponInstance.transform.localScale = Vector3.one;
         
         _weaponInstance.GetComponent<WeaponController>().EquipWeapon();
+        */
         
         Debug.Log("Weapon equipped: " + data.weaponName);
     }
@@ -72,6 +73,6 @@ public class WeaponManager : MonoBehaviour
             _weaponInstance.transform.rotation = Quaternion.Euler(90, 0, 0);
         }
 
-        _weaponInstance.GetComponent<WeaponController>().UnEquipWeapon();
+        //_weaponInstance.GetComponent<WeaponController>().UnEquipWeapon();
     }
 }

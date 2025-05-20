@@ -1,6 +1,5 @@
 ﻿class StatusEffect
-{  
-    StatusEffectDataSO statusEffectData;
+{/*
     private StatusEffectManager owner;
 
     private float timer, tickTimer;
@@ -20,8 +19,9 @@
 
         if (tickTimer >= statusEffectData.tickRate)
         {
-            owner.GetComponent<IDamageable>().ApplyDamage(statusEffectData.tickDamage);
+            owner.GetComponent<IDamageable>().TakeDamage(statusEffectData.tickDamage);
             tickTimer = 0f;
         }
     }
+    */
 }

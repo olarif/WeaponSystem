@@ -7,7 +7,7 @@ public class TrainingDummy : EnemyBase
     
     private bool _isStunned = false;
 
-    public override void ApplyDamage(float damage)
+    public override void TakeDamage(float damage, DamageType damageType)
     {
         if (_isStunned) return;
         
@@ -32,6 +32,6 @@ public class TrainingDummy : EnemyBase
         _isStunned = false;
         Animator.SetBool("isDead", false);
         HealthComponent.Heal(HealthComponent.GetMaxHealth());
-        StatusEffectsManager.ClearAllEffects();
+        //StatusEffectsManager.ClearAllEffects();
     }
 }

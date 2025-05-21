@@ -3,7 +3,7 @@
 public class WeaponPickup : BaseInteractable
 {
     [Header("Weapon Settings")]
-    [SerializeField] private WeaponDataSO weaponData;
+    [SerializeField] private WeaponDataSO weaponData ;
 
     public override void Interact(WeaponManager weaponManager)
     {
@@ -16,6 +16,11 @@ public class WeaponPickup : BaseInteractable
         {
             Debug.Log("Cannot equip weapon, already have one equipped");
         }
+    }
+    
+    public void Initialize(WeaponDataSO data)
+    {
+        weaponData = data;
     }
 
     public WeaponDataSO Data => weaponData;

@@ -92,107 +92,94 @@ public class WeaponController : MonoBehaviour
     }
 
     // -------------------- Inner Handler --------------------
-    class Handler
+            class Handler
     {
-        readonly WeaponDataSO.InputBinding _b;
-        readonly WeaponContext             _ctx;
-        readonly InputAction               _action;
+    readonly WeaponDataSO.InputBinding _b;
+    readonly WeaponContext             _ctx;
+    readonly InputAction               _action;
+    
+    bool  isContinuous;
+    float holdStart;
+    float lastFireTime = -Mathf.Infinity;
 
-        float holdStart;
-        bool  isContinuous;
-        float lastFire;
-        float cooldown;
+    public Handler(WeaponDataSO.InputBinding b, WeaponContext ctx, InputAction action)
+    {
+        _b      = b;
+        _ctx    = ctx;
+        _action = action;
+    }
 
-        public Handler(WeaponDataSO.InputBinding b, WeaponContext ctx, InputAction action)
+    public void Enable()
+    {
+        switch (_b.eventType)
         {
-            _b      = b;
-            _ctx    = ctx;
-            _action = action;
-        }
-
-        public void Enable()
-        {
-            switch (_b.eventType)
-            {
-                case WeaponInputEvent.Press:
-                    _action.performed += OnFire;
-                    break;
-                case WeaponInputEvent.Release:
-                    _action.canceled  += OnFire;
-                    break;
-                case WeaponInputEvent.Hold:
-                    _action.started   += ctx => holdStart = Time.time;
-                    _action.canceled  += OnHoldRelease;
-                    break;
-                case WeaponInputEvent.Continuous:
-                    _action.started   += OnStartContinuous;
-                    _action.canceled  += OnCancelContinuous;
-                    break;
-            }
-        }
-
-        public void Disable()
-        {
-            switch (_b.eventType)
-            {
-                case WeaponInputEvent.Press:
-                    _action.performed -= OnFire;
-                    break;
-                case WeaponInputEvent.Release:
-                    _action.canceled  -= OnFire;
-                    break;
-                case WeaponInputEvent.Hold:
-                    _action.started   -= ctx => holdStart = Time.time;
-                    _action.canceled  -= OnHoldRelease;
-                    break;
-                case WeaponInputEvent.Continuous:
-                    _action.started   -= OnStartContinuous;
-                    _action.canceled  -= OnCancelContinuous;
-                    break;
-            }
-            _action.Disable();
-        }
-
-        public void Update()
-        {
-            if (_b.eventType == WeaponInputEvent.Continuous && isContinuous)
-            {
-                if (Time.time >= lastFire + _b.fireRate)
-                {
-                    DoFire();
-                    lastFire = Time.time;
-                }
-            }
-        }
-
-        void OnFire(InputAction.CallbackContext _)
-        {
-            if (Time.time < cooldown) return;
-            DoFire();
-            cooldown = Time.time + _b.fireRate;
-        }
-
-        void OnHoldRelease(InputAction.CallbackContext _)
-        {
-            if (Time.time - holdStart >= _b.holdTime)
-                DoFire();
-        }
-
-        void OnStartContinuous(InputAction.CallbackContext _)
-        {
-            isContinuous = true;
-            lastFire     = Time.time - _b.fireRate; // so first Fire happens immediately
-        }
-
-        void OnCancelContinuous(InputAction.CallbackContext _)
-        {
-            isContinuous = false;
-        }
-
-        void DoFire()
-        {
-            foreach (var action in _b.actions)
-                action.Execute(_ctx, _b);
+            case WeaponInputEvent.Press:
+                _action.performed += OnFire;
+                break;
+            case WeaponInputEvent.Release:
+                _action.canceled  += OnFire;
+                break;
+            case WeaponInputEvent.Hold:
+                _action.started   += ctx => holdStart = Time.time;
+                _action.canceled  += OnHoldRelease;
+                break;
+            case WeaponInputEvent.Continuous:
+                _action.started   += OnStartContinuous;
+                _action.canceled  += OnCancelContinuous;
+                break;
         }
     }
+
+    public void Disable()
+    {
+        _action.Disable();
+    }
+
+    public void Update()
+    {
+        if (_b.eventType == WeaponInputEvent.Continuous && isContinuous)
+        {
+            TryFire();
+        }
+    }
+
+    void OnFire(InputAction.CallbackContext _)
+    {
+        TryFire();
+    }
+
+    void TryFire()
+    {
+        // enforce the same minimum interval between *any* shots:
+        if (Time.time < lastFireTime + _b.fireRate)
+            return;
+
+        DoFire();
+        lastFireTime = Time.time;
+    }
+
+    void OnHoldRelease(InputAction.CallbackContext _)
+    {
+        if (Time.time - holdStart >= _b.holdTime)
+            TryFire();
+    }
+
+    void OnStartContinuous(InputAction.CallbackContext _)
+    {
+        isContinuous = true;
+    }
+
+    void OnCancelContinuous(InputAction.CallbackContext _)
+    {
+        isContinuous = false;
+    }
+
+    void DoFire()
+    {
+        foreach (var action in _b.actions)
+            action?.Execute(_ctx, _b);
+    }
+
+    
+}
 }

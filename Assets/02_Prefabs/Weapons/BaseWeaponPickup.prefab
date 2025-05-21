@@ -1,36 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &5454288930098962095
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 6087581573200896119}
-  m_Layer: 9
-  m_Name: FirePoint
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &6087581573200896119
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5454288930098962095}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.879, z: -0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 151056160016560832}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6888727773174072129
 GameObject:
   m_ObjectHideFlags: 0
@@ -40,12 +9,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2301062206024712320}
-  - component: {fileID: 8266767242560328857}
   - component: {fileID: 2744664776512533842}
   - component: {fileID: 8885805350735326409}
   - component: {fileID: 3248754415215771040}
   m_Layer: 9
-  m_Name: BaseWeapon
+  m_Name: BaseWeaponPickup
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -59,30 +27,14 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6888727773174072129}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 151056160016560832}
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8266767242560328857
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6888727773174072129}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 25a2c512721946e48d02ad108ca380a4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  weaponData: {fileID: 11400000, guid: d6512c5656f642041b691ad01faba705, type: 2}
-  firePoint: {fileID: 6087581573200896119}
-  lineRenderer: {fileID: 2744664776512533842}
-  isEquipped: 0
+  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
 --- !u!120 &2744664776512533842
 LineRenderer:
   serializedVersion: 2
@@ -234,6 +186,7 @@ MonoBehaviour:
   _promptOffset: {x: 0, y: 0.5, z: 0}
   _canvas: {fileID: 730092786535789121, guid: a2a0ef90109541640a73095e17b3ec76, type: 3}
   _outlineMaterial: {fileID: 2100000, guid: 8ddd0ea21bb16c94985b0abe8f8b9f5f, type: 2}
+  weaponData: {fileID: 0}
 --- !u!1001 &6180725211379425559
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -256,7 +209,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6331762093753734103, guid: aabfceb8b9bfd3e498257c457049b58a, type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.4
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6331762093753734103, guid: aabfceb8b9bfd3e498257c457049b58a, type: 3}
       propertyPath: m_LocalPosition.x
@@ -312,10 +265,7 @@ PrefabInstance:
       objectReference: {fileID: 6406290515951874832, guid: b443f5ee3b25cd14b9bd4065b7e31c0b, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects:
-    - targetCorrespondingSourceObject: {fileID: 6331762093753734103, guid: aabfceb8b9bfd3e498257c457049b58a, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 6087581573200896119}
+    m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: aabfceb8b9bfd3e498257c457049b58a, type: 3}
 --- !u!4 &151056160016560832 stripped

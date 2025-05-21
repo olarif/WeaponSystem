@@ -97,6 +97,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   owner: {fileID: 0}
+  hitLayer:
+    serializedVersion: 2
+    m_Bits: 73
   speed: 10
   lifetime: 5
   useGravity: 0
@@ -108,11 +111,8 @@ MonoBehaviour:
     - rid: 1246412349123854455
       type: {class: DealDamageOnHitData, ns: , asm: Assembly-CSharp}
       data:
-        hitLayer:
-          serializedVersion: 2
-          m_Bits: 64
         damageType: 0
-        damage: 5
+        damage: 10
 --- !u!1 &3634619665484577082
 GameObject:
   m_ObjectHideFlags: 0

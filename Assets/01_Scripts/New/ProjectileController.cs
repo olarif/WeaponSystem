@@ -4,6 +4,7 @@ using System.Collections.Generic;
 public class ProjectileController : MonoBehaviour
 {
     [HideInInspector] public GameObject owner;
+    [HideInInspector] public LayerMask hitLayer;
     public float speed     = 15f;
     public float lifetime  = 5f;
     public bool  useGravity= false;
@@ -25,6 +26,7 @@ public class ProjectileController : MonoBehaviour
         Destroy(gameObject, lifetime);
     }
 
+    /*
     private void OnTriggerEnter(Collider other)
     {
         // ignore self-hits
@@ -39,10 +41,30 @@ public class ProjectileController : MonoBehaviour
 
         Destroy(gameObject);
     }
+    */
 
-    // if you want to handle physics collisions instead of triggers:
     private void OnCollisionEnter(Collision col)
     {
+        //collider only with hitlayer objects
+        
+        // ignore self-hits
+        if (col.gameObject == owner) return;
+        
+        // ignore non-hitlayer objects
+        if ((hitLayer & (1 << col.gameObject.layer)) == 0) return;
+        
+        // build CollisionInfo
+        var info = new CollisionInfo(col);
+
+        // execute all actions
+        foreach (var act in onHitActions)
+            act?.Execute(gameObject, info, owner);
+
+        Destroy(gameObject);
+        
+        
+        /*
+        
         // ignore self-hits
         if (col.gameObject == owner) return;
 
@@ -54,5 +76,7 @@ public class ProjectileController : MonoBehaviour
             act?.Execute(gameObject, info, owner);
 
         Destroy(gameObject);
+        
+        */
     }
 }

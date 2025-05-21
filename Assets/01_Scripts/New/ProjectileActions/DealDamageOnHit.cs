@@ -3,7 +3,6 @@
 [System.Serializable]
 public class DealDamageOnHitData : ProjectileActionData
 {
-    public LayerMask hitLayer;
     public DamageType damageType;
     public float damage = 5;
     

@@ -4,6 +4,7 @@ using UnityEngine;
 [CustomEditor(typeof(ProjectileController))]
 public class ProjectileControllerEditor : Editor
 {
+    private SerializedProperty pHitLayer;
     SerializedProperty pSpeed;
     SerializedProperty pLifetime;
     SerializedProperty pUseGravity;
@@ -13,6 +14,7 @@ public class ProjectileControllerEditor : Editor
 
     void OnEnable()
     {
+        pHitLayer    = serializedObject.FindProperty("hitLayer");
         pSpeed       = serializedObject.FindProperty("speed");
         pLifetime    = serializedObject.FindProperty("lifetime");
         pUseGravity  = serializedObject.FindProperty("useGravity");
@@ -24,6 +26,7 @@ public class ProjectileControllerEditor : Editor
         serializedObject.Update();
 
         // Default fields
+        EditorGUILayout.PropertyField(pHitLayer);
         EditorGUILayout.PropertyField(pSpeed);
         EditorGUILayout.PropertyField(pLifetime);
         EditorGUILayout.PropertyField(pUseGravity);
@@ -40,7 +43,12 @@ public class ProjectileControllerEditor : Editor
                 var elem = pActions.GetArrayElementAtIndex(i);
                 EditorGUILayout.BeginHorizontal();
                 // Draw the inline data (polymorphic)
-                EditorGUILayout.PropertyField(elem, new GUIContent(elem.managedReferenceFullTypename), true);
+                
+                string fullTypeName = elem.managedReferenceFullTypename;
+                var afterSpace = fullTypeName.Substring(fullTypeName.LastIndexOf(' ') + 1);
+                
+                
+                EditorGUILayout.PropertyField(elem, new GUIContent(afterSpace), true);
                 if (GUILayout.Button("X", GUILayout.Width(20)))
                 {
                     pActions.DeleteArrayElementAtIndex(i);

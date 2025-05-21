@@ -9,7 +9,6 @@ public class WeaponDataSO : ScriptableObject
     public string weaponDescription;
     public GameObject rightHandModel;
     public GameObject leftHandModel;
-    public GameObject worldPickupPrefab;
     
     public enum Hand { Right, Left, Both }
     public Hand defaultHand = Hand.Right;

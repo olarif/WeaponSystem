@@ -7,7 +7,7 @@ public class ProjectileController : MonoBehaviour
     [HideInInspector] public LayerMask hitLayer;
     public float speed     = 15f;
     public float lifetime  = 5f;
-    public bool  useGravity= false;
+    public bool  useGravity = false;
 
     [SerializeReference]
     public List<ProjectileActionData> onHitActions = new();
@@ -23,7 +23,9 @@ public class ProjectileController : MonoBehaviour
             rb.useGravity = useGravity;
             rb.linearVelocity   = transform.forward * speed;
         }
-        Destroy(gameObject, lifetime);
+        
+        if (lifetime > 0)
+            Destroy(gameObject, lifetime);
     }
 
     /*
@@ -56,7 +58,5 @@ public class ProjectileController : MonoBehaviour
         // execute all actions
         foreach (var act in onHitActions)
             act?.Execute(gameObject, info, owner);
-
-        //Destroy(gameObject);
     }
 }

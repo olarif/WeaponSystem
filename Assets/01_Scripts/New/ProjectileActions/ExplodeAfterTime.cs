@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using UnityEngine;
 
+[System.Serializable]
 public class ExplodeAfterTime : ProjectileActionData
 {
     public float timeToExplode = 3f;

@@ -106,6 +106,7 @@ MonoBehaviour:
   onHitActions:
   - rid: 3936017921557921921
   - rid: 3936017921557921922
+  - rid: 3936017921557921972
   references:
     version: 2
     RefIds:
@@ -117,6 +118,9 @@ MonoBehaviour:
       data:
         damageType: 0
         damage: 5
+    - rid: 3936017921557921972
+      type: {class: ProjectilePunch, ns: , asm: Assembly-CSharp}
+      data: 
 --- !u!1 &3634619665484577082
 GameObject:
   m_ObjectHideFlags: 0

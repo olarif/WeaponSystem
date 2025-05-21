@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 
+[System.Serializable]
 public class DestroyOnHit : ProjectileActionData
 {
     public override void Execute(GameObject projectile, CollisionInfo collision, GameObject owner)

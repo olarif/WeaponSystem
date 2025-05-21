@@ -15,9 +15,9 @@ MonoBehaviour:
   weaponName: Test
   weaponDescription: 
   rightHandModel: {fileID: 5374478241137192205, guid: 4b0b469db98e6fc42bfdf1661af14ae1, type: 3}
-  leftHandModel: {fileID: 0}
+  leftHandModel: {fileID: 1596470492229182116, guid: 490ae74f1f255814e8aca40f179aa439, type: 3}
   pickupPrefab: {fileID: 1467819138738470339, guid: 24d1e24d2f8f6ac458534c8278f04506, type: 3}
-  defaultHand: 0
+  defaultHand: 2
   modelPositionOffset: {x: 0, y: 0, z: 0}
   modelRotationOffset: {x: 90, y: 0, z: 0}
   bindings:
@@ -28,6 +28,13 @@ MonoBehaviour:
     inputAction: {fileID: 2158980376108856071, guid: 6eaff8a1080c3b64bba326ccc7407a63, type: 3}
     actions:
     - rid: 3936017921557921944
+  - eventType: 0
+    fireHand: 1
+    holdTime: 0
+    fireRate: 0.4
+    inputAction: {fileID: -2189319267458262046, guid: 6eaff8a1080c3b64bba326ccc7407a63, type: 3}
+    actions:
+    - rid: 3936017921557921977
   references:
     version: 2
     RefIds:
@@ -43,3 +50,7 @@ MonoBehaviour:
         chargeTime: 0
         pulseTime: 1
         width: 0.02
+    - rid: 3936017921557921977
+      type: {class: SpawnProjectileAction, ns: , asm: Assembly-CSharp}
+      data:
+        projectilePrefab: {fileID: 1930107923466689315, guid: 6b45f06f2495ddf4583930a0fc1a3bec, type: 3}

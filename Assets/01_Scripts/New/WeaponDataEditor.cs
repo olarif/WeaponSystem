@@ -8,7 +8,7 @@ using System.Reflection;
 [CustomEditor(typeof(WeaponDataSO))]
 public class WeaponDataEditor : Editor
 {
-    SerializedProperty pName, pDescription, pRightHandModel, pLeftHandModel,pBindings;
+    SerializedProperty pName, pDescription, pRightHandModel, pLeftHandModel, pPickupPrefab, pBindings;
     SerializedProperty pHand, pModelPositionOffset, pModelRotationOffset;
     bool showBindings = true;
 
@@ -24,6 +24,7 @@ public class WeaponDataEditor : Editor
         pDescription          = serializedObject.FindProperty("weaponDescription");
         pRightHandModel       = serializedObject.FindProperty("rightHandModel");
         pLeftHandModel        = serializedObject.FindProperty("leftHandModel");
+        pPickupPrefab         = serializedObject.FindProperty("pickupPrefab");
         pHand                 = serializedObject.FindProperty("defaultHand");
         pModelPositionOffset  = serializedObject.FindProperty("modelPositionOffset");
         pModelRotationOffset  = serializedObject.FindProperty("modelRotationOffset");
@@ -59,6 +60,7 @@ public class WeaponDataEditor : Editor
         EditorGUILayout.PropertyField(pDescription, new GUIContent("Weapon Description"));
         EditorGUILayout.PropertyField(pRightHandModel, new GUIContent("Right Hand Model"));
         EditorGUILayout.PropertyField(pLeftHandModel, new GUIContent("Left Hand Model"));
+        EditorGUILayout.PropertyField(pPickupPrefab, new GUIContent("Pickup Prefab"));
         EditorGUILayout.PropertyField(pHand, new GUIContent("Hands to use"));
         EditorGUILayout.PropertyField(pModelPositionOffset, new GUIContent("Model Position Offset"));
         EditorGUILayout.PropertyField(pModelRotationOffset, new GUIContent("Model Rotation Offset"));
@@ -128,7 +130,7 @@ public class WeaponDataEditor : Editor
                     case WeaponInputEvent.Press:
                         EditorGUILayout.PropertyField(rRate, new GUIContent("Cooldown (s)"));
                         break;
-                    case WeaponInputEvent.Hold:
+                    case WeaponInputEvent.Charge:
                         EditorGUILayout.PropertyField(hTime, new GUIContent("Hold Time (s)"));
                         break;
                     case WeaponInputEvent.Continuous:

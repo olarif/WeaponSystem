@@ -102,17 +102,31 @@ MonoBehaviour:
     m_Bits: 73
   speed: 10
   lifetime: 5
-  useGravity: 0
+  useGravity: 1
   onHitActions:
-  - rid: 1246412349123854455
+  - rid: 3936017921557921916
+  - rid: 3936017921557921920
+  - rid: 3936017921557921937
   references:
     version: 2
     RefIds:
-    - rid: 1246412349123854455
-      type: {class: DealDamageOnHitData, ns: , asm: Assembly-CSharp}
+    - rid: 3936017921557921916
+      type: {class: StickOnHit, ns: , asm: Assembly-CSharp}
+      data: 
+    - rid: 3936017921557921920
+      type: {class: DestroyAfterTime, ns: , asm: Assembly-CSharp}
       data:
-        damageType: 0
-        damage: 5
+        timeToDestroy: 3
+    - rid: 3936017921557921937
+      type: {class: ExplodeAfterTime, ns: , asm: Assembly-CSharp}
+      data:
+        timeToExplode: 3
+        damageType: 1
+        explosionPrefab: {fileID: 6171168156913535822, guid: eac553dbb6ed45e46a484cac6b1e2a19, type: 3}
+        damage: 50
+        explosionRadius: 5
+        explosionForce: 10
+        duration: 2
 --- !u!1 &3634619665484577082
 GameObject:
   m_ObjectHideFlags: 0

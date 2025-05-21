@@ -10,30 +10,35 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 173e1320fcaa41c78d1bb440de6ba45a, type: 3}
-  m_Name: MeleeWeapon
+  m_Name: HealthConsumable
   m_EditorClassIdentifier: 
-  weaponName: MeleeWeapon
+  weaponName: Health Consumable
   weaponDescription: 
-  rightHandModel: {fileID: 4841816053556224155, guid: 0f4c565822e482b4e8dd9ff05ea03122, type: 3}
+  rightHandModel: {fileID: 4240378193073885370, guid: 0b38f2db129504d4788123aff1badf5a, type: 3}
   leftHandModel: {fileID: 0}
-  pickupPrefab: {fileID: 5291027263261853057, guid: 87ea6d7f2f5c7464fa9a942a85b379ca, type: 3}
+  pickupPrefab: {fileID: 4433644318165709800, guid: d64b4d738536e954f809ef75578117f3, type: 3}
   defaultHand: 0
   modelPositionOffset: {x: 0, y: 0, z: 0}
-  modelRotationOffset: {x: 90, y: 0, z: 0}
+  modelRotationOffset: {x: 0, y: 0, z: 0}
   bindings:
   - eventType: 0
     fireHand: 0
     holdTime: 0
-    fireRate: 0.6
+    fireRate: 0.2
     inputAction: {fileID: 2158980376108856071, guid: 6eaff8a1080c3b64bba326ccc7407a63, type: 3}
     actions:
-    - rid: 7470862035778011219
+    - rid: 3936017921557921874
+    - rid: -2
+    - rid: 3936017921557921890
   references:
     version: 2
     RefIds:
-    - rid: 7470862035778011219
-      type: {class: DealMeleeDamageAction, ns: , asm: Assembly-CSharp}
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 3936017921557921874
+      type: {class: HealAction, ns: , asm: Assembly-CSharp}
       data:
-        damageType: 0
-        damage: 10
-        range: 1.5
+        amount: 10
+    - rid: 3936017921557921890
+      type: {class: DestroyOnUseAction, ns: , asm: Assembly-CSharp}
+      data: 

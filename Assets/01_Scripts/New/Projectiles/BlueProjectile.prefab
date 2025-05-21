@@ -104,15 +104,19 @@ MonoBehaviour:
   lifetime: 5
   useGravity: 0
   onHitActions:
-  - rid: 1246412349123854455
+  - rid: 3936017921557921921
+  - rid: 3936017921557921922
   references:
     version: 2
     RefIds:
-    - rid: 1246412349123854455
-      type: {class: DealDamageOnHitData, ns: , asm: Assembly-CSharp}
+    - rid: 3936017921557921921
+      type: {class: DestroyOnHit, ns: , asm: Assembly-CSharp}
+      data: 
+    - rid: 3936017921557921922
+      type: {class: DealDamageOnHit, ns: , asm: Assembly-CSharp}
       data:
         damageType: 0
-        damage: 10
+        damage: 5
 --- !u!1 &3634619665484577082
 GameObject:
   m_ObjectHideFlags: 0

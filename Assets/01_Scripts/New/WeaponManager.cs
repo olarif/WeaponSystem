@@ -4,19 +4,26 @@ using UnityEngine.InputSystem;
 public class WeaponManager : MonoBehaviour
 {
     private PlayerInput _actions;
+    private InputAction _dropAction;
     
     [SerializeField] Transform weaponHolder;
-    public GameObject worldPickupPrefab;
+    private GameObject worldPickupPrefab;
     WeaponController equipped;
     WeaponDataSO equippedData;
+    WeaponContext ctx;
 
     public bool CanEquipWeapon => equipped == null;
     private void Awake()
     {
         _actions = new PlayerInput();
+        _dropAction = _actions.Player.DropWeapon;
+        _dropAction.Enable();
+        _dropAction.performed += OnDropPerformed;
     }
     private void OnEnable() => _actions.Enable();
     private void OnDisable() => _actions.Disable();
+    
+    private void OnDropPerformed(InputAction.CallbackContext context) { DropWeapon(); }
     
     public void EquipFromPickup(WeaponPickup pickup)
     {
@@ -26,25 +33,29 @@ public class WeaponManager : MonoBehaviour
         go.transform.SetParent(weaponHolder, false);
 
         var wc  = go.AddComponent<WeaponController>();
-        var ctx = GetComponent<WeaponContext>();
+        ctx = GetComponent<WeaponContext>();
+        
+        ctx.WeaponManager    = this;
         wc.Initialize(pickup.Data, ctx);
 
         equipped = wc;
         equippedData = pickup.Data;
+        worldPickupPrefab = pickup.Data.pickupPrefab;
     }
     
     public void DropWeapon()
     {
         if (equipped == null) return;
         
-        var worldPickup = Instantiate(worldPickupPrefab, equipped.transform.position, equipped.transform.rotation);
+        Instantiate(worldPickupPrefab, transform.position, Quaternion.identity);
+
+        Destroy(ctx.WeaponController._model);
+        Destroy(ctx.WeaponController.gameObject);
         
-        var weaponPickup = worldPickup.GetComponent<WeaponPickup>();
-        if (weaponPickup != null)
-        {
-            weaponPickup.Initialize(equippedData);
-            weaponPickup.transform.SetParent(null, true);
-        }
-        
+        worldPickupPrefab = null;
+        equippedData = null;
+        equipped = null;
     }
+    
+    private void OnDestroy() { _dropAction.performed -= OnDropPerformed; }
 }

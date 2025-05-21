@@ -10,30 +10,36 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 173e1320fcaa41c78d1bb440de6ba45a, type: 3}
-  m_Name: MeleeWeapon
+  m_Name: BeamWeapon
   m_EditorClassIdentifier: 
-  weaponName: MeleeWeapon
+  weaponName: Test
   weaponDescription: 
-  rightHandModel: {fileID: 4841816053556224155, guid: 0f4c565822e482b4e8dd9ff05ea03122, type: 3}
+  rightHandModel: {fileID: 5374478241137192205, guid: 4b0b469db98e6fc42bfdf1661af14ae1, type: 3}
   leftHandModel: {fileID: 0}
-  pickupPrefab: {fileID: 5291027263261853057, guid: 87ea6d7f2f5c7464fa9a942a85b379ca, type: 3}
+  pickupPrefab: {fileID: 1467819138738470339, guid: 24d1e24d2f8f6ac458534c8278f04506, type: 3}
   defaultHand: 0
   modelPositionOffset: {x: 0, y: 0, z: 0}
   modelRotationOffset: {x: 90, y: 0, z: 0}
   bindings:
-  - eventType: 0
+  - eventType: 1
     fireHand: 0
-    holdTime: 0
-    fireRate: 0.6
+    holdTime: 1
+    fireRate: 0.5
     inputAction: {fileID: 2158980376108856071, guid: 6eaff8a1080c3b64bba326ccc7407a63, type: 3}
     actions:
-    - rid: 7470862035778011219
+    - rid: 3936017921557921944
   references:
     version: 2
     RefIds:
-    - rid: 7470862035778011219
-      type: {class: DealMeleeDamageAction, ns: , asm: Assembly-CSharp}
+    - rid: 3936017921557921944
+      type: {class: ContinuousRayAction, ns: , asm: Assembly-CSharp}
       data:
+        maxDistance: 100
         damageType: 0
-        damage: 10
-        range: 1.5
+        damage: 20
+        beamMode: 2
+        linePrefab: {fileID: 6171105225868257669, guid: 740782c4cd288be4a94f25c73bb92da7, type: 3}
+        beamDuration: 2
+        chargeTime: 0
+        pulseTime: 1
+        width: 0.02

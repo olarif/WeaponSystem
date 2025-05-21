@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 
 [System.Serializable]
-public class DealDamageOnHitData : ProjectileActionData
+public class DealDamageOnHit : ProjectileActionData
 {
     public DamageType damageType;
     public float damage = 5;

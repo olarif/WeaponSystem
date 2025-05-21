@@ -9,8 +9,15 @@ public class WeaponContext: MonoBehaviour
     public Transform leftHand;
     public Transform rightHand;
     public Camera PlayerCamera;
+    
+    public ChargeUI leftChargeUI;
+    public ChargeUI rightChargeUI;
+    
     [HideInInspector] public List<Transform> FirePoints = new List<Transform>();
     [HideInInspector] public Animator Animator;
+    
+    [HideInInspector] public WeaponController WeaponController;
+    [HideInInspector] public WeaponManager    WeaponManager;
 
     private void Reset()
     {

@@ -45,9 +45,6 @@ public class ProjectileController : MonoBehaviour
 
     private void OnCollisionEnter(Collision col)
     {
-        //collider only with hitlayer objects
-        
-        // ignore self-hits
         if (col.gameObject == owner) return;
         
         // ignore non-hitlayer objects
@@ -60,23 +57,6 @@ public class ProjectileController : MonoBehaviour
         foreach (var act in onHitActions)
             act?.Execute(gameObject, info, owner);
 
-        Destroy(gameObject);
-        
-        
-        /*
-        
-        // ignore self-hits
-        if (col.gameObject == owner) return;
-
-        // build CollisionInfo
-        var info = new CollisionInfo(col);
-
-        // execute all actions
-        foreach (var act in onHitActions)
-            act?.Execute(gameObject, info, owner);
-
-        Destroy(gameObject);
-        
-        */
+        //Destroy(gameObject);
     }
 }

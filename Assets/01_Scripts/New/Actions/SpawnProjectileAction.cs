@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Weapon/Actions/Spawn Projectile")]
+[System.Serializable]
 public class SpawnProjectileAction : WeaponActionData
 {
-    [Tooltip("Prefab of the projectile to fire.")]
+    [Tooltip("The prefab to spawn when firing the weapon.")]
     public GameObject projectilePrefab;
     
     public override void Execute(WeaponContext ctx, WeaponDataSO.InputBinding binding)

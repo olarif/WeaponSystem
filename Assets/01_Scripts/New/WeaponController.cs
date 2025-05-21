@@ -8,7 +8,7 @@ public class WeaponController : MonoBehaviour
     WeaponContext       _ctx;
     readonly List<Handler> _handlers = new();
     
-    public GameObject _model;
+    [HideInInspector] public List<GameObject> _models = new List<GameObject>();
     
     public void Initialize(WeaponDataSO data, WeaponContext ctx)
     {
@@ -24,23 +24,25 @@ public class WeaponController : MonoBehaviour
     void AttachModel()
     {
         if (_data == null) return;
-        // clear any previous
         _ctx.FirePoints.Clear();
+        _models.Clear();
 
         // helper to spawn one side
         void SpawnSide(GameObject prefab, Transform parent)
         {
             if (prefab == null || parent == null) return;
-            _model = Instantiate(prefab, parent);
-            _model.transform.localPosition = _data.modelPositionOffset;
-            _model.transform.localRotation = Quaternion.Euler(_data.modelRotationOffset);
+            var mdl = Instantiate(prefab, parent);
+            mdl.transform.localPosition = _data.modelPositionOffset;
+            mdl.transform.localRotation = Quaternion.Euler(_data.modelRotationOffset);
+
+            _models.Add(mdl);
 
             // register its FirePoint
-            var fp = _model.transform.Find("FirePoint");
+            var fp = mdl.transform.Find("FirePoint");
             if (fp != null)
                 _ctx.FirePoints.Add(fp);
             else
-                Debug.LogWarning($"[{name}] no ‘FirePoint’ child on {_model.name}", this);
+                Debug.LogWarning($"[{name}] no ‘FirePoint’ child on {mdl.name}", this);
         }
 
         // decide which to spawn

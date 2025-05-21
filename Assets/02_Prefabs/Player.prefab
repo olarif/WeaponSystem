@@ -3245,11 +3245,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3937661317679733131, guid: 826fe8d69594c2247a89de74653cddda, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 471
+      value: 350
       objectReference: {fileID: 0}
     - target: {fileID: 3937661317679733131, guid: 826fe8d69594c2247a89de74653cddda, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -80
       objectReference: {fileID: 0}
     - target: {fileID: 3937661317679733131, guid: 826fe8d69594c2247a89de74653cddda, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -3282,6 +3282,10 @@ PrefabInstance:
     - target: {fileID: 7205654366456187634, guid: 826fe8d69594c2247a89de74653cddda, type: 3}
       propertyPath: colorGradient.key1.r
       value: 0.14122522
+      objectReference: {fileID: 0}
+    - target: {fileID: 9147814011532966713, guid: 826fe8d69594c2247a89de74653cddda, type: 3}
+      propertyPath: m_Alpha
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -3382,11 +3386,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3937661317679733131, guid: 826fe8d69594c2247a89de74653cddda, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -484.66
+      value: -350
       objectReference: {fileID: 0}
     - target: {fileID: 3937661317679733131, guid: 826fe8d69594c2247a89de74653cddda, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -80
       objectReference: {fileID: 0}
     - target: {fileID: 3937661317679733131, guid: 826fe8d69594c2247a89de74653cddda, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -3419,6 +3423,10 @@ PrefabInstance:
     - target: {fileID: 7205654366456187634, guid: 826fe8d69594c2247a89de74653cddda, type: 3}
       propertyPath: colorGradient.key1.r
       value: 0.14122522
+      objectReference: {fileID: 0}
+    - target: {fileID: 9147814011532966713, guid: 826fe8d69594c2247a89de74653cddda, type: 3}
+      propertyPath: m_Alpha
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

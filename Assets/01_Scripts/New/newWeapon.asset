@@ -13,36 +13,36 @@ MonoBehaviour:
   m_Name: newWeapon
   m_EditorClassIdentifier: 
   weaponName: Test
+  weaponDescription: 
+  rightHandModel: {fileID: 5374478241137192205, guid: 4b0b469db98e6fc42bfdf1661af14ae1, type: 3}
+  leftHandModel: {fileID: 8170218154423182505, guid: 1dd602ee85aba1048aa46c8bb0c254f0, type: 3}
+  worldPickupPrefab: {fileID: 6664467674714522818, guid: 3541b7e3548de384eafb240f734bb491, type: 3}
+  defaultHand: 2
+  modelPositionOffset: {x: 0, y: 0, z: 0}
+  modelRotationOffset: {x: 90, y: 0, z: 0}
   bindings:
-  - eventType: 0
+  - eventType: 3
+    fireHand: 0
     holdTime: 0
-    fireRate: 0
-    inputAction: {fileID: 0}
+    fireRate: 0.2
+    inputAction: {fileID: 2158980376108856071, guid: 6eaff8a1080c3b64bba326ccc7407a63, type: 3}
     actions:
-    - rid: 1246412350636425333
-    - rid: 1246412350636425334
-  - eventType: 1
-    holdTime: 2
-    fireRate: 0
-    inputAction: {fileID: 0}
+    - rid: 7470862035778011215
+  - eventType: 0
+    fireHand: 1
+    holdTime: 0
+    fireRate: 1
+    inputAction: {fileID: -2189319267458262046, guid: 6eaff8a1080c3b64bba326ccc7407a63, type: 3}
     actions:
-    - rid: 1246412350636425331
+    - rid: 7470862035778011218
   references:
     version: 2
     RefIds:
-    - rid: 1246412350636425331
-      type: {class: PlayerForceAction, ns: , asm: Assembly-CSharp}
-      data:
-        forceAmount: 15
-        forceDirection: {x: 0, y: 0, z: -1}
-    - rid: 1246412350636425333
+    - rid: 7470862035778011215
       type: {class: SpawnProjectileAction, ns: , asm: Assembly-CSharp}
       data:
         projectilePrefab: {fileID: 1930107923466689315, guid: 86ebdaff25f482b4f9f8a1ff3fdb20c6, type: 3}
-        useLeftHand: 0
-        toggleHands: 1
-    - rid: 1246412350636425334
-      type: {class: PlayerForceAction, ns: , asm: Assembly-CSharp}
+    - rid: 7470862035778011218
+      type: {class: SpawnProjectileAction, ns: , asm: Assembly-CSharp}
       data:
-        forceAmount: 2
-        forceDirection: {x: 0, y: 0, z: -1}
+        projectilePrefab: {fileID: 1930107923466689315, guid: 6b45f06f2495ddf4583930a0fc1a3bec, type: 3}

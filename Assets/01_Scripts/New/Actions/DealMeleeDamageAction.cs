@@ -2,7 +2,7 @@
 using UnityEngine.InputSystem;
 
 [System.Serializable]
-public class DealDamageAction : WeaponActionData
+public class DealMeleeDamageAction : WeaponActionData
 {
     public DamageType damageType;
     public float damage = 5f;
@@ -10,7 +10,7 @@ public class DealDamageAction : WeaponActionData
     
     public override void Execute(WeaponContext ctx, WeaponDataSO.InputBinding binding)
     {
-        Debug.Log("DealDamageAction executed!");
+        Debug.Log("DealMeleeDamageAction executed!");
         
         //physics overlap
         Collider[] hitColliders = Physics.OverlapSphere(ctx.transform.position, range);

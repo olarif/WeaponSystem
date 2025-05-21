@@ -1,31 +1,46 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
+[CreateAssetMenu(menuName = "Weapon/Actions/Spawn Projectile")]
 public class SpawnProjectileAction : WeaponActionData
 {
+    [Tooltip("Prefab of the projectile to fire.")]
     public GameObject projectilePrefab;
-    public bool useLeftHand = false;
-    public bool toggleHands = false;
     
     public override void Execute(WeaponContext ctx, WeaponDataSO.InputBinding binding)
     {
-        if (projectilePrefab == null) return;
-        
-        var hand = useLeftHand ? ctx.leftHand : ctx.rightHand;
-        
-        // toggle between hands
-        if (toggleHands)
+        // collect the transforms we should fire from:
+        var sources = new List<Transform>();
+        foreach (var fp in ctx.FirePoints)
         {
-            useLeftHand = !useLeftHand;
-            hand = useLeftHand ? ctx.leftHand : ctx.rightHand;
+            // fp.IsChildOf() will be true if fp is under leftHand or rightHand
+            bool isLeft  = fp.IsChildOf(ctx.leftHand);
+            bool isRight = fp.IsChildOf(ctx.rightHand);
+
+            if (binding.fireHand == WeaponDataSO.Hand.Both ||
+                (binding.fireHand == WeaponDataSO.Hand.Left  && isLeft) ||
+                (binding.fireHand == WeaponDataSO.Hand.Right && isRight))
+            {
+                sources.Add(fp);
+            }
         }
-        
-        Vector3 pos = hand.position;
-        Quaternion rot = hand.rotation;
-        // Instantiate
-        var projectile = Object.Instantiate(projectilePrefab, pos, rot);
-        // Initialize with owner
-        var controller = projectile.GetComponent<ProjectileController>();
-        if (controller != null)
-            controller.Initialize(ctx.gameObject);
+
+        // fallback if nobody matched
+        if (sources.Count == 0)
+        {
+            Debug.LogWarning($"No FirePoints found for hand {binding.fireHand}; defaulting to right hand.", ctx);
+            sources.Add(ctx.rightHand);
+        }
+
+        // spawn one projectile per source
+        foreach (var fp in sources)
+        {
+            Vector3 worldPos = fp.position;
+            Quaternion worldRot = fp.rotation;
+
+            var projGO = Object.Instantiate(projectilePrefab, worldPos, worldRot);
+            if (projGO.TryGetComponent<ProjectileController>(out var ctrl))
+                ctrl.Initialize(ctx.gameObject);
+        }
     }
 }

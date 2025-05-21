@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 [DisallowMultipleComponent]
@@ -9,6 +10,7 @@ public class WeaponContext: MonoBehaviour
     public Transform rightHand;
     public Animator Animator;
     public Camera PlayerCamera;
+    public List<Transform> FirePoints = new List<Transform>();
 
     private void Reset()
     {

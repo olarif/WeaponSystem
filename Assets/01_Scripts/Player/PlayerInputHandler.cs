@@ -7,6 +7,8 @@ public class PlayerInputHandler : MonoBehaviour
     [Header("Input Action Asset")] 
     private PlayerInput _actions;
 
+    public PlayerInput Actions => _actions;
+
     [Header("Action Name References")]
     [SerializeField] private string movement = "Movement";
     [SerializeField] private string rotation = "Rotation";

@@ -12,30 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 173e1320fcaa41c78d1bb440de6ba45a, type: 3}
   m_Name: HealthConsumable
   m_EditorClassIdentifier: 
-  weaponName: Health Consumable
-  weaponDescription: 
-  rightHandModel: {fileID: 4240378193073885370, guid: 0b38f2db129504d4788123aff1badf5a, type: 3}
+  weaponName: 
+  rightHandModel: {fileID: 0}
   leftHandModel: {fileID: 0}
-  pickupPrefab: {fileID: 4433644318165709800, guid: d64b4d738536e954f809ef75578117f3, type: 3}
-  defaultHand: 0
+  pickupPrefab: {fileID: 0}
   modelPositionOffset: {x: 0, y: 0, z: 0}
   modelRotationOffset: {x: 0, y: 0, z: 0}
-  bindings:
-  - eventType: 0
-    fireHand: 0
-    holdTime: 0
-    fireRate: 0
-    inputAction: {fileID: 2158980376108856071, guid: 6eaff8a1080c3b64bba326ccc7407a63, type: 3}
-    actions:
-    - rid: 1246412388835786887
-    - rid: 1246412388835786888
+  defaultHand: 0
+  inputBindings: []
   references:
     version: 2
-    RefIds:
-    - rid: 1246412388835786887
-      type: {class: HealAction, ns: , asm: Assembly-CSharp}
-      data:
-        amount: 5
-    - rid: 1246412388835786888
-      type: {class: DestroyOnUseAction, ns: , asm: Assembly-CSharp}
-      data: 
+    RefIds: []

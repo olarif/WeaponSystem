@@ -1,27 +1,34 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 [System.Serializable]
-public class ChargeBeamAction : WeaponActionData
+public class ChargeBeamAction : IWeaponAction
 {
     public GameObject beamPrefab;
     public float      duration = 0.5f;
 
-    public override void OnPress(WeaponContext ctx, WeaponDataSO.InputBinding b)
+    public void Execute(WeaponContext ctx, InputBindingData b, ActionBindingData ab)
     {
-        // runner only calls this if holdTime was reached
-        var go = Object.Instantiate(beamPrefab);
+        // pick the right FirePoint for this hand
+        var fp = ctx.FirePoints
+            .First(p => p.IsChildOf(
+                b.hand == Hand.Left ? ctx.leftHand : ctx.rightHand));
+
+        // spawn beam
+        var go = GameObject.Instantiate(beamPrefab, fp.position, fp.rotation);
         var f  = go.GetComponent<BeamFollower>();
-        f.origin = ctx.FirePoints[0];
+        f.origin = fp;
         f.length = b.holdTime * 50f;
 
-        CoroutineRunner.Instance.StartCoroutine(AutoDestroy(go, duration));
+        // auto‐destroy after duration
+        ctx.WeaponController.StartCoroutine(AutoDestroy(go, duration));
     }
 
     IEnumerator AutoDestroy(GameObject go, float t)
     {
         yield return new WaitForSeconds(t);
-        Object.Destroy(go);
+        GameObject.Destroy(go);
     }
 }

@@ -1,15 +1,12 @@
 ﻿using UnityEngine;
 
 [System.Serializable]
-public class DestroyOnUseAction : WeaponActionData
+public class DestroyOnUseAction : IWeaponAction
 {
-    public override void OnPress(WeaponContext ctx, WeaponDataSO.InputBinding binding)
+    public void Execute(WeaponContext ctx, InputBindingData binding, ActionBindingData actionBinding)
     {
-        Destroy(ctx);
-    }
-    
-    public override void OnRelease(WeaponContext ctx, WeaponDataSO.InputBinding binding)
-    {
+        if (ctx == null || ctx.WeaponManager == null) return;
+
         Destroy(ctx);
     }
     

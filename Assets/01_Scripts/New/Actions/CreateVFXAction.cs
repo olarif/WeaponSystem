@@ -2,18 +2,15 @@
 using System.Collections.Generic;
 
 [System.Serializable]
-public class CreateVFXAction : WeaponActionData
+public class CreateVFXAction : IWeaponAction
 {
     public GameObject vfxPrefab;
     public float lifetime = 5f;
 
-    public override void OnPress(WeaponContext ctx, WeaponDataSO.InputBinding b)
+    public void Execute(WeaponContext ctx, InputBindingData binding, ActionBindingData actionBinding)
     {
-        SpawnVFX(ctx);
-    }
-    
-    public override void OnRelease(WeaponContext ctx, WeaponDataSO.InputBinding b)
-    {
+        if (ctx == null || ctx.FirePoints == null || ctx.FirePoints.Count == 0) return;
+
         SpawnVFX(ctx);
     }
 

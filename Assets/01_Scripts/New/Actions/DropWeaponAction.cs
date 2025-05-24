@@ -1,15 +1,13 @@
 ﻿using UnityEngine;
 
 [System.Serializable]
-public class DropWeaponAction : WeaponActionData
+public class DropWeaponAction : IWeaponAction
 {
-    public override void OnPress(WeaponContext ctx, WeaponDataSO.InputBinding binding)
-    {
-        DropWeapon(ctx);
-    }
     
-    public override void OnRelease(WeaponContext ctx, WeaponDataSO.InputBinding binding)
+    public void Execute(WeaponContext ctx, InputBindingData binding, ActionBindingData actionBinding)
     {
+        if (ctx == null || ctx.WeaponManager == null) return;
+        
         DropWeapon(ctx);
     }
 

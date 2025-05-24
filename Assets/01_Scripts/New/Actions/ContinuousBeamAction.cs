@@ -2,9 +2,9 @@
 using UnityEngine;
 
 [System.Serializable]
-public class ContinuousBeamAction : WeaponActionData
+public class ContinuousBeamAction
 {
-    public GameObject beamPrefab;
+    /*public GameObject beamPrefab;
     BeamFollower _instance;
 
     // this now runs on "start holding"
@@ -24,5 +24,5 @@ public class ContinuousBeamAction : WeaponActionData
     {
         if (_instance != null)
             Object.Destroy(_instance.gameObject);
-    }
+    }*/
 }

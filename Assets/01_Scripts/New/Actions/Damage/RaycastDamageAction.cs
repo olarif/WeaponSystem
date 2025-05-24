@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public class RaycastDamageAction : WeaponActionData
+public class RaycastDamageAction : IWeaponAction
 {
+    
     public float maxDistance, damagePerTick, tickRate;
     public DamageType damageType;
     float _last;
 
-    public override void OnContinuous(WeaponContext ctx, WeaponDataSO.InputBinding b)
+    public void Execute(WeaponContext ctx, InputBindingData binding, ActionBindingData actionBinding)
     {
         if (Time.time < _last + tickRate) return;
         _last = Time.time;

@@ -4,9 +4,9 @@ using UnityEngine;
 using Object = UnityEngine.Object;
 
 [Serializable]
-public class PressBeamAction : WeaponActionData
+public class PressBeamAction
 {
-    public GameObject beamPrefab;
+    /*public GameObject beamPrefab;
     public float      duration = 0.3f;
 
     public override void OnPress(WeaponContext ctx, WeaponDataSO.InputBinding b)
@@ -25,5 +25,5 @@ public class PressBeamAction : WeaponActionData
     {
         yield return new WaitForSeconds(t);
         Object.Destroy(go);
-    }
+    }*/
 }

@@ -12,38 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 173e1320fcaa41c78d1bb440de6ba45a, type: 3}
   m_Name: MeleeWeapon
   m_EditorClassIdentifier: 
-  weaponName: MeleeWeapon
-  weaponDescription: 
-  rightHandModel: {fileID: 4841816053556224155, guid: 0f4c565822e482b4e8dd9ff05ea03122, type: 3}
-  leftHandModel: {fileID: 1596470492229182116, guid: 490ae74f1f255814e8aca40f179aa439, type: 3}
-  pickupPrefab: {fileID: 5291027263261853057, guid: 87ea6d7f2f5c7464fa9a942a85b379ca, type: 3}
-  defaultHand: 0
+  weaponName: 
+  rightHandModel: {fileID: 0}
+  leftHandModel: {fileID: 0}
+  pickupPrefab: {fileID: 0}
   modelPositionOffset: {x: 0, y: 0, z: 0}
-  modelRotationOffset: {x: 90, y: 0, z: 0}
-  bindings:
-  - eventType: 0
-    fireHand: 0
-    holdTime: 0
-    fireRate: 0
-    inputAction: {fileID: 2158980376108856071, guid: 6eaff8a1080c3b64bba326ccc7407a63, type: 3}
-    actions:
-    - rid: 1246412388835786851
-  - eventType: 1
-    fireHand: 0
-    holdTime: 1
-    fireRate: 0
-    inputAction: {fileID: 2158980376108856071, guid: 6eaff8a1080c3b64bba326ccc7407a63, type: 3}
-    actions:
-    - rid: 1246412388835786859
+  modelRotationOffset: {x: 0, y: 0, z: 0}
+  defaultHand: 0
+  inputBindings: []
   references:
     version: 2
-    RefIds:
-    - rid: 1246412388835786851
-      type: {class: DealMeleeDamageAction, ns: , asm: Assembly-CSharp}
-      data:
-        damageType: 0
-        damage: 5
-        range: 2.5
-    - rid: 1246412388835786859
-      type: {class: DropWeaponAction, ns: , asm: Assembly-CSharp}
-      data: 
+    RefIds: []

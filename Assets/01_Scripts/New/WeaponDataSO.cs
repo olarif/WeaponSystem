@@ -10,33 +10,9 @@ public class WeaponDataSO : ScriptableObject
     public GameObject rightHandModel;
     public GameObject leftHandModel;
     public GameObject pickupPrefab;
+    public Vector3 modelPositionOffset;
+    public Vector3 modelRotationOffset;
+    public Hand defaultHand;
     
-    public enum Hand { Right, Left, Both }
-    public Hand defaultHand = Hand.Right;
-    
-    [Tooltip("Local position offset after parenting under the hand")]
-    public Vector3 modelPositionOffset = Vector3.zero;
-    [Tooltip("Local euler-rotation after parenting under the hand")]
-    public Vector3 modelRotationOffset = Vector3.zero;
-    
-    public List<InputBinding> bindings = new List<InputBinding>();
-    
-    [System.Serializable]
-    public class InputBinding
-    {
-        public WeaponInputEvent eventType;
-        
-        public Hand fireHand = Hand.Right;
-        
-        [Tooltip("Time in seconds to hold the button before executing the action")]
-        public float holdTime;
-
-        [Tooltip("Time in seconds between each action execution when holding the button")]
-        public float fireRate = 0.1f;
-        
-        public InputActionReference inputAction;
-        
-        [SerializeReference] 
-        public List<WeaponActionData> actions = new List<WeaponActionData>();
-    }
+    public List<InputBindingData> inputBindings = new();
 }

@@ -12,15 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 173e1320fcaa41c78d1bb440de6ba45a, type: 3}
   m_Name: FlamethrowerWeapon
   m_EditorClassIdentifier: 
-  weaponName: Flamethrower
-  weaponDescription: 
-  rightHandModel: {fileID: 1048356090118815806, guid: 71b07f6e1b714434d9a1591cbf8f30d9, type: 3}
+  weaponName: 
+  rightHandModel: {fileID: 0}
   leftHandModel: {fileID: 0}
-  pickupPrefab: {fileID: 1467819138738470339, guid: bd824a854c5fe3e4a9379de911bfb1af, type: 3}
-  defaultHand: 0
+  pickupPrefab: {fileID: 0}
   modelPositionOffset: {x: 0, y: 0, z: 0}
-  modelRotationOffset: {x: 90, y: 0, z: 0}
-  bindings: []
+  modelRotationOffset: {x: 0, y: 0, z: 0}
+  defaultHand: 0
+  inputBindings: []
   references:
     version: 2
     RefIds: []

@@ -1,12 +1,12 @@
 ﻿using UnityEngine;
 
 [System.Serializable]
-public class ChargeDamageAction : WeaponActionData
+public class ChargeDamageAction : IWeaponAction
 {
     public float maxDistance, damageAmount;
     public DamageType damageType;
 
-    public override void OnPress(WeaponContext ctx, WeaponDataSO.InputBinding b)
+    public void Execute(WeaponContext ctx, InputBindingData binding, ActionBindingData actionBinding)
     {
         var origin = ctx.FirePoints[0].position;
         var dir    = ctx.FirePoints[0].forward;

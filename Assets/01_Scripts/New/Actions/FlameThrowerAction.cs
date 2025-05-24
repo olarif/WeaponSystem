@@ -1,9 +1,9 @@
 ﻿using UnityEngine;
 
 [System.Serializable]
-public class FlameThrowerAction : WeaponActionData
+public class FlameThrowerAction
 {
-    public float range           = 5f;
+    /*public float range           = 5f;
     public float halfAngle       = 30f;            // degrees
     public float damagePerSecond = 10f;
     public LayerMask targetMask;
@@ -29,5 +29,5 @@ public class FlameThrowerAction : WeaponActionData
                 && col.TryGetComponent<IDamageable>(out var d))
                 d.TakeDamage(dmg, DamageType.Fire);
         }
-    }
+    }*/
 }

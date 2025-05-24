@@ -12,15 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 173e1320fcaa41c78d1bb440de6ba45a, type: 3}
   m_Name: ProjWeapon
   m_EditorClassIdentifier: 
-  weaponName: Test
-  weaponDescription: 
-  rightHandModel: {fileID: 5374478241137192205, guid: 4b0b469db98e6fc42bfdf1661af14ae1, type: 3}
-  leftHandModel: {fileID: 8170218154423182505, guid: 1dd602ee85aba1048aa46c8bb0c254f0, type: 3}
-  pickupPrefab: {fileID: 6664467674714522818, guid: 67d03a5b26d86cc4ca35589934ad07aa, type: 3}
-  defaultHand: 2
+  weaponName: 
+  rightHandModel: {fileID: 0}
+  leftHandModel: {fileID: 0}
+  pickupPrefab: {fileID: 0}
   modelPositionOffset: {x: 0, y: 0, z: 0}
-  modelRotationOffset: {x: 90, y: 0, z: 0}
-  bindings: []
+  modelRotationOffset: {x: 0, y: 0, z: 0}
+  defaultHand: 0
+  inputBindings: []
   references:
     version: 2
     RefIds: []

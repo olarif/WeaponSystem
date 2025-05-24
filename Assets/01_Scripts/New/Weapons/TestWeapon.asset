@@ -12,33 +12,39 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 173e1320fcaa41c78d1bb440de6ba45a, type: 3}
   m_Name: TestWeapon
   m_EditorClassIdentifier: 
-  weaponName: Test
-  weaponDescription: 
-  rightHandModel: {fileID: 5374478241137192205, guid: 4b0b469db98e6fc42bfdf1661af14ae1, type: 3}
-  leftHandModel: {fileID: 0}
+  weaponName: TestWeapon
+  weaponDescription: yurr
+  rightHandModel: {fileID: 1467819138738470339, guid: 24d1e24d2f8f6ac458534c8278f04506, type: 3}
+  leftHandModel: {fileID: 1467819138738470339, guid: 24d1e24d2f8f6ac458534c8278f04506, type: 3}
   pickupPrefab: {fileID: 1467819138738470339, guid: 24d1e24d2f8f6ac458534c8278f04506, type: 3}
-  defaultHand: 2
   modelPositionOffset: {x: 0, y: 0, z: 0}
   modelRotationOffset: {x: 90, y: 0, z: 0}
-  bindings:
-  - eventType: 1
-    fireHand: 0
-    holdTime: 0.5
-    fireRate: 0
-    inputAction: {fileID: 2158980376108856071, guid: 6eaff8a1080c3b64bba326ccc7407a63, type: 3}
-    actions:
-    - rid: 1246412388835786901
-    - rid: 1246412388835786903
+  defaultHand: 2
+  inputBindings:
+  - bindingMode: 0
+    actionRef: {fileID: 2158980376108856071, guid: 6eaff8a1080c3b64bba326ccc7407a63, type: 3}
+    hand: 0
+    holdTime: 0
+    cooldown: 0
+    bindings:
+    - triggerPhase: 1
+      tickRate: 0
+      action:
+        rid: 1246412388835786978
+  - bindingMode: 1
+    actionRef: {fileID: 2158980376108856071, guid: 6eaff8a1080c3b64bba326ccc7407a63, type: 3}
+    hand: 0
+    holdTime: 1
+    cooldown: 0
+    bindings:
+    - triggerPhase: 2
+      tickRate: 0
+      action:
+        rid: 1246412388835786978
   references:
     version: 2
     RefIds:
-    - rid: 1246412388835786901
-      type: {class: ChargeBeamAction, ns: , asm: Assembly-CSharp}
+    - rid: 1246412388835786978
+      type: {class: SpawnProjectileAction, ns: , asm: Assembly-CSharp}
       data:
-        beamPrefab: {fileID: 6171105225868257669, guid: 740782c4cd288be4a94f25c73bb92da7, type: 3}
-        duration: 0.5
-    - rid: 1246412388835786903
-      type: {class: PlayerForceAction, ns: , asm: Assembly-CSharp}
-      data:
-        forceAmount: 4
-        forceDirection: {x: 0, y: 0, z: -1}
+        prefab: {fileID: 1930107923466689315, guid: 86ebdaff25f482b4f9f8a1ff3fdb20c6, type: 3}

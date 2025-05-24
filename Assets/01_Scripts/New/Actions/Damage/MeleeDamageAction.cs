@@ -1,14 +1,14 @@
-﻿using UnityEngine;
-using UnityEngine.InputSystem;
+﻿using System;
+using UnityEngine;
 
-[System.Serializable]
-public class DealMeleeDamageAction : WeaponActionData
+[Serializable]
+public class MeleeDamageAction : IWeaponAction
 {
     public DamageType damageType;
     public float damage = 5f;
     public float range = 2.5f;
-
-    public override void OnPress(WeaponContext ctx, WeaponDataSO.InputBinding binding)
+    
+    public void Execute(WeaponContext ctx, InputBindingData binding, ActionBindingData actionBinding)
     {
         Collider[] hits = Physics.OverlapSphere(ctx.transform.position, range);
         foreach (var c in hits)

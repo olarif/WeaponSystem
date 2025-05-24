@@ -1,11 +1,11 @@
 ﻿using UnityEngine;
 
 [System.Serializable]
-public class HealAction : WeaponActionData
+public class HealAction : IWeaponAction
 {
     public float amount = 10f;
     
-    public override void OnPress(WeaponContext ctx, WeaponDataSO.InputBinding b)
+    public void Execute(WeaponContext ctx, InputBindingData binding, ActionBindingData actionBinding)
     {
         if (ctx == null || ctx.Player == null) return;
 

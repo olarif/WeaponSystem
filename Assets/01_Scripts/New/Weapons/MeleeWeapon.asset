@@ -12,14 +12,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 173e1320fcaa41c78d1bb440de6ba45a, type: 3}
   m_Name: MeleeWeapon
   m_EditorClassIdentifier: 
-  weaponName: 
-  rightHandModel: {fileID: 0}
+  weaponName: Sword
+  weaponDescription: 
+  rightHandModel: {fileID: 5291027263261853057, guid: 87ea6d7f2f5c7464fa9a942a85b379ca, type: 3}
   leftHandModel: {fileID: 0}
-  pickupPrefab: {fileID: 0}
+  pickupPrefab: {fileID: 5291027263261853057, guid: 87ea6d7f2f5c7464fa9a942a85b379ca, type: 3}
   modelPositionOffset: {x: 0, y: 0, z: 0}
-  modelRotationOffset: {x: 0, y: 0, z: 0}
+  modelRotationOffset: {x: 65, y: 0, z: 0}
   defaultHand: 0
-  inputBindings: []
+  inputBindings:
+  - bindingMode: 0
+    actionRef: {fileID: 2158980376108856071, guid: 6eaff8a1080c3b64bba326ccc7407a63, type: 3}
+    hand: 0
+    holdTime: 0
+    cooldown: 0.3
+    bindings:
+    - triggerPhase: 1
+      tickRate: 0
+      action:
+        rid: 1246412388835786981
   references:
     version: 2
-    RefIds: []
+    RefIds:
+    - rid: 1246412388835786981
+      type: {class: MeleeDamageAction, ns: , asm: Assembly-CSharp}
+      data:
+        damageType: 0
+        damage: 5
+        range: 1.7

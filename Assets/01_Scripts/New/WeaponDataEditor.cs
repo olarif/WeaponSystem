@@ -1,40 +1,49 @@
-﻿// Assets/Editor/WeaponDataSOEditor.cs
-using System;
+﻿using System;
 using System.Linq;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
+/// <summary>
+/// Custom inspector for WeaponDataSO that allows editing
+/// weapon metadata and input-action bindings with a context menu.
+/// </summary>
 [CustomEditor(typeof(WeaponDataSO))]
-public class WeaponDataEditor : Editor
+public class WeaponDataSOEditor : Editor
 {
-    // Top‐level SO fields
-    SerializedProperty pName, pDesc;
-    SerializedProperty pRightModel, pLeftModel, pPickupPrefab;
-    SerializedProperty pModelPos, pModelRot, pDefaultHand;
+    // Top-level properties
+    private SerializedProperty pName;
+    private SerializedProperty pDesc;
+    private SerializedProperty pRightModel;
+    private SerializedProperty pLeftModel;
+    private SerializedProperty pPickupPrefab;
+    private SerializedProperty pModelPos;
+    private SerializedProperty pModelRot;
+    private SerializedProperty pDefaultHand;
 
-    // Bindings list
-    SerializedProperty pBindings;
-    string _bindingsFieldName;
+    // Bindings array
+    private SerializedProperty pBindings;
+    private string _bindingsFieldName;
 
-    // All your IWeaponAction types
-    List<Type> _actionTypes;
+    // Cached available IWeaponAction types
+    private List<Type> _actionTypes;
 
-    void OnEnable()
+    /// <summary>
+    /// Initialize property references and cache action types.
+    /// </summary>
+    private void OnEnable()
     {
-        serializedObject.FindProperty(""); // force serialization init
-
-        // Grab your fields
-        pName = serializedObject.FindProperty("weaponName");
-        pDesc = serializedObject.FindProperty("weaponDescription");
-        pRightModel = serializedObject.FindProperty("rightHandModel");
-        pLeftModel = serializedObject.FindProperty("leftHandModel");
+        // Top-level fields
+        pName         = serializedObject.FindProperty("weaponName");
+        pDesc         = serializedObject.FindProperty("weaponDescription");
+        pRightModel   = serializedObject.FindProperty("rightHandModel");
+        pLeftModel    = serializedObject.FindProperty("leftHandModel");
         pPickupPrefab = serializedObject.FindProperty("pickupPrefab");
-        pModelPos = serializedObject.FindProperty("modelPositionOffset");
-        pModelRot = serializedObject.FindProperty("modelRotationOffset");
-        pDefaultHand = serializedObject.FindProperty("defaultHand");
+        pModelPos     = serializedObject.FindProperty("modelPositionOffset");
+        pModelRot     = serializedObject.FindProperty("modelRotationOffset");
+        pDefaultHand  = serializedObject.FindProperty("defaultHand");
 
-        // Try both possible names
+        // Find bindings list (supports both names)
         pBindings = serializedObject.FindProperty("inputBindings");
         _bindingsFieldName = "inputBindings";
         if (pBindings == null)
@@ -43,7 +52,7 @@ public class WeaponDataEditor : Editor
             _bindingsFieldName = "bindings";
         }
 
-        // Cache action types
+        // Gather all concrete IWeaponAction types for Add Action menu
         _actionTypes = AppDomain.CurrentDomain.GetAssemblies()
             .SelectMany(a => a.GetTypes())
             .Where(t => typeof(IWeaponAction).IsAssignableFrom(t)
@@ -52,17 +61,20 @@ public class WeaponDataEditor : Editor
             .ToList();
     }
 
+    /// <summary>
+    /// Draw the inspector GUI for WeaponDataSO.
+    /// </summary>
     public override void OnInspectorGUI()
     {
         serializedObject.Update();
 
-        // --- Top‐level fields ---
+        // Draw basic weapon info
         EditorGUILayout.PropertyField(pName, new GUIContent("Name"));
         EditorGUILayout.PropertyField(pDesc, new GUIContent("Description"));
 
         EditorGUILayout.Space();
         EditorGUILayout.PropertyField(pRightModel, new GUIContent("Right Model"));
-        EditorGUILayout.PropertyField(pLeftModel, new GUIContent("Left Model"));
+        EditorGUILayout.PropertyField(pLeftModel,  new GUIContent("Left Model"));
         EditorGUILayout.PropertyField(pPickupPrefab, new GUIContent("Pickup Prefab"));
 
         EditorGUILayout.Space();
@@ -75,10 +87,10 @@ public class WeaponDataEditor : Editor
 
         if (pBindings == null)
         {
+            // Show error if bindings list not found
             EditorGUILayout.HelpBox(
-                $"Could not find a List<InputBindingData> named '{_bindingsFieldName}'.",
-                MessageType.Error
-            );
+                $"Could not find a List<InputBindingData> named '{_bindingsFieldName}'",
+                MessageType.Error);
         }
         else
         {
@@ -88,9 +100,12 @@ public class WeaponDataEditor : Editor
         serializedObject.ApplyModifiedProperties();
     }
 
-    void DrawBindings()
+    /// <summary>
+    /// Renders the list of input bindings and their actions.
+    /// </summary>
+    private void DrawBindings()
     {
-        // Add new input-binding
+        // Button to add a new input binding
         if (GUILayout.Button("Add Binding", GUILayout.MaxWidth(120)))
         {
             Undo.RecordObject(target, "Add Input Binding");
@@ -98,20 +113,20 @@ public class WeaponDataEditor : Editor
             serializedObject.ApplyModifiedProperties();
         }
 
-        // Iterate existing bindings
-        for (int bi = 0; bi < pBindings.arraySize; bi++)
+        // Iterate each binding
+        for (int i = 0; i < pBindings.arraySize; i++)
         {
-            var bindProp = pBindings.GetArrayElementAtIndex(bi);
+            var bindProp = pBindings.GetArrayElementAtIndex(i);
             bindProp.isExpanded = EditorGUILayout.Foldout(
-                bindProp.isExpanded, $"Binding #{bi + 1}", true);
-            if (!bindProp.isExpanded) continue;
+                bindProp.isExpanded, $"Binding #{i + 1}", true);
 
+            if (!bindProp.isExpanded) continue;
             EditorGUI.indentLevel++;
-            var modeProp = bindProp.FindPropertyRelative("bindingMode");
-            if (modeProp != null)
-                EditorGUILayout.PropertyField(
-                    modeProp,
-                    new GUIContent("Binding Mode"));
+
+            // Basic binding fields
+            EditorGUILayout.PropertyField(
+                bindProp.FindPropertyRelative("bindingMode"),
+                new GUIContent("Binding Mode"));
             EditorGUILayout.PropertyField(
                 bindProp.FindPropertyRelative("actionRef"),
                 new GUIContent("Input Action"));
@@ -121,23 +136,21 @@ public class WeaponDataEditor : Editor
             EditorGUILayout.PropertyField(
                 bindProp.FindPropertyRelative("holdTime"),
                 new GUIContent("Hold Time"));
-            var cooldownProp = bindProp.FindPropertyRelative("cooldown");
-            if (cooldownProp != null)
-                EditorGUILayout.PropertyField(
-                    cooldownProp,
-                    new GUIContent("Input Cooldown"));
+            EditorGUILayout.PropertyField(
+                bindProp.FindPropertyRelative("cooldown"),
+                new GUIContent("Input Cooldown"));
 
-            // Remove binding (single pass)
+            // Remove binding button
             if (GUILayout.Button("Remove Binding", GUILayout.MaxWidth(140)))
             {
                 Undo.RecordObject(target, "Remove Input Binding");
-                pBindings.DeleteArrayElementAtIndex(bi);
+                pBindings.DeleteArrayElementAtIndex(i);
                 serializedObject.ApplyModifiedProperties();
                 EditorGUI.indentLevel--;
-                break;
+                break; // Prevent index issues
             }
 
-            // Actions list inside this binding
+            // Actions sub-list
             var actionsProp = bindProp.FindPropertyRelative("bindings");
             if (actionsProp == null)
             {
@@ -147,43 +160,40 @@ public class WeaponDataEditor : Editor
             else
             {
                 EditorGUILayout.Space();
-                EditorGUILayout.LabelField(
-                    "Actions", EditorStyles.boldLabel);
+                EditorGUILayout.LabelField("Actions", EditorStyles.boldLabel);
 
-                // Show context menu to add a new action
+                // Button to add a new weapon action
                 if (GUILayout.Button("Add Action", GUILayout.MaxWidth(120)))
-                    ShowAddActionMenu(bi);
+                    ShowAddActionMenu(i);
 
-                // Iterate existing actions
-                for (int ai = 0; ai < actionsProp.arraySize; ai++)
+                // Iterate each action in this binding
+                for (int j = 0; j < actionsProp.arraySize; j++)
                 {
-                    var actProp = actionsProp.GetArrayElementAtIndex(ai);
-                    var typeProp = actProp.FindPropertyRelative("action");
-                    string typeName = typeProp != null
-                        ? GetNiceManagedTypeName(typeProp)
-                        : $"Action {ai + 1}";
+                    var actProp = actionsProp.GetArrayElementAtIndex(j);
+                    string title = GetNiceManagedTypeName(
+                        actProp.FindPropertyRelative("action"));
 
                     actProp.isExpanded = EditorGUILayout.Foldout(
-                        actProp.isExpanded, typeName, true);
+                        actProp.isExpanded, title, true);
                     if (!actProp.isExpanded) continue;
-
                     EditorGUI.indentLevel++;
-                    // Trigger phase
+
+                    // Trigger phase field
                     EditorGUILayout.PropertyField(
                         actProp.FindPropertyRelative("triggerPhase"),
                         new GUIContent("Trigger Phase"));
 
-                    // Tick rate only for OnTick
+                    // Tick rate only for OnTick phase
                     var phaseProp = actProp.FindPropertyRelative("triggerPhase");
-                    if (phaseProp != null
-                        && (TriggerPhase)phaseProp.enumValueIndex == TriggerPhase.OnTick)
+                    if ((TriggerPhase)phaseProp.enumValueIndex == TriggerPhase.OnTick)
                     {
                         EditorGUILayout.PropertyField(
                             actProp.FindPropertyRelative("tickRate"),
                             new GUIContent("Tick Rate"));
                     }
 
-                    // Draw concrete action data
+                    // Draw managed-reference action data
+                    var typeProp = actProp.FindPropertyRelative("action");
                     if (typeProp != null && typeProp.managedReferenceValue != null)
                     {
                         EditorGUILayout.PropertyField(
@@ -194,15 +204,15 @@ public class WeaponDataEditor : Editor
                     else
                     {
                         EditorGUILayout.HelpBox(
-                            "Action data missing or improperly configured. Try adding the action again.",
+                            "Action data missing or improperly configured.",
                             MessageType.Error);
                     }
 
-                    // Remove action
+                    // Remove action button
                     if (GUILayout.Button("Remove Action", GUILayout.MaxWidth(120)))
                     {
                         Undo.RecordObject(target, "Remove Weapon Action");
-                        actionsProp.DeleteArrayElementAtIndex(ai);
+                        actionsProp.DeleteArrayElementAtIndex(j);
                         serializedObject.ApplyModifiedProperties();
                         EditorGUI.indentLevel--;
                         break;
@@ -217,67 +227,65 @@ public class WeaponDataEditor : Editor
         }
     }
 
-// Helper for displaying managed-reference type names
-    static string GetNiceManagedTypeName(SerializedProperty prop)
-    {
-        if (prop == null)
-            return "None";
-
-        var full = prop.managedReferenceFullTypename;
-        if (string.IsNullOrEmpty(full))
-            return "None";
-
-        // "AssemblyName Namespace.TypeName"
-        int spaceIdx = full.IndexOf(' ');
-        if (spaceIdx < 0 || spaceIdx + 1 >= full.Length)
-            return full;
-
-        var afterSpace = full.Substring(spaceIdx + 1);
-        int lastDot = afterSpace.LastIndexOf('.');
-        return lastDot >= 0
-            ? afterSpace.Substring(lastDot + 1)
-            : afterSpace;
-    }
-
-    void ShowAddActionMenu(int bindingIndex)
+    /// <summary>
+    /// Creates a context menu for adding a new IWeaponAction instance.
+    /// </summary>
+    private void ShowAddActionMenu(int bindingIndex)
     {
         var menu = new GenericMenu();
-        foreach (var t in _actionTypes)
+        foreach (var type in _actionTypes)
         {
-            string niceName = ObjectNames.NicifyVariableName(t.Name);
-            menu.AddItem(new GUIContent(niceName), false, () =>
+            string displayName = ObjectNames.NicifyVariableName(type.Name);
+            menu.AddItem(new GUIContent(displayName), false, () =>
             {
                 serializedObject.Update();
 
-                var bindingProp = pBindings.GetArrayElementAtIndex(bindingIndex);
-                var actionsProp = bindingProp.FindPropertyRelative("bindings");
+                var bindProp = pBindings.GetArrayElementAtIndex(bindingIndex);
+                var actionsProp = bindProp.FindPropertyRelative("bindings");
 
                 Undo.RecordObject(target, "Add Weapon Action");
 
-                // Increase array size and fetch the new element
+                // Expand array and create new element
                 int newIndex = actionsProp.arraySize;
                 actionsProp.arraySize++;
                 serializedObject.ApplyModifiedProperties();
-
-                // Explicitly instantiate the managed reference correctly
                 serializedObject.Update();
 
-                bindingProp = pBindings.GetArrayElementAtIndex(bindingIndex);
-                actionsProp = bindingProp.FindPropertyRelative("bindings");
+                // Instantiate the managed reference
+                bindProp = pBindings.GetArrayElementAtIndex(bindingIndex);
+                actionsProp = bindProp.FindPropertyRelative("bindings");
                 var newActionProp = actionsProp.GetArrayElementAtIndex(newIndex);
-
                 var actionProp = newActionProp.FindPropertyRelative("action");
-                actionProp.managedReferenceValue = Activator.CreateInstance(t);
+                actionProp.managedReferenceValue = Activator.CreateInstance(type);
 
-                var triggerPhaseProp = newActionProp.FindPropertyRelative("triggerPhase");
-                triggerPhaseProp.enumValueIndex = (int)TriggerPhase.OnPerform;
+                // Default trigger phase to OnPerform
+                var phaseProp = newActionProp.FindPropertyRelative("triggerPhase");
+                phaseProp.enumValueIndex = (int)TriggerPhase.OnPerform;
 
                 serializedObject.ApplyModifiedProperties();
-                serializedObject.Update(); // Final update ensures proper sync
+                serializedObject.Update();
             });
         }
-
         menu.ShowAsContext();
     }
-}
 
+    /// <summary>
+    /// Extracts a clean type name from a managedReferenceFullTypename.
+    /// </summary>
+    private static string GetNiceManagedTypeName(SerializedProperty prop)
+    {
+        if (prop == null || string.IsNullOrEmpty(prop.managedReferenceFullTypename))
+            return "None";
+
+        string fullname = prop.managedReferenceFullTypename;
+        int spaceIdx = fullname.IndexOf(' ');
+        string after = (spaceIdx >= 0 && spaceIdx < fullname.Length - 1)
+            ? fullname.Substring(spaceIdx + 1)
+            : fullname;
+
+        int dotIdx = after.LastIndexOf('.');
+        return (dotIdx >= 0)
+            ? after.Substring(dotIdx + 1)
+            : after;
+    }
+}

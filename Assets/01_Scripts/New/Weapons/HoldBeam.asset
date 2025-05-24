@@ -1,0 +1,66 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 173e1320fcaa41c78d1bb440de6ba45a, type: 3}
+  m_Name: HoldBeam
+  m_EditorClassIdentifier: 
+  weaponName: Beam
+  weaponDescription: 
+  rightHandModel: {fileID: 1467819138738470339, guid: c7f65adf031bf784681090a00b1728f5, type: 3}
+  leftHandModel: {fileID: 0}
+  pickupPrefab: {fileID: 1467819138738470339, guid: c7f65adf031bf784681090a00b1728f5, type: 3}
+  modelPositionOffset: {x: 0, y: 0, z: 0}
+  modelRotationOffset: {x: 90, y: 0, z: 0}
+  defaultHand: 0
+  inputBindings:
+  - bindingMode: 2
+    actionRef: {fileID: 2158980376108856071, guid: 6eaff8a1080c3b64bba326ccc7407a63, type: 3}
+    hand: 0
+    holdTime: 0
+    cooldown: 0
+    bindings:
+    - triggerPhase: 0
+      tickRate: 0.1
+      action:
+        rid: 1246412388835786997
+    - triggerPhase: 2
+      tickRate: 0.1
+      action:
+        rid: 1246412388835787000
+  references:
+    version: 2
+    RefIds:
+    - rid: 1246412388835786997
+      type: {class: BeamAction, ns: , asm: Assembly-CSharp}
+      data:
+        mode: 2
+        beamPrefab: {fileID: 6171105225868257669, guid: 740782c4cd288be4a94f25c73bb92da7, type: 3}
+        upTime: 0
+        extraTime: 0.1
+        damageAmount: 0
+        continuousDPS: 5
+        damageMask:
+          serializedVersion: 2
+          m_Bits: 64
+        length: 50
+    - rid: 1246412388835787000
+      type: {class: BeamAction, ns: , asm: Assembly-CSharp}
+      data:
+        mode: 2
+        beamPrefab: {fileID: 6171105225868257669, guid: 740782c4cd288be4a94f25c73bb92da7, type: 3}
+        upTime: 0
+        extraTime: 0.1
+        damageAmount: 0
+        continuousDPS: 5
+        damageMask:
+          serializedVersion: 2
+          m_Bits: 0
+        length: 50

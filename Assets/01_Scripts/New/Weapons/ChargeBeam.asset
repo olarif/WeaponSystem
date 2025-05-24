@@ -10,38 +10,40 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 173e1320fcaa41c78d1bb440de6ba45a, type: 3}
-  m_Name: HealthConsumable
+  m_Name: ChargeBeam
   m_EditorClassIdentifier: 
-  weaponName: Health
+  weaponName: Beam
   weaponDescription: 
-  rightHandModel: {fileID: 4433644318165709800, guid: d64b4d738536e954f809ef75578117f3, type: 3}
+  rightHandModel: {fileID: 1467819138738470339, guid: 88883c20384660341be9e58be8734d82, type: 3}
   leftHandModel: {fileID: 0}
-  pickupPrefab: {fileID: 4433644318165709800, guid: d64b4d738536e954f809ef75578117f3, type: 3}
+  pickupPrefab: {fileID: 1467819138738470339, guid: 88883c20384660341be9e58be8734d82, type: 3}
   modelPositionOffset: {x: 0, y: 0, z: 0}
-  modelRotationOffset: {x: 0, y: 0, z: 0}
+  modelRotationOffset: {x: 90, y: 0, z: 0}
   defaultHand: 0
   inputBindings:
-  - bindingMode: 0
+  - bindingMode: 1
     actionRef: {fileID: 2158980376108856071, guid: 6eaff8a1080c3b64bba326ccc7407a63, type: 3}
     hand: 0
-    holdTime: 0
+    holdTime: 1
     cooldown: 0
     bindings:
     - triggerPhase: 1
       tickRate: 0
       action:
-        rid: 1246412388835786982
-    - triggerPhase: 1
-      tickRate: 0
-      action:
-        rid: 1246412388835786983
+        rid: 1246412388835787015
   references:
     version: 2
     RefIds:
-    - rid: 1246412388835786982
-      type: {class: HealAction, ns: , asm: Assembly-CSharp}
+    - rid: 1246412388835787015
+      type: {class: BeamAction, ns: , asm: Assembly-CSharp}
       data:
-        amount: 5
-    - rid: 1246412388835786983
-      type: {class: DestroyOnUseAction, ns: , asm: Assembly-CSharp}
-      data: 
+        mode: 1
+        beamPrefab: {fileID: 6171105225868257669, guid: 740782c4cd288be4a94f25c73bb92da7, type: 3}
+        upTime: 0.2
+        extraTime: 0.1
+        damageAmount: 10
+        continuousDPS: 5
+        damageMask:
+          serializedVersion: 2
+          m_Bits: 4294967295
+        length: 50

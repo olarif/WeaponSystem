@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -28,4 +26,5 @@ public class InputBindingData
     public List<ActionBindingData> bindings = new();
     
     [NonSerialized] public float lastPerformTime = -Mathf.Infinity;
+    [NonSerialized] public BeamController activeBeam;
 }

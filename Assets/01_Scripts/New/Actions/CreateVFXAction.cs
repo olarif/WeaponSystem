@@ -5,14 +5,28 @@ using System.Collections.Generic;
 public class CreateVFXAction : WeaponActionData
 {
     public GameObject vfxPrefab;
-    public float duration = 1f;
+    public float lifetime = 5f;
 
-    public override void Execute(WeaponContext ctx, WeaponDataSO.InputBinding binding)
+    public override void OnPress(WeaponContext ctx, WeaponDataSO.InputBinding b)
+    {
+        SpawnVFX(ctx);
+    }
+    
+    public override void OnRelease(WeaponContext ctx, WeaponDataSO.InputBinding b)
+    {
+        SpawnVFX(ctx);
+    }
+
+    private void SpawnVFX(WeaponContext ctx)
     {
         if (vfxPrefab == null) return;
 
-        // Instantiate the VFX prefab at the weapon's position and rotation
-        var vfxInstance = Object.Instantiate(vfxPrefab, ctx.transform.position, ctx.transform.rotation);
+        var origin = ctx.FirePoints[0].position;
+        var dir    = ctx.FirePoints[0].forward;
+
+        var go = Object.Instantiate(vfxPrefab, origin, Quaternion.LookRotation(dir));
         
+        if(lifetime <= 0f) return;
+            Object.Destroy(go, lifetime);
     }
 }

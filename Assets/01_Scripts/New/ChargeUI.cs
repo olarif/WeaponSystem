@@ -9,6 +9,8 @@ public class ChargeUI : MonoBehaviour
     [SerializeField] CanvasGroup canvasGroup = null;
 
     public Gradient colorGradient;
+    
+    public bool autoHideOnComplete = false;
 
     void Awake()
     {
@@ -26,12 +28,12 @@ public class ChargeUI : MonoBehaviour
     
     public void SetPercent(float t)
     {
-        if (t < 0f || t > 1f) return;
-
+        t = Mathf.Clamp01(t);
         slider.value = t;
+        
         fillImage.color = colorGradient.Evaluate(t);
-
-        if (t >= 1f)
+        
+        if (autoHideOnComplete && t >= 1f)
             Hide();
         else
             Show();

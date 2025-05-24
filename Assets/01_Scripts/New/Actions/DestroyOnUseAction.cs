@@ -1,12 +1,21 @@
-﻿using Unity.VisualScripting;
-using UnityEngine;
+﻿using UnityEngine;
 
 [System.Serializable]
 public class DestroyOnUseAction : WeaponActionData
 {
-    public override void Execute(WeaponContext ctx, WeaponDataSO.InputBinding binding)
+    public override void OnPress(WeaponContext ctx, WeaponDataSO.InputBinding binding)
     {
-        // Destroy the model
-        ctx.WeaponManager.DestroyWeapon();
+        Destroy(ctx);
+    }
+    
+    public override void OnRelease(WeaponContext ctx, WeaponDataSO.InputBinding binding)
+    {
+        Destroy(ctx);
+    }
+    
+    private void Destroy(WeaponContext ctx)
+    {
+        if (ctx.WeaponManager != null)
+            ctx.WeaponManager.DestroyWeapon();
     }
 }

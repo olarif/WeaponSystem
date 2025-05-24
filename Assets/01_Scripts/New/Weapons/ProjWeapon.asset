@@ -20,29 +20,7 @@ MonoBehaviour:
   defaultHand: 2
   modelPositionOffset: {x: 0, y: 0, z: 0}
   modelRotationOffset: {x: 90, y: 0, z: 0}
-  bindings:
-  - eventType: 3
-    fireHand: 0
-    holdTime: 0
-    fireRate: 0.3
-    inputAction: {fileID: 2158980376108856071, guid: 6eaff8a1080c3b64bba326ccc7407a63, type: 3}
-    actions:
-    - rid: 7470862035778011215
-  - eventType: 1
-    fireHand: 1
-    holdTime: 2
-    fireRate: 1
-    inputAction: {fileID: -2189319267458262046, guid: 6eaff8a1080c3b64bba326ccc7407a63, type: 3}
-    actions:
-    - rid: 3936017921557921931
+  bindings: []
   references:
     version: 2
-    RefIds:
-    - rid: 3936017921557921931
-      type: {class: SpawnProjectileAction, ns: , asm: Assembly-CSharp}
-      data:
-        projectilePrefab: {fileID: 1930107923466689315, guid: 86ebdaff25f482b4f9f8a1ff3fdb20c6, type: 3}
-    - rid: 7470862035778011215
-      type: {class: SpawnProjectileAction, ns: , asm: Assembly-CSharp}
-      data:
-        projectilePrefab: {fileID: 1930107923466689315, guid: 6b45f06f2495ddf4583930a0fc1a3bec, type: 3}
+    RefIds: []

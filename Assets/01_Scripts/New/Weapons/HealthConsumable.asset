@@ -24,21 +24,18 @@ MonoBehaviour:
   - eventType: 0
     fireHand: 0
     holdTime: 0
-    fireRate: 0.2
+    fireRate: 0
     inputAction: {fileID: 2158980376108856071, guid: 6eaff8a1080c3b64bba326ccc7407a63, type: 3}
     actions:
-    - rid: 3936017921557921874
-    - rid: -2
-    - rid: 3936017921557921890
+    - rid: 1246412388835786887
+    - rid: 1246412388835786888
   references:
     version: 2
     RefIds:
-    - rid: -2
-      type: {class: , ns: , asm: }
-    - rid: 3936017921557921874
+    - rid: 1246412388835786887
       type: {class: HealAction, ns: , asm: Assembly-CSharp}
       data:
-        amount: 10
-    - rid: 3936017921557921890
+        amount: 5
+    - rid: 1246412388835786888
       type: {class: DestroyOnUseAction, ns: , asm: Assembly-CSharp}
       data: 

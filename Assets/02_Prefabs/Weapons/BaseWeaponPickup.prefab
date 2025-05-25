@@ -67,7 +67,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _buttonPrompt: E
-  _promptOffset: {x: 0, y: 0.5, z: 0}
-  _canvas: {fileID: 730092786535789121, guid: a2a0ef90109541640a73095e17b3ec76, type: 3}
+  _promptOffset: {x: 0, y: 0, z: -0.5}
+  _canvasPrefab: {fileID: 730092786535789121, guid: a2a0ef90109541640a73095e17b3ec76, type: 3}
   _outlineMaterial: {fileID: 2100000, guid: 8ddd0ea21bb16c94985b0abe8f8b9f5f, type: 2}
   weaponData: {fileID: 0}

@@ -10617,6 +10617,10 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 6927247644890983188, guid: 54ac07bbe68e5614194c89b21f61fef2, type: 3}
+      propertyPath: _interactableMask.m_Bits
+      value: 512
+      objectReference: {fileID: 0}
     - target: {fileID: 8258826294148250327, guid: 54ac07bbe68e5614194c89b21f61fef2, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0

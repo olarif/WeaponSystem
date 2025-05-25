@@ -40,6 +40,10 @@ public class PlayerController : MonoBehaviour
         _controller = GetComponent<CharacterController>();
         _input = GetComponent<PlayerInputHandler>();
         _playerCamera = GetComponentInChildren<Camera>();
+        
+        // Initialize player camera rotation
+        _xRotation = _playerCamera.transform.localEulerAngles.x;
+        if (_xRotation > 180f) _xRotation -= 360f;
     }
 
     private void Start()

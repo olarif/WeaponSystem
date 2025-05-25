@@ -1,114 +1,112 @@
-using System;
 using UnityEngine;
-using UnityEngine.InputSystem;
-using TMPro;
 
+/// <summary>
+/// Base class that handles outline & world-space prompt for any interactable object.
+/// Child classes implement their own Interact() logic.
+/// </summary>
 public abstract class BaseInteractable : MonoBehaviour, IInteractable
 {
-    [Header("Interaction Settings")]
-    [SerializeField] private string _buttonPrompt = "E";
-    [SerializeField] private Vector3 _promptOffset = new Vector3(0, 0.5f, 0);
-    [SerializeField] private GameObject _canvas;
-    
-    [Header("Outline Settings")]
+    [Header("Interaction Prompt")]
+    [SerializeField] private string     _buttonPrompt = "E";
+    [SerializeField] private Vector3    _promptOffset = new Vector3(0, 0.5f, 0);
+    [SerializeField] private GameObject _canvasPrefab;
+
+    [Header("Outline Shader")]
     [SerializeField] private Material _outlineMaterial;
-    private float _defaultOutlineScale = 1f;
-    private float _highlightedOutlineScale = 1.04f;
-    
-    private Camera _playerCamera;
+    private const float _defaultOutlineScale     = 1f;
+    private const float _highlightedOutlineScale = 1.04f;
 
     private GameObject _promptInstance;
+    private Camera     _playerCamera;
+
+    // ──────────────────────────────────────────────────────────────
+    #region Setup
 
     protected virtual void Awake()
     {
+        // outline setup
         Renderer renderer = GetComponent<Renderer>();
-        
         if (renderer != null && renderer.materials.Length >= 2)
         {
-            // Create a unique instance of the outline material
-            _outlineMaterial = new Material(renderer.materials[1]);
-        
-            // Apply the instance to the renderer
-            Material[] materials = renderer.materials;
-            materials[1] = _outlineMaterial;
-            renderer.materials = materials;
+            _outlineMaterial         = new Material(renderer.materials[1]);
+            var mats                 = renderer.materials;
+            mats[1]                  = _outlineMaterial;
+            renderer.materials       = mats;
+        }
+
+        // pre-instantiate prompt
+        if (_canvasPrefab != null)
+        {
+            _promptInstance = Instantiate(_canvasPrefab, transform);
+            _promptInstance.transform.localPosition = _promptOffset;
+            _promptInstance.layer = LayerMask.NameToLayer("Ignore Raycast");
+
+            _promptInstance
+                .GetComponent<InteractCanvas>()
+                .InitializeCanvas(_buttonPrompt);
+
+            _promptInstance.SetActive(false);    // start hidden
         }
     }
+
+    #endregion
+    // ──────────────────────────────────────────────────────────────
+    #region Highlight & Prompt
 
     public virtual void Highlight(bool isHighlighted, Camera playerCamera)
     {
         _playerCamera = playerCamera;
-        
+
         if (isHighlighted)
-        {
-            ShowInteractionPrompt();
-        }
+            ShowPrompt();
         else
-        {
-            HideInteractionPrompt();
-        }
-        
+            HidePrompt();
+
         RenderOutline(isHighlighted);
     }
-    
-    private void ShowInteractionPrompt()
-    {
-        if (_promptInstance == null && _canvas != null)
-        {
-            _promptInstance = Instantiate(_canvas, transform.position + _promptOffset, Quaternion.identity);
 
-            _promptInstance.GetComponent<InteractCanvas>().InitializeCanvas(_buttonPrompt);
-        }
-        
-        if (_promptInstance != null)
-        {
-            _promptInstance.SetActive(true);
-            LookAtCamera();
-        }
+    private void ShowPrompt()
+    {
+        if (_promptInstance == null) return;
+
+        _promptInstance.SetActive(true);
+        FaceCamera();
     }
-    
-    private void HideInteractionPrompt()
+
+    private void HidePrompt()
     {
         if (_promptInstance != null)
-        {
-            //_promptInstance.SetActive(false);
-            Destroy(_promptInstance);
-        }
+            _promptInstance.SetActive(false);
     }
-    
+
     private void RenderOutline(bool isHighlighted)
     {
-        if (_outlineMaterial != null)
-        {
-            float scale = isHighlighted ? _highlightedOutlineScale : _defaultOutlineScale;
-            _outlineMaterial.SetFloat("_Scale", scale);
-        }
+        if (_outlineMaterial == null) return;
+        _outlineMaterial.SetFloat("_Scale",
+                                  isHighlighted ? _highlightedOutlineScale
+                                                : _defaultOutlineScale);
     }
-    
-    private void LookAtCamera()
+
+    private void FaceCamera()
     {
-        if (_promptInstance != null && _playerCamera != null)
-        {
-            _promptInstance.transform.LookAt(_promptInstance.transform.position + _playerCamera.transform.rotation * Vector3.forward, _playerCamera.transform.rotation * Vector3.up);
-        }
+        if (_promptInstance == null || _playerCamera == null) return;
+
+        Vector3 dir = _promptInstance.transform.position - _playerCamera.transform.position;
+        _promptInstance.transform.rotation = Quaternion.LookRotation(dir);
     }
-    
+
     private void Update()
     {
         if (_promptInstance != null && _promptInstance.activeSelf)
-        {
-            LookAtCamera();
-        }
-    }
-    
-    private void OnDestroy()
-    {
-        if (_promptInstance != null)
-        {
-            Destroy(_promptInstance);
-        }
+            FaceCamera();
     }
 
-    public virtual void Interact(WeaponManager player){ }
+    #endregion
+    // ──────────────────────────────────────────────────────────────
+    #region Interaction API
+
+    public virtual void Interact(WeaponManager player) { }
     public virtual void Interact() { }
+
+    #endregion
 }

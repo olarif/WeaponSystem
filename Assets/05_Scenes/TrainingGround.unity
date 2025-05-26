@@ -1918,6 +1918,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Beam2
       objectReference: {fileID: 0}
+    - target: {fileID: 1467819138738470339, guid: 88883c20384660341be9e58be8734d82, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6064118000254991874, guid: 88883c20384660341be9e58be8734d82, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.401
@@ -5870,6 +5874,10 @@ PrefabInstance:
     - target: {fileID: 1467819138738470339, guid: c7f65adf031bf784681090a00b1728f5, type: 3}
       propertyPath: m_Name
       value: BeamWeapon_1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1467819138738470339, guid: c7f65adf031bf784681090a00b1728f5, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6064118000254991874, guid: c7f65adf031bf784681090a00b1728f5, type: 3}
       propertyPath: m_LocalPosition.x
@@ -11020,7 +11028,7 @@ SceneRoots:
   - {fileID: 1811212940}
   - {fileID: 987588779}
   - {fileID: 1734166213}
-  - {fileID: 1237420118}
-  - {fileID: 333998003}
   - {fileID: 1482900920}
   - {fileID: 1020024249}
+  - {fileID: 333998003}
+  - {fileID: 1237420118}

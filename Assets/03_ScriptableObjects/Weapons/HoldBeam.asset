@@ -27,8 +27,8 @@ MonoBehaviour:
     holdTime: 0
     cooldown: 0
     bindings:
-    - triggerPhase: 1
-      tickRate: 0.1
+    - triggerPhase: 0
+      tickRate: 0
       action:
         rid: 1246412484254892330
   references:
@@ -37,17 +37,17 @@ MonoBehaviour:
     - rid: 1246412484254892330
       type: {class: EnhancedBeamAction, ns: , asm: Assembly-CSharp}
       data:
-        mode: 0
-        beamVFXPrefab: {fileID: 0}
+        mode: 2
+        beamVFXPrefab: {fileID: 389821699222927281, guid: 856f1f18fb8861d4499813c38a5963ae, type: 3}
         maxTargetDistance: 1000
         targetingMask:
           serializedVersion: 2
           m_Bits: 4294967295
-        upTime: 0.2
-        extraTime: 0.1
+        upTime: 0
+        extraTime: 0
         damageAmount: 10
         continuousDPS: 5
         damageMask:
           serializedVersion: 2
-          m_Bits: 4294967295
+          m_Bits: 0
         maxBeamDistance: 50

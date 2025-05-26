@@ -28,11 +28,11 @@ MonoBehaviour:
     cooldown: 0
     bindings:
     - triggerPhase: 3
-      tickRate: 0.5
+      tickRate: 0.6
       action:
         rid: 1246412484254892311
     - triggerPhase: 3
-      tickRate: 0.5
+      tickRate: 0.6
       action:
         rid: 1246412484254892328
   references:

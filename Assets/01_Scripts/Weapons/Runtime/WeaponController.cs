@@ -22,7 +22,7 @@ public class WeaponController : MonoBehaviour
         public Action<InputAction.CallbackContext> onCancel;
         
         // Timing state
-        public float lastTriggerTime = -1000f;
+        public float lastTriggerTime = float.NegativeInfinity;
         public float inputStartTime;
         public bool isHolding;
         public bool hasTriggeredRelease;

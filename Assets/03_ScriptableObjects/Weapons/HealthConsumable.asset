@@ -17,8 +17,8 @@ MonoBehaviour:
   rightHandModel: {fileID: 4240378193073885370, guid: 0b38f2db129504d4788123aff1badf5a, type: 3}
   leftHandModel: {fileID: 0}
   pickupPrefab: {fileID: 4433644318165709800, guid: d64b4d738536e954f809ef75578117f3, type: 3}
-  modelPositionOffset: {x: 0, y: 0, z: 0}
-  modelRotationOffset: {x: -45, y: 0, z: 0}
+  modelPositionOffset: {x: 0, y: -0.1, z: 0.06}
+  modelRotationOffset: {x: -35, y: 0, z: 0}
   defaultHand: 0
   inputBindings:
   - bindingMode: 0
@@ -39,6 +39,10 @@ MonoBehaviour:
       tickRate: 0
       action:
         rid: 1246412484254892256
+    - triggerPhase: 1
+      tickRate: 0.1
+      action:
+        rid: 1246412484254892339
   references:
     version: 2
     RefIds:
@@ -55,3 +59,9 @@ MonoBehaviour:
         vfxPrefab: {fileID: 8593464584776411535, guid: b21d155ec7ea5a349a0e36106f913148, type: 3}
         lifetime: 1
         spawnSize: {x: 0.5, y: 0.5, z: 0.5}
+    - rid: 1246412484254892339
+      type: {class: PlayAnimationAction, ns: , asm: Assembly-CSharp}
+      data:
+        animationType: 0
+        triggerName: attack1
+        booleanValue: 1

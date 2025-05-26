@@ -5,17 +5,12 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-/// <summary>
-/// Enhanced weapon controller with reliable timing and precise input handling.
-/// Supports Press, Charge, Continuous, and Release modes with accurate cooldowns.
-/// </summary>
 public class WeaponController : MonoBehaviour
 {
     [Header("Weapon Data")]
     [SerializeField] private WeaponDataSO data;
     private WeaponContext ctx;
-
-    // Enhanced binding state tracking
+    
     private class BindingState
     {
         public InputAction action;

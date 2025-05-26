@@ -51,7 +51,7 @@ PrefabInstance:
     - target: {fileID: 3248754415215771040, guid: 174f609dffdb2b0408656b8edec0f173, type: 3}
       propertyPath: weaponData
       value: 
-      objectReference: {fileID: 11400000, guid: bc8ad441517d4cd43b2ec8832111cecc, type: 2}
+      objectReference: {fileID: 11400000, guid: 531a21a5ff222ba4c9c9fd89906ecfe0, type: 2}
     - target: {fileID: 6888727773174072129, guid: 174f609dffdb2b0408656b8edec0f173, type: 3}
       propertyPath: m_Name
       value: DoubleWeapon

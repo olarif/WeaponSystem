@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weaponName: Beam
   weaponDescription: 
-  rightHandModel: {fileID: 1467819138738470339, guid: c7f65adf031bf784681090a00b1728f5, type: 3}
+  rightHandModel: {fileID: 3197520161871881305, guid: 5129da67f28aa4b48ad5c2ba772d3558, type: 3}
   leftHandModel: {fileID: 0}
   pickupPrefab: {fileID: 1467819138738470339, guid: c7f65adf031bf784681090a00b1728f5, type: 3}
   modelPositionOffset: {x: 0, y: 0, z: 0}
@@ -27,40 +27,27 @@ MonoBehaviour:
     holdTime: 0
     cooldown: 0
     bindings:
-    - triggerPhase: 0
+    - triggerPhase: 1
       tickRate: 0.1
       action:
-        rid: 1246412388835786997
-    - triggerPhase: 2
-      tickRate: 0.1
-      action:
-        rid: 1246412388835787000
+        rid: 1246412484254892330
   references:
     version: 2
     RefIds:
-    - rid: 1246412388835786997
-      type: {class: BeamAction, ns: , asm: Assembly-CSharp}
+    - rid: 1246412484254892330
+      type: {class: EnhancedBeamAction, ns: , asm: Assembly-CSharp}
       data:
-        mode: 2
-        beamPrefab: {fileID: 6171105225868257669, guid: 740782c4cd288be4a94f25c73bb92da7, type: 3}
-        upTime: 0
+        mode: 0
+        beamVFXPrefab: {fileID: 0}
+        maxTargetDistance: 1000
+        targetingMask:
+          serializedVersion: 2
+          m_Bits: 4294967295
+        upTime: 0.2
         extraTime: 0.1
-        damageAmount: 0
+        damageAmount: 10
         continuousDPS: 5
         damageMask:
           serializedVersion: 2
-          m_Bits: 64
-        length: 50
-    - rid: 1246412388835787000
-      type: {class: BeamAction, ns: , asm: Assembly-CSharp}
-      data:
-        mode: 2
-        beamPrefab: {fileID: 6171105225868257669, guid: 740782c4cd288be4a94f25c73bb92da7, type: 3}
-        upTime: 0
-        extraTime: 0.1
-        damageAmount: 0
-        continuousDPS: 5
-        damageMask:
-          serializedVersion: 2
-          m_Bits: 0
-        length: 50
+          m_Bits: 4294967295
+        maxBeamDistance: 50

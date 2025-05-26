@@ -2,129 +2,192 @@
 using UnityEngine.Events;
 
 /// <summary>
-/// Renders and manages a damaging beam from an origin transform.
+/// Renders and manages a damaging beam from an origin transform using Unity's Particle System.
 /// Supports configurable length, width, lifetime, and damage over time.
 /// </summary>
-[RequireComponent(typeof(LineRenderer))]
 public class BeamController : MonoBehaviour
 {
-    [Header("Beam Settings")]
-    [Tooltip("Starting point of the beam.")]
-    public Transform origin;
+    [Header("Particle System Properties")]
+    [Tooltip("Width of the beam")]
+    public float beamWidth = 0.2f;
+    
+    [Tooltip("Should the beam use world space simulation?")]
+    public bool useWorldSpace = true;
 
-    [Tooltip("Beam length in world units.")]
-    public float length = 50f;
-
-    [Tooltip("Beam width multiplier on the LineRenderer.")]
-    public float width = 0.05f;
-
-    [Header("Lifetime")]
-    [Tooltip("How long the beam stays active before auto‐destroy.")]
-    public float lifetime = 0.2f;
-
-    [Tooltip("Automatically destroy this object when lifetime expires.")]
-    public bool autoDestroy = true;
-
-    [Header("Damage Over Time")]
-    [Tooltip("Damage applied per second while beam hits a valid target.")]
-    public float damagePerSecond = 0f;
-
-    [Tooltip("Layers that can be damaged by the beam.")]
-    public LayerMask damageMask = ~0;
-
-    [Header("Events")]
-    public UnityEvent onBeamStart;
-    public UnityEvent onBeamEnd;
-
-    // Internal state
-    private LineRenderer _lineRenderer;
-    private float _destroyTime;
+    // Runtime data
+    private ParticleSystem _particleSystem;
+    private ParticleSystem.MainModule _mainModule;
+    private ParticleSystem.ShapeModule _shapeModule;
+    private ParticleSystem.VelocityOverLifetimeModule _velocityModule;
+    
+    private Transform _origin;
+    private BeamTargetInfo _targetInfo;
+    private float _lifetime;
+    private float _damagePerSecond;
+    private LayerMask _damageMask;
+    private float _endTime;
     private bool _isActive;
+    private bool _autoDestroy;
 
-    /// <summary>
-    /// Cache LineRenderer settings on awake.
-    /// </summary>
     private void Awake()
     {
-        _lineRenderer = GetComponent<LineRenderer>();
-        _lineRenderer.positionCount = 2;
-        _lineRenderer.useWorldSpace = true;
-        _lineRenderer.widthMultiplier = width;
-
-        // Assign a default unlit cyan material if none set
-        if (_lineRenderer.material == null)
+        _particleSystem = GetComponent<ParticleSystem>();
+        if (_particleSystem != null)
         {
-            var mat = new Material(Shader.Find("Unlit/Color"));
-            mat.color = Color.cyan;
-            _lineRenderer.material = mat;
+            _mainModule = _particleSystem.main;
+            _shapeModule = _particleSystem.shape;
+            _velocityModule = _particleSystem.velocityOverLifetime;
+            
+            // Configure for beam behavior
+            _mainModule.simulationSpace = useWorldSpace ? ParticleSystemSimulationSpace.World : ParticleSystemSimulationSpace.Local;
+            _shapeModule.enabled = true;
+            _shapeModule.shapeType = ParticleSystemShapeType.Box;
         }
     }
 
     /// <summary>
-    /// Activate beam and schedule its end.
+    /// Initialize the beam with all necessary parameters
     /// </summary>
-    private void OnEnable()
+    public void Initialize(Transform origin, BeamTargetInfo targetInfo, float lifetime, float dps, LayerMask damageMask)
     {
+        _origin = origin;
+        _targetInfo = targetInfo;
+        _lifetime = lifetime;
+        _damagePerSecond = dps;
+        _damageMask = damageMask;
+        _autoDestroy = lifetime < Mathf.Infinity;
+        _endTime = Time.time + lifetime;
         _isActive = true;
-        _destroyTime = Time.time + lifetime;
-        onBeamStart?.Invoke();
+
+        ConfigureParticleSystem();
+        
+        if (_particleSystem != null)
+        {
+            _particleSystem.Play();
+        }
     }
 
-    /// <summary>
-    /// Update beam positions, apply damage, and handle auto‐destroy.
-    /// </summary>
     private void Update()
     {
-        if (!_isActive || origin == null)
-            return;
+        if (!_isActive) return;
 
-        // Update beam endpoints
-        Vector3 startPos = origin.position;
-        Vector3 endPos = startPos + origin.forward * length;
-        _lineRenderer.SetPosition(0, startPos);
-        _lineRenderer.SetPosition(1, endPos);
+        // Update particle system properties each frame (in case origin moves)
+        UpdateParticleSystemProperties();
 
-        // Damage over time via raycast
-        if (damagePerSecond > 0f)
+        // Apply continuous damage
+        if (_damagePerSecond > 0f)
         {
-            if (Physics.Raycast(startPos, origin.forward, out RaycastHit hit, length, damageMask))
+            ApplyContinuousDamage();
+        }
+
+        // Check for auto-destroy
+        if (_autoDestroy && Time.time >= _endTime)
+        {
+            ForceEnd();
+        }
+    }
+
+    /// <summary>
+    /// Initial configuration of the particle system for beam behavior
+    /// </summary>
+    private void ConfigureParticleSystem()
+    {
+        if (_particleSystem == null) return;
+
+        // Main module settings
+        _mainModule.startLifetime = 0.5f; // How long particles live
+        _mainModule.startSpeed = 0f; // No initial velocity
+        _mainModule.startSize = beamWidth;
+        _mainModule.startColor = Color.white;
+        _mainModule.maxParticles = 1000;
+        
+        // Set emission rate based on beam length for consistent density
+        var emission = _particleSystem.emission;
+        emission.rateOverTime = Mathf.Max(50f, _targetInfo.distance * 20f);
+        
+        UpdateParticleSystemProperties();
+    }
+
+    /// <summary>
+    /// Updates particle system properties with current beam data
+    /// </summary>
+    private void UpdateParticleSystemProperties()
+    {
+        if (_particleSystem == null || _origin == null) return;
+
+        Vector3 startPos = _origin.position;
+        Vector3 endPos = _targetInfo.targetPoint;
+        Vector3 direction = (endPos - startPos).normalized;
+        Vector3 center = (startPos + endPos) * 0.5f;
+
+        // Update shape module for beam
+        _shapeModule.position = useWorldSpace ? center : transform.InverseTransformPoint(center);
+        _shapeModule.scale = new Vector3(beamWidth, beamWidth, _targetInfo.distance);
+        _shapeModule.rotation = useWorldSpace ? 
+            Quaternion.LookRotation(direction).eulerAngles : 
+            transform.InverseTransformDirection(direction);
+
+        // If using local space, update transform
+        if (!useWorldSpace)
+        {
+            transform.position = startPos;
+            transform.rotation = Quaternion.LookRotation(direction);
+        }
+    }
+
+    /// <summary>
+    /// Applies damage over time via raycast
+    /// </summary>
+    private void ApplyContinuousDamage()
+    {
+        Vector3 direction = (_targetInfo.targetPoint - _origin.position).normalized;
+        
+        if (Physics.Raycast(_origin.position, direction, out RaycastHit hit, _targetInfo.distance, _damageMask))
+        {
+            var damageable = hit.collider.GetComponent<IDamageable>();
+            if (damageable != null)
             {
-                var target = hit.collider.GetComponent<IDamageable>();
-                if (target != null)
-                {
-                    float dmg = damagePerSecond * Time.deltaTime;
-                    target.TakeDamage(dmg, DamageType.Bleed);
-                }
+                float damage = _damagePerSecond * Time.deltaTime;
+                damageable.TakeDamage(damage, DamageType.Bleed);
             }
         }
+    }
 
-        // Check for auto‐destroy
-        if (autoDestroy && Time.time >= _destroyTime)
+    /// <summary>
+    /// Gracefully end the beam with optional extra time
+    /// </summary>
+    public void EndBeam(float extraTime = 0f)
+    {
+        if (!_isActive) return;
+
+        _autoDestroy = true;
+        _endTime = Time.time + extraTime;
+        
+        // Stop emitting new particles but let existing ones finish
+        if (_particleSystem != null)
         {
-            EndNow();
+            var emission = _particleSystem.emission;
+            emission.enabled = false;
         }
     }
 
     /// <summary>
-    /// Ends the beam immediately (or after extra life), invokes end event, and destroys object.
+    /// Immediately end the beam
     /// </summary>
-    /// <param name="extraLife">Additional seconds before destruction (optional).</param>
-    public void EndBeam(float extraLife = 0f)
-    {
-        if (!_isActive)
-            return;
-
-        autoDestroy = true;
-        _destroyTime = Time.time + extraLife;
-    }
-
-    /// <summary>
-    /// Handles beam shutdown: invokes end event and destroys the GameObject.
-    /// </summary>
-    private void EndNow()
+    public void ForceEnd()
     {
         _isActive = false;
-        onBeamEnd?.Invoke();
+        
+        if (_particleSystem != null)
+        {
+            _particleSystem.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+        }
+        
         Destroy(gameObject);
+    }
+
+    private void OnDisable()
+    {
+        ForceEnd();
     }
 }

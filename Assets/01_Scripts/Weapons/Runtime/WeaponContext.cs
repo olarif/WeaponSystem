@@ -2,10 +2,6 @@
 using System.Linq;
 using UnityEngine;
 
-/// <summary>
-/// Holds shared references and utilities for weapon systems on the player.
-/// Manages fire points, hand transforms, UI, and related managers.
-/// </summary>
 [DisallowMultipleComponent]
 public class WeaponContext : MonoBehaviour
 {
@@ -34,7 +30,6 @@ public class WeaponContext : MonoBehaviour
     [Tooltip("All valid fire points attached to the current weapon model(s).")]
     public List<Transform> FirePoints = new List<Transform>();
     
-    //[Tooltip("Cached Animator from the weapon or player.")]
     public Animator Animator;
 
     [HideInInspector]
@@ -44,10 +39,7 @@ public class WeaponContext : MonoBehaviour
     [HideInInspector]
     [Tooltip("Managing component for switching and tracking weapons.")]
     public WeaponManager WeaponManager;
-
-    /// <summary>
-    /// Auto-fill common references when component is reset in the editor.
-    /// </summary>
+    
     private void Reset()
     {
         if (Player == null)

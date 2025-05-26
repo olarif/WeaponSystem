@@ -8,124 +8,183 @@ using UnityEngine;
 /// Implements IWeaponAction to integrate with the weapon system.
 /// </summary>
 [Serializable]
-public class BeamAction : IWeaponAction
+public class EnhancedBeamAction : IWeaponAction
 {
-    /// <summary>
-    /// Determines how the beam is triggered and maintained.
-    /// </summary>
     public enum Mode { Press, Charge, Continuous }
 
     [Header("General Settings")]
-    [Tooltip("Mode of beam activation: instant press, charge then shoot, or continuous.")]
     public Mode mode = Mode.Press;
-
-    [Tooltip("Prefab containing a BeamController component.")]
-    public GameObject beamPrefab;
+    
+    [Tooltip("VFX prefab with VisualEffect component for the beam")]
+    public GameObject beamVFXPrefab;
+    
+    [Header("Targeting")]
+    [Tooltip("Max distance to raycast for screen center targeting")]
+    public float maxTargetDistance = 1000f;
+    
+    [Tooltip("Layers to consider for targeting")]
+    public LayerMask targetingMask = ~0;
 
     [Header("Timing")]
-    [Tooltip("Press/Charge: duration before beam auto‐dies.")]
     public float upTime = 0.2f;
-
-    [Tooltip("Continuous: extra seconds after release before auto‐destroy.")]
     public float extraTime = 0.1f;
 
     [Header("Damage")]
-    [Tooltip("Instant damage amount for Press/Charge modes.")]
     public float damageAmount = 10f;
-
-    [Tooltip("Damage per second for Continuous mode.")]
     public float continuousDPS = 5f;
-
-    [Tooltip("Layers that the beam can damage.")]
     public LayerMask damageMask = ~0;
 
     [Header("Beam Parameters")]
-    [Tooltip("Length of the beam in world units.")]
-    public float length = 50f;
-
-    // Tracks active beam controllers for each action binding (continuous mode)
-    private readonly Dictionary<ActionBindingData, BeamController> _activeBeams
-        = new Dictionary<ActionBindingData, BeamController>();
+    [Tooltip("Maximum beam distance if no target found")]
+    public float maxBeamDistance = 50f;
 
     /// <summary>
-    /// Called by the WeaponController when an action binding triggers.
-    /// Spawns or ends beams based on mode and trigger phase.
+    /// Tracks active beam data for each input binding
     /// </summary>
+    private readonly Dictionary<InputBindingData, BeamInstance> _activeBeams 
+        = new Dictionary<InputBindingData, BeamInstance>();
+
     public void Execute(WeaponContext ctx, InputBindingData ib, ActionBindingData ab)
     {
-        if (beamPrefab == null)
-            return;
+        if (beamVFXPrefab == null) return;
 
-        var origin = ctx.GetFirePointsFor(ib.hand).FirstOrDefault();
-        if (origin == null)
-            return;
+        var firePoint = ctx.GetFirePointsFor(ib.hand).FirstOrDefault();
+        if (firePoint == null) return;
 
         switch (mode)
         {
-            // Instant and charged beams fire on perform
             case Mode.Press:
             case Mode.Charge:
-                if (ab.triggerPhase != TriggerPhase.OnPerform)
-                    return;
-
-                SpawnBeam(origin, length, upTime, 0f);
-                ApplyInstantDamage(origin);
+                if (ab.triggerPhase != TriggerPhase.OnPerform) return;
+                
+                var targetInfo = CalculateBeamTarget(ctx, firePoint);
+                var beam = SpawnBeam(firePoint, targetInfo, upTime, 0f);
+                ApplyInstantDamage(firePoint, targetInfo);
                 break;
 
-            // Continuous beams start on OnStart and end on OnCancel
             case Mode.Continuous:
                 if (ab.triggerPhase == TriggerPhase.OnStart)
                 {
-                    ib.activeBeam = SpawnBeam(origin, length, Mathf.Infinity, continuousDPS);
+                    var contTargetInfo = CalculateBeamTarget(ctx, firePoint);
+                    var contBeam = SpawnBeam(firePoint, contTargetInfo, Mathf.Infinity, continuousDPS);
+                    _activeBeams[ib] = contBeam;
                 }
                 else if (ab.triggerPhase == TriggerPhase.OnCancel)
                 {
-                    ib.activeBeam?.EndBeam(extraTime);
-                    ib.activeBeam = null;
+                    if (_activeBeams.TryGetValue(ib, out var activeBeam))
+                    {
+                        activeBeam.EndBeam(extraTime);
+                        _activeBeams.Remove(ib);
+                    }
                 }
                 break;
         }
     }
 
     /// <summary>
-    /// Instantiates the beam prefab and configures its controller.
+    /// Calculates the target point by raycasting from screen center
     /// </summary>
-    private BeamController SpawnBeam(
-        Transform origin,
-        float beamLength,
-        float lifeTime,
-        float dps)
+    private BeamTargetInfo CalculateBeamTarget(WeaponContext ctx, Transform firePoint)
     {
-        var go = GameObject.Instantiate(beamPrefab, origin.position, origin.rotation);
-        var bc = go.GetComponent<BeamController>();
+        Camera cam = ctx.PlayerCamera ?? Camera.main;
+        if (cam == null)
+        {
+            // Fallback: shoot forward from firepoint
+            return new BeamTargetInfo
+            {
+                targetPoint = firePoint.position + firePoint.forward * maxBeamDistance,
+                hitSomething = false,
+                distance = maxBeamDistance
+            };
+        }
 
-        bc.origin = origin;
-        bc.length = beamLength;
-        bc.lifetime = lifeTime;
-        bc.autoDestroy = lifeTime < Mathf.Infinity;
-        bc.damagePerSecond = dps;
-        bc.damageMask = damageMask;
+        // Cast ray from screen center
+        Ray screenRay = cam.ScreenPointToRay(new Vector3(Screen.width * 0.5f, Screen.height * 0.5f, 0));
+        
+        Vector3 targetPoint;
+        bool hitSomething = false;
+        float distance;
 
-        return bc;
+        if (Physics.Raycast(screenRay, out RaycastHit hit, maxTargetDistance, targetingMask))
+        {
+            targetPoint = hit.point;
+            hitSomething = true;
+            distance = Vector3.Distance(firePoint.position, hit.point);
+        }
+        else
+        {
+            targetPoint = screenRay.origin + screenRay.direction * maxTargetDistance;
+            hitSomething = false;
+            distance = Vector3.Distance(firePoint.position, targetPoint);
+        }
+
+        // Clamp distance to max beam distance
+        if (distance > maxBeamDistance)
+        {
+            Vector3 direction = (targetPoint - firePoint.position).normalized;
+            targetPoint = firePoint.position + direction * maxBeamDistance;
+            distance = maxBeamDistance;
+            hitSomething = false; // We're not actually hitting the original target
+        }
+
+        return new BeamTargetInfo
+        {
+            targetPoint = targetPoint,
+            hitSomething = hitSomething,
+            distance = distance
+        };
     }
 
     /// <summary>
-    /// Performs an immediate raycast damage on Press/Charge modes.
+    /// Spawns and configures a VFX beam
     /// </summary>
-    private void ApplyInstantDamage(Transform origin)
+    private BeamInstance SpawnBeam(Transform origin, BeamTargetInfo targetInfo, float lifeTime, float dps)
     {
-        if (damageAmount <= 0f)
-            return;
-
-        if (Physics.Raycast(
-            origin.position,
-            origin.forward,
-            out var hit,
-            length,
-            damageMask))
+        var go = GameObject.Instantiate(beamVFXPrefab, origin.position, origin.rotation);
+        var beamController = go.GetComponent<BeamController>();
+        
+        if (beamController == null)
         {
-            var target = hit.collider.GetComponent<IDamageable>();
-            target?.TakeDamage(damageAmount, DamageType.Bleed);
+            beamController = go.AddComponent<BeamController>();
         }
+
+        beamController.Initialize(origin, targetInfo, lifeTime, dps, damageMask);
+
+        return new BeamInstance
+        {
+            controller = beamController,
+            gameObject = go
+        };
+    }
+
+    /// <summary>
+    /// Applies instant damage for Press/Charge modes
+    /// </summary>
+    private void ApplyInstantDamage(Transform origin, BeamTargetInfo targetInfo)
+    {
+        if (damageAmount <= 0f) return;
+
+        Vector3 direction = (targetInfo.targetPoint - origin.position).normalized;
+        
+        if (Physics.Raycast(origin.position, direction, out RaycastHit hit, targetInfo.distance, damageMask))
+        {
+            var damageable = hit.collider.GetComponent<IDamageable>();
+            damageable?.TakeDamage(damageAmount, DamageType.Bleed);
+        }
+    }
+
+    /// <summary>
+    /// Clean up any remaining beams when the action is disabled
+    /// </summary>
+    public void OnDisable()
+    {
+        foreach (var kvp in _activeBeams.ToList())
+        {
+            if (kvp.Value.controller != null)
+            {
+                kvp.Value.controller.ForceEnd();
+            }
+        }
+        _activeBeams.Clear();
     }
 }

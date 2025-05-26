@@ -30,7 +30,7 @@ MonoBehaviour:
     - triggerPhase: 1
       tickRate: 0
       action:
-        rid: 1246412388835787015
+        rid: -2
     - triggerPhase: 1
       tickRate: 0
       action:
@@ -58,19 +58,8 @@ MonoBehaviour:
   references:
     version: 2
     RefIds:
-    - rid: 1246412388835787015
-      type: {class: BeamAction, ns: , asm: Assembly-CSharp}
-      data:
-        mode: 1
-        beamPrefab: {fileID: 6171105225868257669, guid: 740782c4cd288be4a94f25c73bb92da7, type: 3}
-        upTime: 0.2
-        extraTime: 0.1
-        damageAmount: 10
-        continuousDPS: 5
-        damageMask:
-          serializedVersion: 2
-          m_Bits: 4294967295
-        length: 50
+    - rid: -2
+      type: {class: , ns: , asm: }
     - rid: 1246412484254892297
       type: {class: PlayAnimationAction, ns: , asm: Assembly-CSharp}
       data:

@@ -18,7 +18,7 @@ MonoBehaviour:
   leftHandModel: {fileID: 1467819138738470339, guid: 24d1e24d2f8f6ac458534c8278f04506, type: 3}
   pickupPrefab: {fileID: 1467819138738470339, guid: 24d1e24d2f8f6ac458534c8278f04506, type: 3}
   modelPositionOffset: {x: 0, y: 0, z: 0}
-  modelRotationOffset: {x: 90, y: 0, z: 0}
+  modelRotationOffset: {x: 0, y: 0, z: 0}
   defaultHand: 2
   inputBindings:
   - bindingMode: 2

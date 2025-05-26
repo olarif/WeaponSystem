@@ -6,8 +6,8 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 /// <summary>
-/// Controls weapon input bindings, model attachment, and firing phases.
-/// Supports Press, Charge, Continuous, and Release modes.
+/// Enhanced weapon controller with reliable timing and precise input handling.
+/// Supports Press, Charge, Continuous, and Release modes with accurate cooldowns.
 /// </summary>
 public class WeaponController : MonoBehaviour
 {
@@ -15,17 +15,40 @@ public class WeaponController : MonoBehaviour
     [SerializeField] private WeaponDataSO data;
     private WeaponContext ctx;
 
-    private struct BindingSubscription
+    // Enhanced binding state tracking
+    private class BindingState
     {
         public InputAction action;
+        public InputBindingData bindingData;
+        
+        // Event subscriptions
         public Action<InputAction.CallbackContext> onStart;
         public Action<InputAction.CallbackContext> onPerform;
         public Action<InputAction.CallbackContext> onCancel;
+        
+        // Timing state
+        public float lastTriggerTime = -1000f;
+        public float inputStartTime;
+        public bool isHolding;
+        public bool hasTriggeredRelease;
+        
+        // Coroutine management
         public Coroutine chargeCoroutine;
-        public List<Coroutine> tickCoroutines;
+        public Coroutine continuousCoroutine;
+        public readonly List<Coroutine> tickCoroutines = new();
+        
+        // UI reference
+        public ChargeUI chargeUI;
+        
+        public bool CanTrigger => Time.time - lastTriggerTime >= bindingData.cooldown;
+        
+        public void MarkTriggered()
+        {
+            lastTriggerTime = Time.time;
+        }
     }
 
-    private readonly List<BindingSubscription> _subscriptions = new();
+    private readonly List<BindingState> _bindingStates = new();
     [HideInInspector] public List<GameObject> _models = new();
 
     public void Initialize(WeaponDataSO sourceData, WeaponContext context)
@@ -33,171 +56,340 @@ public class WeaponController : MonoBehaviour
         ctx = context;
         data = Instantiate(sourceData);
         ctx.WeaponController = this;
+        
         AttachModel();
-        foreach (var ib in data.inputBindings)
-            HookBinding(ib);
+        
+        foreach (var inputBinding in data.inputBindings)
+        {
+            SetupBinding(inputBinding);
+        }
     }
 
     private void AttachModel()
     {
         ctx.FirePoints.Clear();
-        foreach (var mdl in _models) if (mdl) Destroy(mdl);
+        foreach (var mdl in _models) 
+            if (mdl) Destroy(mdl);
         _models.Clear();
 
-        void Spawn(GameObject prefab, Transform parent)
+        void SpawnModel(GameObject prefab, Transform parent)
         {
             if (prefab == null || parent == null) return;
+            
             var model = Instantiate(prefab, parent);
             model.transform.localPosition = data.modelPositionOffset;
             model.transform.localRotation = Quaternion.Euler(data.modelRotationOffset);
             _models.Add(model);
-            var fp = model.GetComponentsInChildren<Transform>(true)
-                          .FirstOrDefault(t => t.name == "FirePoint");
-            if (fp != null) ctx.FirePoints.Add(fp);
+            
+            var firePoint = model.GetComponentsInChildren<Transform>(true)
+                                 .FirstOrDefault(t => t.name == "FirePoint");
+            if (firePoint != null) 
+                ctx.FirePoints.Add(firePoint);
         }
 
         switch (data.defaultHand)
         {
-            case Hand.Right: Spawn(data.rightHandModel, ctx.rightHand); break;
-            case Hand.Left:  Spawn(data.leftHandModel,  ctx.leftHand);  break;
+            case Hand.Right: 
+                SpawnModel(data.rightHandModel, ctx.rightHand); 
+                break;
+            case Hand.Left:  
+                SpawnModel(data.leftHandModel, ctx.leftHand);  
+                break;
             case Hand.Both:
-                Spawn(data.rightHandModel, ctx.rightHand);
-                Spawn(data.leftHandModel,  ctx.leftHand);
+                SpawnModel(data.rightHandModel, ctx.rightHand);
+                SpawnModel(data.leftHandModel, ctx.leftHand);
                 break;
         }
     }
 
-    private void HookBinding(InputBindingData ib)
+    private void SetupBinding(InputBindingData bindingData)
     {
-        var action = ib.actionRef.action;
+        var action = bindingData.actionRef.action;
+        if (action == null)
+        {
+            Debug.LogError($"Input action is null for binding {bindingData.bindingMode}");
+            return;
+        }
+
         action.Enable();
 
-        var sub = new BindingSubscription
+        var state = new BindingState
         {
             action = action,
-            tickCoroutines = new List<Coroutine>()
+            bindingData = bindingData,
+            chargeUI = bindingData.hand == Hand.Left ? ctx.leftChargeUI : ctx.rightChargeUI
         };
 
-        float startTime = 0f;
-        var ui = ib.hand == Hand.Left ? ctx.leftChargeUI : ctx.rightChargeUI;
+        SetupBindingMode(state);
+        _bindingStates.Add(state);
+    }
 
-        switch (ib.bindingMode)
+    private void SetupBindingMode(BindingState state)
+    {
+        var action = state.action;
+        var bindingData = state.bindingData;
+
+        switch (bindingData.bindingMode)
         {
             case BindingMode.Press:
-                sub.onPerform = _ =>
-                {
-                    if (Time.time - ib.lastPerformTime >= ib.cooldown)
-                    {
-                        ib.lastPerformTime = Time.time;
-                        FirePhase(ib, TriggerPhase.OnPerform);
-                    }
-                };
-                action.performed += sub.onPerform;
+                SetupPressBinding(state);
                 break;
-
             case BindingMode.Charge:
-                sub.onStart = _ =>
-                {
-                    startTime = Time.time;
-                    ui.Reset(); ui.Show();
-                    sub.chargeCoroutine = StartCoroutine(UpdateChargeUI(ib, ui));
-                };
-                sub.onCancel = _ =>
-                {
-                    if (sub.chargeCoroutine != null) StopCoroutine(sub.chargeCoroutine);
-                    ui.Hide();
-                    if (Time.time - startTime >= ib.holdTime)
-                        FirePhase(ib, TriggerPhase.OnPerform);
-                };
-                action.started += sub.onStart;
-                action.canceled += sub.onCancel;
+                SetupChargeBinding(state);
                 break;
-
             case BindingMode.Continuous:
-                sub.onStart = _ =>
-                {
-                    if (Time.time - ib.lastPerformTime < ib.cooldown) return;
-                    ib.lastPerformTime = Time.time;
-                    FirePhase(ib, TriggerPhase.OnStart);
-                    // start ticks
-                    foreach (var ab in ib.bindings.Where(b => b.triggerPhase == TriggerPhase.OnTick))
-                        sub.tickCoroutines.Add(StartCoroutine(TickLoop(ib, ab)));
-                };
-                sub.onCancel = _ =>
-                {
-                    // stop ticks
-                    foreach (var co in sub.tickCoroutines) if (co != null) StopCoroutine(co);
-                    sub.tickCoroutines.Clear();
-                    FirePhase(ib, TriggerPhase.OnCancel);
-                };
-                action.started += sub.onStart;
-                action.canceled += sub.onCancel;
+                SetupContinuousBinding(state);
                 break;
-
             case BindingMode.Release:
-                sub.onCancel = _ =>
-                {
-                    if (Time.time - ib.lastPerformTime >= ib.cooldown)
-                    {
-                        ib.lastPerformTime = Time.time;
-                        FirePhase(ib, TriggerPhase.OnPerform);
-                    }
-                };
-                action.canceled += sub.onCancel;
+                SetupReleaseBinding(state);
                 break;
         }
-
-        _subscriptions.Add(sub);
     }
 
-    private void FirePhase(InputBindingData ib, TriggerPhase phase)
+    private void SetupPressBinding(BindingState state)
     {
-        foreach (var ab in ib.bindings.Where(b => b.triggerPhase == phase))
-            ab.action.Execute(ctx, ib, ab);
-    }
-
-    private IEnumerator TickLoop(InputBindingData ib, ActionBindingData ab)
-    {
-        if (ab.tickRate <= 0f) yield break;
-        while (true)
+        state.onPerform = ctx =>
         {
-            yield return new WaitForSeconds(ab.tickRate);
-            if (Time.time - ib.lastPerformTime >= ib.cooldown)
+            if (state.CanTrigger)
             {
-                ib.lastPerformTime = Time.time;
-                ab.action.Execute(ctx, ib, ab);
+                state.MarkTriggered();
+                ExecutePhase(state.bindingData, TriggerPhase.OnPerform);
+            }
+        };
+        
+        state.action.performed += state.onPerform;
+    }
+
+    private void SetupChargeBinding(BindingState state)
+    {
+        state.onStart = ctx =>
+        {
+            state.inputStartTime = Time.time;
+            state.isHolding = true;
+            
+            if (state.chargeUI != null)
+            {
+                state.chargeUI.Reset();
+                state.chargeUI.Show();
+            }
+            
+            state.chargeCoroutine = StartCoroutine(ChargeCoroutine(state));
+        };
+
+        state.onCancel = ctx =>
+        {
+            state.isHolding = false;
+            
+            if (state.chargeCoroutine != null)
+            {
+                StopCoroutine(state.chargeCoroutine);
+                state.chargeCoroutine = null;
+            }
+            
+            if (state.chargeUI != null)
+                state.chargeUI.Hide();
+
+            float holdDuration = Time.time - state.inputStartTime;
+            if (holdDuration >= state.bindingData.holdTime && state.CanTrigger)
+            {
+                state.MarkTriggered();
+                ExecutePhase(state.bindingData, TriggerPhase.OnPerform);
+            }
+        };
+
+        state.action.started += state.onStart;
+        state.action.canceled += state.onCancel;
+    }
+
+    private void SetupContinuousBinding(BindingState state)
+    {
+        state.onStart = ctx =>
+        {
+            if (!state.CanTrigger) return;
+            
+            state.MarkTriggered();
+            state.isHolding = true;
+            state.inputStartTime = Time.time;
+            
+            ExecutePhase(state.bindingData, TriggerPhase.OnStart);
+            
+            // Start tick actions
+            var tickActions = state.bindingData.bindings
+                .Where(b => b.triggerPhase == TriggerPhase.OnTick)
+                .ToList();
+                
+            foreach (var tickAction in tickActions)
+            {
+                var coroutine = StartCoroutine(TickCoroutine(state, tickAction));
+                state.tickCoroutines.Add(coroutine);
+            }
+        };
+
+        state.onCancel = ctx =>
+        {
+            state.isHolding = false;
+            
+            // Stop all tick coroutines
+            foreach (var coroutine in state.tickCoroutines)
+            {
+                if (coroutine != null)
+                    StopCoroutine(coroutine);
+            }
+            state.tickCoroutines.Clear();
+            
+            ExecutePhase(state.bindingData, TriggerPhase.OnCancel);
+        };
+
+        state.action.started += state.onStart;
+        state.action.canceled += state.onCancel;
+    }
+
+    private void SetupReleaseBinding(BindingState state)
+    {
+        state.onStart = ctx =>
+        {
+            state.isHolding = true;
+            state.hasTriggeredRelease = false;
+        };
+
+        state.onCancel = ctx =>
+        {
+            state.isHolding = false;
+            
+            if (!state.hasTriggeredRelease && state.CanTrigger)
+            {
+                state.hasTriggeredRelease = true;
+                state.MarkTriggered();
+                ExecutePhase(state.bindingData, TriggerPhase.OnPerform);
+            }
+        };
+
+        state.action.started += state.onStart;
+        state.action.canceled += state.onCancel;
+    }
+
+    private IEnumerator ChargeCoroutine(BindingState state)
+    {
+        float elapsed = 0f;
+        float holdTime = state.bindingData.holdTime;
+        
+        while (state.isHolding && elapsed < holdTime)
+        {
+            elapsed = Time.time - state.inputStartTime;
+            
+            if (state.chargeUI != null)
+            {
+                float percent = Mathf.Clamp01(elapsed / holdTime);
+                state.chargeUI.SetPercent(percent);
+            }
+            
+            yield return null;
+        }
+        
+        if (state.chargeUI != null && state.isHolding)
+            state.chargeUI.SetPercent(1f);
+            
+        state.chargeCoroutine = null;
+    }
+
+    private IEnumerator TickCoroutine(BindingState state, ActionBindingData actionBinding)
+    {
+        if (actionBinding.tickRate <= 0f) yield break;
+        
+        // Wait initial tick delay
+        yield return new WaitForSeconds(actionBinding.tickRate);
+        
+        while (state.isHolding)
+        {
+            if (state.CanTrigger)
+            {
+                state.MarkTriggered();
+                actionBinding.action.Execute(ctx, state.bindingData, actionBinding);
+            }
+            
+            yield return new WaitForSeconds(actionBinding.tickRate);
+        }
+    }
+
+    private void ExecutePhase(InputBindingData bindingData, TriggerPhase phase)
+    {
+        var actionsToExecute = bindingData.bindings
+            .Where(b => b.triggerPhase == phase)
+            .ToList();
+            
+        foreach (var actionBinding in actionsToExecute)
+        {
+            try
+            {
+                actionBinding.action.Execute(ctx, bindingData, actionBinding);
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"Error executing weapon action: {e.Message}\n{e.StackTrace}");
             }
         }
     }
 
-    private IEnumerator UpdateChargeUI(InputBindingData ib, ChargeUI ui)
+    private void CleanupBinding(BindingState state)
     {
-        float elapsed = 0f;
-        while (elapsed < ib.holdTime)
+        if (state.action == null) return;
+
+        // Unsubscribe from events
+        if (state.onStart != null) 
+            state.action.started -= state.onStart;
+        if (state.onPerform != null) 
+            state.action.performed -= state.onPerform;
+        if (state.onCancel != null) 
+            state.action.canceled -= state.onCancel;
+
+        // Stop coroutines
+        if (state.chargeCoroutine != null)
         {
-            elapsed += Time.deltaTime;
-            ui.SetPercent(elapsed / ib.holdTime);
-            yield return null;
+            StopCoroutine(state.chargeCoroutine);
+            state.chargeCoroutine = null;
         }
-        ui.SetPercent(1f);
+
+        foreach (var coroutine in state.tickCoroutines)
+        {
+            if (coroutine != null)
+                StopCoroutine(coroutine);
+        }
+        state.tickCoroutines.Clear();
+
+        // Hide UI
+        if (state.chargeUI != null)
+            state.chargeUI.Hide();
+
+        // Disable action
+        state.action.Disable();
     }
 
     private void OnDestroy()
     {
-        foreach (var sub in _subscriptions)
+        // Clean up all bindings
+        foreach (var state in _bindingStates)
         {
-            if (sub.action == null) continue;
-            if (sub.onStart   != null) sub.action.started   -= sub.onStart;
-            if (sub.onPerform != null) sub.action.performed -= sub.onPerform;
-            if (sub.onCancel  != null) sub.action.canceled  -= sub.onCancel;
-            sub.action.Disable();
-            if (sub.chargeCoroutine != null) StopCoroutine(sub.chargeCoroutine);
-            if (sub.tickCoroutines != null)
-                foreach (var co in sub.tickCoroutines) if (co != null) StopCoroutine(co);
+            CleanupBinding(state);
         }
-        _subscriptions.Clear();
+        _bindingStates.Clear();
 
-        foreach (var mdl in _models) if (mdl != null) Destroy(mdl);
+        // Clean up models
+        foreach (var model in _models)
+        {
+            if (model != null)
+                Destroy(model);
+        }
         _models.Clear();
     }
+
+    #region Debug Methods
+    [System.Diagnostics.Conditional("UNITY_EDITOR")]
+    private void LogBindingState(BindingState state, string message)
+    {
+        Debug.Log($"[{state.bindingData.bindingMode}] {message} - " +
+                 $"CanTrigger: {state.CanTrigger}, " +
+                 $"LastTrigger: {state.lastTriggerTime:F2}, " +
+                 $"Cooldown: {state.bindingData.cooldown:F2}");
+    }
+    #endregion
 }

@@ -14,11 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weaponName: Beam
   weaponDescription: 
-  rightHandModel: {fileID: 1467819138738470339, guid: 88883c20384660341be9e58be8734d82, type: 3}
+  rightHandModel: {fileID: 1048356090118815806, guid: 71b07f6e1b714434d9a1591cbf8f30d9, type: 3}
   leftHandModel: {fileID: 0}
   pickupPrefab: {fileID: 1467819138738470339, guid: 88883c20384660341be9e58be8734d82, type: 3}
   modelPositionOffset: {x: 0, y: 0, z: 0}
-  modelRotationOffset: {x: 90, y: 0, z: 0}
+  modelRotationOffset: {x: 0, y: 0, z: 0}
   defaultHand: 0
   inputBindings:
   - bindingMode: 1
@@ -34,7 +34,27 @@ MonoBehaviour:
     - triggerPhase: 1
       tickRate: 0
       action:
-        rid: 1246412456527921479
+        rid: 1246412484254892299
+  - bindingMode: 0
+    actionRef: {fileID: 2158980376108856071, guid: 6eaff8a1080c3b64bba326ccc7407a63, type: 3}
+    hand: 0
+    holdTime: 0
+    cooldown: 0
+    bindings:
+    - triggerPhase: 1
+      tickRate: 0
+      action:
+        rid: 1246412484254892297
+  - bindingMode: 3
+    actionRef: {fileID: 2158980376108856071, guid: 6eaff8a1080c3b64bba326ccc7407a63, type: 3}
+    hand: 0
+    holdTime: 0
+    cooldown: 0
+    bindings:
+    - triggerPhase: 1
+      tickRate: 0
+      action:
+        rid: 1246412484254892298
   references:
     version: 2
     RefIds:
@@ -51,7 +71,21 @@ MonoBehaviour:
           serializedVersion: 2
           m_Bits: 4294967295
         length: 50
-    - rid: 1246412456527921479
+    - rid: 1246412484254892297
       type: {class: PlayAnimationAction, ns: , asm: Assembly-CSharp}
       data:
-        triggerName: ShootRight
+        animationType: 1
+        triggerName: charging
+        booleanValue: 1
+    - rid: 1246412484254892298
+      type: {class: PlayAnimationAction, ns: , asm: Assembly-CSharp}
+      data:
+        animationType: 1
+        triggerName: charging
+        booleanValue: 0
+    - rid: 1246412484254892299
+      type: {class: PlayAnimationAction, ns: , asm: Assembly-CSharp}
+      data:
+        animationType: 0
+        triggerName: attack1
+        booleanValue: 1

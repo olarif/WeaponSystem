@@ -14,11 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weaponName: Sword
   weaponDescription: 
-  rightHandModel: {fileID: 5291027263261853057, guid: 87ea6d7f2f5c7464fa9a942a85b379ca, type: 3}
+  rightHandModel: {fileID: 4841816053556224155, guid: 0f4c565822e482b4e8dd9ff05ea03122, type: 3}
   leftHandModel: {fileID: 0}
   pickupPrefab: {fileID: 5291027263261853057, guid: 87ea6d7f2f5c7464fa9a942a85b379ca, type: 3}
   modelPositionOffset: {x: 0, y: 0, z: 0}
-  modelRotationOffset: {x: 65, y: 0, z: 0}
+  modelRotationOffset: {x: 0, y: 0, z: 0}
   defaultHand: 0
   inputBindings:
   - bindingMode: 0
@@ -35,6 +35,10 @@ MonoBehaviour:
       tickRate: 0
       action:
         rid: 1246412484254892283
+    - triggerPhase: 1
+      tickRate: 0
+      action:
+        rid: 1246412484254892289
   references:
     version: 2
     RefIds:
@@ -57,3 +61,9 @@ MonoBehaviour:
         hitRange: 1.7
         vfxLifetime: 1.5
         vfxScale: {x: 0.2, y: 0.2, z: 0.2}
+    - rid: 1246412484254892289
+      type: {class: PlayAnimationAction, ns: , asm: Assembly-CSharp}
+      data:
+        animationType: 0
+        triggerName: attack1
+        booleanValue: 1

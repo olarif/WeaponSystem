@@ -174,19 +174,18 @@ public class InputBindingDataDrawer : PropertyDrawer
                 string nice = ObjectNames.NicifyVariableName(t.Name);
                 menu.AddItem(new GUIContent(nice), false, () =>
                 {
-                    // grow array
+                    int idx = actionsProp.arraySize;
                     actionsProp.arraySize++;
                     actionsProp.serializedObject.ApplyModifiedProperties();
                     actionsProp.serializedObject.Update();
-
-                    // assign brand-new instance
-                    var newEl = actionsProp.GetArrayElementAtIndex(actionsProp.arraySize - 1);
-                    newEl.FindPropertyRelative(nameof(ActionBindingData.action))
-                         .managedReferenceValue = Activator.CreateInstance(t);
-
-                    // default to OnPerform
-                    newEl.FindPropertyRelative(nameof(ActionBindingData.triggerPhase))
-                         .enumValueIndex = (int)TriggerPhase.OnPerform;
+                    
+                    var newEl = actionsProp.GetArrayElementAtIndex(idx);
+                    
+                    newEl.FindPropertyRelative("action")
+                        .managedReferenceValue = Activator.CreateInstance(t);
+                    
+                    newEl.FindPropertyRelative("triggerPhase").enumValueIndex 
+                        = (int)TriggerPhase.OnPerform;
 
                     actionsProp.serializedObject.ApplyModifiedProperties();
                 });

@@ -31,6 +31,10 @@ MonoBehaviour:
       tickRate: 0
       action:
         rid: 1246412388835786981
+    - triggerPhase: 1
+      tickRate: 0
+      action:
+        rid: 1246412484254892283
   references:
     version: 2
     RefIds:
@@ -38,5 +42,18 @@ MonoBehaviour:
       type: {class: MeleeDamageAction, ns: , asm: Assembly-CSharp}
       data:
         damageType: 0
+        targetLayerMask:
+          serializedVersion: 2
+          m_Bits: 64
         damage: 5
         range: 1.7
+    - rid: 1246412484254892283
+      type: {class: SpawnHitVFXOnAction, ns: , asm: Assembly-CSharp}
+      data:
+        hitVFXPrefab: {fileID: 3077343761403282166, guid: f78aaaec3b393e24ca74cd6de8194347, type: 3}
+        targetLayerMask:
+          serializedVersion: 2
+          m_Bits: 64
+        hitRange: 1.7
+        vfxLifetime: 1.5
+        vfxScale: {x: 0.2, y: 0.2, z: 0.2}

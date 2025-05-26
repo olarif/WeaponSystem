@@ -35,12 +35,10 @@ MonoBehaviour:
       tickRate: 0
       action:
         rid: 1246412388835786983
-  - bindingMode: 0
-    actionRef: {fileID: 2158980376108856071, guid: 6eaff8a1080c3b64bba326ccc7407a63, type: 3}
-    hand: 0
-    holdTime: 0
-    cooldown: 0
-    bindings: []
+    - triggerPhase: 1
+      tickRate: 0
+      action:
+        rid: 1246412484254892256
   references:
     version: 2
     RefIds:
@@ -51,3 +49,9 @@ MonoBehaviour:
     - rid: 1246412388835786983
       type: {class: DestroyOnUseAction, ns: , asm: Assembly-CSharp}
       data: 
+    - rid: 1246412484254892256
+      type: {class: CreateVFXAction, ns: , asm: Assembly-CSharp}
+      data:
+        vfxPrefab: {fileID: 8593464584776411535, guid: b21d155ec7ea5a349a0e36106f913148, type: 3}
+        lifetime: 1
+        spawnSize: {x: 0.5, y: 0.5, z: 0.5}

@@ -6,6 +6,7 @@ public class CreateVFXAction : IWeaponAction
 {
     public GameObject vfxPrefab;
     public float lifetime = 5f;
+    public Vector3 spawnSize = Vector3.one;
 
     public void Execute(WeaponContext ctx, InputBindingData binding, ActionBindingData actionBinding)
     {
@@ -22,6 +23,7 @@ public class CreateVFXAction : IWeaponAction
         var dir    = ctx.FirePoints[0].forward;
 
         var go = Object.Instantiate(vfxPrefab, origin, Quaternion.LookRotation(dir));
+        go.transform.localScale = spawnSize;
         
         if(lifetime <= 0f) return;
             Object.Destroy(go, lifetime);

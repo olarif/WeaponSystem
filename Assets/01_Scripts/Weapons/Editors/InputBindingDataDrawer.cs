@@ -1,4 +1,5 @@
-﻿using System;
+﻿// InputBindingDataDrawer.cs
+using System;
 using System.Linq;
 using System.Collections.Generic;
 using UnityEditor;
@@ -8,13 +9,11 @@ using UnityEngine;
 [CustomPropertyDrawer(typeof(InputBindingData), true)]
 public class InputBindingDataDrawer : PropertyDrawer
 {
-    // cached action types
+    // cached list of all concrete IWeaponAction types
     static List<Type> _actionTypes;
 
-    // one ReorderableList per drawer instance
     private ReorderableList _actionsList;
 
-    // gather all IWeaponAction types once
     private void EnsureActionTypes()
     {
         if (_actionTypes != null) return;
@@ -28,13 +27,13 @@ public class InputBindingDataDrawer : PropertyDrawer
 
     public override float GetPropertyHeight(SerializedProperty prop, GUIContent label)
     {
-        float h = EditorGUIUtility.singleLineHeight + 4;      // foldout
+        // one line for the foldout
+        float h = EditorGUIUtility.singleLineHeight + 4;
         if (!prop.isExpanded) return h;
 
-        // 5 fields: bindingMode, actionRef, hand, holdTime, cooldown
+        // five fields: bindingMode, actionRef, hand, holdTime, cooldown
         h += 5 * (EditorGUIUtility.singleLineHeight + 2) + 4;
-
-        // nested list height
+        // plus the nested actions list height
         h += GetActionsList(prop).GetHeight() + 4;
         return h;
     }
@@ -44,10 +43,9 @@ public class InputBindingDataDrawer : PropertyDrawer
         EnsureActionTypes();
 
         float y = rect.y;
+        // --- Foldout using bindingMode name ---
         var modeProp = prop.FindPropertyRelative(nameof(InputBindingData.bindingMode));
         string header = modeProp.enumDisplayNames[modeProp.enumValueIndex];
-
-        // foldout
         prop.isExpanded = EditorGUI.Foldout(
             new Rect(rect.x, y, rect.width, EditorGUIUtility.singleLineHeight),
             prop.isExpanded, header, true);
@@ -55,141 +53,167 @@ public class InputBindingDataDrawer : PropertyDrawer
         if (!prop.isExpanded) return;
 
         EditorGUI.indentLevel++;
-        // draw the five fields
+        var lineH = EditorGUIUtility.singleLineHeight;
+
+        // Draw the five binding fields
         DrawField(ref y, rect, prop, nameof(InputBindingData.bindingMode),   "Mode");
         DrawField(ref y, rect, prop, nameof(InputBindingData.actionRef),     "Input Action");
         DrawField(ref y, rect, prop, nameof(InputBindingData.hand),          null);
         DrawField(ref y, rect, prop, nameof(InputBindingData.holdTime),      "Hold Time");
         DrawField(ref y, rect, prop, nameof(InputBindingData.cooldown),      "Cooldown");
 
-        // nested actions list
+        // --- Nested ReorderableList of ActionBindingData ---
         var list = GetActionsList(prop);
         list.DoList(new Rect(rect.x, y, rect.width, list.GetHeight()));
 
         EditorGUI.indentLevel--;
     }
 
-    private void DrawField(
-        ref float y, Rect rect,
-        SerializedProperty root, string propName, string label)
+    private void DrawField(ref float y, Rect r, SerializedProperty root, string name, string label)
     {
-        var sp = root.FindPropertyRelative(propName);
-        var guiLabel = string.IsNullOrEmpty(label)
-            ? new GUIContent(sp.displayName)
-            : new GUIContent(label);
+        var p = root.FindPropertyRelative(name);
+        var gui = string.IsNullOrEmpty(label) ? new GUIContent(p.displayName)
+                                              : new GUIContent(label);
         EditorGUI.PropertyField(
-            new Rect(rect.x, y, rect.width, EditorGUIUtility.singleLineHeight),
-            sp, guiLabel);
+            new Rect(r.x, y, r.width, EditorGUIUtility.singleLineHeight),
+            p, gui);
         y += EditorGUIUtility.singleLineHeight + 2;
     }
 
     private ReorderableList GetActionsList(SerializedProperty bindProp)
     {
-        var actionsProp = bindProp.FindPropertyRelative(nameof(InputBindingData.bindings));
-        if (_actionsList != null &&
-            _actionsList.serializedProperty == actionsProp)
+        // keep one list per drawer instance
+        if (_actionsList != null
+            && _actionsList.serializedProperty == bindProp.FindPropertyRelative("bindings"))
             return _actionsList;
 
+        var actionsProp = bindProp.FindPropertyRelative(nameof(InputBindingData.bindings));
         _actionsList = new ReorderableList(
             actionsProp.serializedObject, actionsProp,
             draggable: true, displayHeader: true,
             displayAddButton: true, displayRemoveButton: true
         );
 
+        // header
         _actionsList.drawHeaderCallback = r =>
             EditorGUI.LabelField(r, "Actions");
 
+        // calculate height properly when collapsed vs expanded
         _actionsList.elementHeightCallback = idx =>
         {
             var el = actionsProp.GetArrayElementAtIndex(idx);
-            // if the element is *not* expanded, only use one line
             if (!el.isExpanded)
                 return EditorGUIUtility.singleLineHeight + 4;
 
-            // otherwise calculate the full expanded height:
-            float h = EditorGUIUtility.singleLineHeight + 4; // foldout line
-            // triggerPhase line
+            float h = EditorGUIUtility.singleLineHeight + 4; // foldout
+            // triggerPhase
             h += EditorGUIUtility.singleLineHeight + 2;
-            // tickRate, if OnTick
-            if ((TriggerPhase)el.FindPropertyRelative("triggerPhase").enumValueIndex
-                == TriggerPhase.OnTick)
+            // tickRate if needed
+            if ((TriggerPhase)el.FindPropertyRelative(nameof(ActionBindingData.triggerPhase))
+                   .enumValueIndex == TriggerPhase.OnTick)
+            {
                 h += EditorGUIUtility.singleLineHeight + 2;
-            // then the managed‐reference “action” data
+            }
+            // full managedReference data
             h += EditorGUI.GetPropertyHeight(
-                     el.FindPropertyRelative("action"),
+                     el.FindPropertyRelative(nameof(ActionBindingData.action)),
                      includeChildren: true)
                  + 4;
             return h;
         };
 
-        _actionsList.drawElementCallback = (r, i, a, f) =>
+        // draw each action
+        _actionsList.drawElementCallback = (rect, idx, active, focused) =>
         {
-            var el = actionsProp.GetArrayElementAtIndex(i);
-            float yy = r.y + 2;
+            var el = actionsProp.GetArrayElementAtIndex(idx);
+            float y = rect.y + 2;
 
-            // foldout showing the action type
+            // foldout with action type name
             var typeProp = el.FindPropertyRelative(nameof(ActionBindingData.action));
-            string typeName = GetNiceName(typeProp);
+            string title = GetNiceManagedTypeName(typeProp);
             el.isExpanded = EditorGUI.Foldout(
-                new Rect(r.x, yy, r.width, EditorGUIUtility.singleLineHeight),
-                el.isExpanded, typeName, true);
-            yy += EditorGUIUtility.singleLineHeight + 2;
+                new Rect(rect.x, y, rect.width, EditorGUIUtility.singleLineHeight),
+                el.isExpanded, title, true);
+            y += EditorGUIUtility.singleLineHeight + 2;
             if (!el.isExpanded) return;
 
             EditorGUI.indentLevel++;
-            // draw the entire action object
+            var lineH = EditorGUIUtility.singleLineHeight;
+
+            // triggerPhase
             EditorGUI.PropertyField(
-                new Rect(r.x, yy, r.width,
-                    EditorGUI.GetPropertyHeight(typeProp, true)),
-                typeProp, true);
+                new Rect(rect.x, y, rect.width, lineH),
+                el.FindPropertyRelative(nameof(ActionBindingData.triggerPhase)));
+            y += lineH + 2;
+
+            // tickRate if OnTick
+            var phase = el.FindPropertyRelative(nameof(ActionBindingData.triggerPhase)).enumValueIndex;
+            if ((TriggerPhase)phase == TriggerPhase.OnTick)
+            {
+                EditorGUI.PropertyField(
+                    new Rect(rect.x, y, rect.width, lineH),
+                    el.FindPropertyRelative(nameof(ActionBindingData.tickRate)));
+                y += lineH + 2;
+            }
+
+            // managedReference action data
+            EditorGUI.PropertyField(
+                new Rect(rect.x, y, rect.width,
+                         EditorGUI.GetPropertyHeight(typeProp, true)),
+                typeProp, includeChildren: true);
+
             EditorGUI.indentLevel--;
         };
 
-        // pop up a GenericMenu at the + button
-        _actionsList.onAddDropdownCallback = (buttonRect, list) =>
-            ShowAddActionMenu(bindProp, buttonRect);
+        // **OVERRIDE** the add‐button so we create a fresh instance each time
+        _actionsList.onAddDropdownCallback = (buttonRect, roList) =>
+        {
+            var menu = new GenericMenu();
+            foreach (var t in _actionTypes)
+            {
+                string nice = ObjectNames.NicifyVariableName(t.Name);
+                menu.AddItem(new GUIContent(nice), false, () =>
+                {
+                    // grow array
+                    actionsProp.arraySize++;
+                    actionsProp.serializedObject.ApplyModifiedProperties();
+                    actionsProp.serializedObject.Update();
+
+                    // assign brand-new instance
+                    var newEl = actionsProp.GetArrayElementAtIndex(actionsProp.arraySize - 1);
+                    newEl.FindPropertyRelative(nameof(ActionBindingData.action))
+                         .managedReferenceValue = Activator.CreateInstance(t);
+
+                    // default to OnPerform
+                    newEl.FindPropertyRelative(nameof(ActionBindingData.triggerPhase))
+                         .enumValueIndex = (int)TriggerPhase.OnPerform;
+
+                    actionsProp.serializedObject.ApplyModifiedProperties();
+                });
+            }
+            menu.DropDown(buttonRect);
+        };
+
+        // override remove so Unity cleans up correctly
+        _actionsList.onRemoveCallback = list =>
+        {
+            int idx = list.index;
+            actionsProp.DeleteArrayElementAtIndex(idx);
+            actionsProp.DeleteArrayElementAtIndex(idx);
+            actionsProp.serializedObject.ApplyModifiedProperties();
+        };
 
         return _actionsList;
     }
 
-    private void ShowAddActionMenu(
-        SerializedProperty bindProp, Rect buttonRect)
+    private static string GetNiceManagedTypeName(SerializedProperty prop)
     {
-        var menu = new GenericMenu();
-        foreach (var t in _actionTypes)
-        {
-            string nice = ObjectNames.NicifyVariableName(t.Name);
-            menu.AddItem(new GUIContent(nice), false, () =>
-            {
-                AddAction(bindProp, t);
-            });
-        }
-        menu.DropDown(buttonRect);
-    }
-
-    private void AddAction(SerializedProperty bindProp, Type type)
-    {
-        var actionsProp = bindProp
-            .FindPropertyRelative(nameof(InputBindingData.bindings));
-        actionsProp.arraySize++;
-        actionsProp.serializedObject.ApplyModifiedProperties();
-        actionsProp.serializedObject.Update();
-
-        var newEl = actionsProp.GetArrayElementAtIndex(actionsProp.arraySize - 1);
-        newEl.FindPropertyRelative(nameof(ActionBindingData.action))
-             .managedReferenceValue = Activator.CreateInstance(type);
-        // default to OnPerform
-        newEl.FindPropertyRelative(nameof(ActionBindingData.triggerPhase))
-             .enumValueIndex = (int)TriggerPhase.OnPerform;
-
-        actionsProp.serializedObject.ApplyModifiedProperties();
-    }
-
-    private string GetNiceName(SerializedProperty prop)
-    {
+        if (prop == null) return "None";
         var full = prop.managedReferenceFullTypename;
         if (string.IsNullOrEmpty(full)) return "None";
-        var after = full.Substring(full.IndexOf(' ') + 1);
-        return after.Substring(after.LastIndexOf('.') + 1);
+        int sp = full.IndexOf(' ');
+        var after = sp >= 0 ? full.Substring(sp + 1) : full;
+        int dot = after.LastIndexOf('.');
+        return dot >= 0 ? after.Substring(dot + 1) : after;
     }
 }

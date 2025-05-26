@@ -52,6 +52,14 @@ PrefabInstance:
       propertyPath: weaponData
       value: 
       objectReference: {fileID: 11400000, guid: 6192264687dc892409dc86470631b8c8, type: 2}
+    - target: {fileID: 3248754415215771040, guid: 174f609dffdb2b0408656b8edec0f173, type: 3}
+      propertyPath: _promptOffset.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3248754415215771040, guid: 174f609dffdb2b0408656b8edec0f173, type: 3}
+      propertyPath: _promptOffset.z
+      value: -0.5
+      objectReference: {fileID: 0}
     - target: {fileID: 6888727773174072129, guid: 174f609dffdb2b0408656b8edec0f173, type: 3}
       propertyPath: m_Name
       value: MeleeWeapon

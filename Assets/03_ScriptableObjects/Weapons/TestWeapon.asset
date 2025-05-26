@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weaponName: TestWeapon
   weaponDescription: yurr
-  rightHandModel: {fileID: 1467819138738470339, guid: 24d1e24d2f8f6ac458534c8278f04506, type: 3}
-  leftHandModel: {fileID: 1467819138738470339, guid: 24d1e24d2f8f6ac458534c8278f04506, type: 3}
+  rightHandModel: {fileID: 5374478241137192205, guid: 4b0b469db98e6fc42bfdf1661af14ae1, type: 3}
+  leftHandModel: {fileID: 8170218154423182505, guid: 1dd602ee85aba1048aa46c8bb0c254f0, type: 3}
   pickupPrefab: {fileID: 1467819138738470339, guid: 24d1e24d2f8f6ac458534c8278f04506, type: 3}
   modelPositionOffset: {x: 0, y: 0, z: 0}
   modelRotationOffset: {x: 90, y: 0, z: 0}
@@ -31,6 +31,10 @@ MonoBehaviour:
       tickRate: 0.2
       action:
         rid: 1246412388835786978
+    - triggerPhase: 3
+      tickRate: 0.2
+      action:
+        rid: 1246412456527921460
   - bindingMode: 1
     actionRef: {fileID: -2189319267458262046, guid: 6eaff8a1080c3b64bba326ccc7407a63, type: 3}
     hand: 1
@@ -41,6 +45,10 @@ MonoBehaviour:
       tickRate: 0
       action:
         rid: 1246412388835786978
+    - triggerPhase: 1
+      tickRate: 0
+      action:
+        rid: 1246412456527921465
   - bindingMode: 2
     actionRef: {fileID: 8212221082979405425, guid: 6eaff8a1080c3b64bba326ccc7407a63, type: 3}
     hand: 2
@@ -62,4 +70,14 @@ MonoBehaviour:
       type: {class: PlayerForceAction, ns: , asm: Assembly-CSharp}
       data:
         forceAmount: 2
+        forceDirection: {x: 0, y: 0, z: -1}
+    - rid: 1246412456527921460
+      type: {class: PlayerForceAction, ns: , asm: Assembly-CSharp}
+      data:
+        forceAmount: 1
+        forceDirection: {x: 0, y: 0, z: -1}
+    - rid: 1246412456527921465
+      type: {class: PlayerForceAction, ns: , asm: Assembly-CSharp}
+      data:
+        forceAmount: 10
         forceDirection: {x: 0, y: 0, z: -1}

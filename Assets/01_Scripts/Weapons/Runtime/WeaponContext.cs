@@ -33,9 +33,8 @@ public class WeaponContext : MonoBehaviour
     [HideInInspector]
     [Tooltip("All valid fire points attached to the current weapon model(s).")]
     public List<Transform> FirePoints = new List<Transform>();
-
-    [HideInInspector]
-    [Tooltip("Cached Animator from the weapon or player.")]
+    
+    //[Tooltip("Cached Animator from the weapon or player.")]
     public Animator Animator;
 
     [HideInInspector]
@@ -57,12 +56,7 @@ public class WeaponContext : MonoBehaviour
         if (PlayerCamera == null)
             PlayerCamera = Camera.main;
     }
-
-    /// <summary>
-    /// Gets the fire points for a specific hand (or both).
-    /// </summary>
-    /// <param name="hand">Hand enum: Left, Right, or Both.</param>
-    /// <returns>Enumerable of matching fire-point transforms.</returns>
+    
     public IEnumerable<Transform> GetFirePointsFor(Hand hand)
     {
         // Return all points if both hands

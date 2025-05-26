@@ -31,6 +31,10 @@ MonoBehaviour:
       tickRate: 0
       action:
         rid: 1246412388835787015
+    - triggerPhase: 1
+      tickRate: 0
+      action:
+        rid: 1246412456527921479
   references:
     version: 2
     RefIds:
@@ -47,3 +51,7 @@ MonoBehaviour:
           serializedVersion: 2
           m_Bits: 4294967295
         length: 50
+    - rid: 1246412456527921479
+      type: {class: PlayAnimationAction, ns: , asm: Assembly-CSharp}
+      data:
+        triggerName: ShootRight

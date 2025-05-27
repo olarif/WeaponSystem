@@ -66,7 +66,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1930107923466689315}
   serializedVersion: 4
-  m_Mass: 1
+  m_Mass: 0.01
   m_Drag: 0
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -102,41 +102,53 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 73
   speed: 10
-  lifetime: 5
+  lifetime: 10
   useGravity: 1
-  onHitActions:
-  - rid: 3936017921557921916
-  - rid: 3936017921557921920
-  - rid: 3936017921557921937
-  - rid: 1246412484254892264
+  components:
+  - rid: 7470862171652751439
+  - rid: 7470862171652751440
+  - rid: 7470862171652751441
+  - rid: 7470862171652751442
+  isDestroyed: 0
+  timeAlive: 0
+  lastPosition: {x: 0, y: 0, z: 0}
   references:
     version: 2
     RefIds:
-    - rid: 1246412484254892264
-      type: {class: SpawnAfterTime, ns: , asm: Assembly-CSharp}
+    - rid: 7470862171652751439
+      type: {class: SpawnPrefabComponent, ns: , asm: Assembly-CSharp}
       data:
-        timeToSpawn: 2.5
-        spawnPrefab: {fileID: 8464950693656172981, guid: 83ad694f134ab954580473212156b35a, type: 3}
+        isEnabled: 1
+        triggerEvents: 04000000
+        prefab: {fileID: 8464950693656172981, guid: 83ad694f134ab954580473212156b35a, type: 3}
         count: 1
-        lifetime: 1
-        spawnSize: {x: 2, y: 2, z: 2}
-    - rid: 3936017921557921916
+        spreadAngle: 0
+        delay: 0
+        lifetime: 3
+        scale: {x: 5, y: 3, z: 5}
+    - rid: 7470862171652751440
       type: {class: StickOnHit, ns: , asm: Assembly-CSharp}
-      data: 
-    - rid: 3936017921557921920
-      type: {class: DestroyAfterTime, ns: , asm: Assembly-CSharp}
       data:
-        timeToDestroy: 3
-    - rid: 3936017921557921937
-      type: {class: ExplodeAfterTime, ns: , asm: Assembly-CSharp}
+        isEnabled: 1
+        delay: 0
+        stickOnCollision: 1
+    - rid: 7470862171652751441
+      type: {class: DamageComponent, ns: , asm: Assembly-CSharp}
       data:
-        timeToExplode: 2.5
-        damageType: 1
-        explosionPrefab: {fileID: 0}
-        damage: 50
-        explosionRadius: 5
-        explosionForce: 10
-        duration: 2
+        isEnabled: 1
+        triggerEvents: 04000000
+        damageAmount: 50
+        damagePerSecond: 0
+        areaOfEffectRadius: 5
+        mask:
+          serializedVersion: 2
+          m_Bits: 64
+    - rid: 7470862171652751442
+      type: {class: DestroyComponent, ns: , asm: Assembly-CSharp}
+      data:
+        isEnabled: 1
+        delay: 2
+        destroyOnCollision: 1
 --- !u!1 &3634619665484577082
 GameObject:
   m_ObjectHideFlags: 0

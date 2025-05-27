@@ -25,6 +25,6 @@ MonoBehaviour:
   JumpForce: 3
   JumpBufferTime: 0.1
   GroundDistance: 0.3
-  RotationSpeed: 35
+  RotationSpeed: 15
   MinLookAngle: -90
   MaxLookAngle: 90

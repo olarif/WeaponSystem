@@ -1,4 +1,5 @@
 ﻿using System;
+using UnityEditor;
 using UnityEngine;
 
 public enum AnimationType
@@ -15,8 +16,9 @@ public class PlayAnimationAction : IWeaponAction
     [Tooltip("You must have a trigger set up in your Animator")]
     public AnimationType animationType = AnimationType.Trigger;
     public string triggerName;
+    //only show this when bool type is selected
+    [Tooltip("Only used when animationType is Bool")]
     public bool booleanValue = true;
-    //public bool resetTriggerOnEnd = true;
 
     public void Execute(WeaponContext ctx, InputBindingData b, ActionBindingData ab)
     {

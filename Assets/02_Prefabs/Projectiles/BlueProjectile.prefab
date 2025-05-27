@@ -101,35 +101,46 @@ MonoBehaviour:
   hitLayer:
     serializedVersion: 2
     m_Bits: 73
-  speed: 10
+  speed: 15
   lifetime: 5
   useGravity: 0
-  onHitActions:
-  - rid: 3936017921557921921
-  - rid: 3936017921557921922
-  - rid: 3936017921557921972
-  - rid: 1246412484254892258
+  components:
+  - rid: 7470862171652751436
+  - rid: 7470862171652751437
+  - rid: 7470862171652751438
+  isDestroyed: 0
+  timeAlive: 0
+  lastPosition: {x: 0, y: 0, z: 0}
   references:
     version: 2
     RefIds:
-    - rid: 1246412484254892258
-      type: {class: SpawnOnHit, ns: , asm: Assembly-CSharp}
+    - rid: 7470862171652751436
+      type: {class: SpawnPrefabComponent, ns: , asm: Assembly-CSharp}
       data:
-        spawnPrefab: {fileID: 3077343761403282166, guid: f78aaaec3b393e24ca74cd6de8194347, type: 3}
+        isEnabled: 1
+        triggerEvents: 03000000
+        prefab: {fileID: 3077343761403282166, guid: f78aaaec3b393e24ca74cd6de8194347, type: 3}
         count: 1
-        childLifeTime: 1
-        spawnSize: {x: 0.2, y: 0.2, z: 0.2}
-    - rid: 3936017921557921921
-      type: {class: DestroyOnHit, ns: , asm: Assembly-CSharp}
-      data: 
-    - rid: 3936017921557921922
-      type: {class: DealDamageOnHit, ns: , asm: Assembly-CSharp}
+        spreadAngle: 0
+        delay: 0
+        lifetime: 2
+        scale: {x: 0.2, y: 0.2, z: 0.2}
+    - rid: 7470862171652751437
+      type: {class: DamageComponent, ns: , asm: Assembly-CSharp}
       data:
-        damageType: 0
-        damage: 5
-    - rid: 3936017921557921972
-      type: {class: ProjectilePunch, ns: , asm: Assembly-CSharp}
-      data: 
+        isEnabled: 1
+        triggerEvents: 03000000
+        damageAmount: 5
+        damagePerSecond: 0
+        mask:
+          serializedVersion: 2
+          m_Bits: 64
+    - rid: 7470862171652751438
+      type: {class: DestroyOnHit, ns: , asm: Assembly-CSharp}
+      data:
+        isEnabled: 1
+        delay: 0
+        destroyOnCollision: 1
 --- !u!1 &3634619665484577082
 GameObject:
   m_ObjectHideFlags: 0

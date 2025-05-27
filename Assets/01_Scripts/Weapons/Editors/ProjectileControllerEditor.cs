@@ -1,38 +1,40 @@
-﻿using UnityEditor;
-using UnityEngine;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Linq;
-using System.Reflection;
+using System.Collections.Generic;
+using UnityEditor;
+using UnityEngine;
 
 [CustomEditor(typeof(ProjectileController))]
 public class ProjectileControllerEditor : Editor
 {
+    // your serializables
     SerializedProperty pHitLayer;
     SerializedProperty pSpeed;
     SerializedProperty pLifetime;
     SerializedProperty pUseGravity;
-    SerializedProperty pActions;
+    SerializedProperty pComponents;
 
-    bool showActions = true;
-    List<Type> actionTypes;
+    bool showComponents = true;
+    List<Type> componentTypes;
 
     void OnEnable()
     {
-        pHitLayer   = serializedObject.FindProperty("hitLayer");
-        pSpeed      = serializedObject.FindProperty("speed");
-        pLifetime   = serializedObject.FindProperty("lifetime");
-        pUseGravity = serializedObject.FindProperty("useGravity");
-        pActions    = serializedObject.FindProperty("onHitActions");
+        // grab built-in fields
+        pHitLayer   = serializedObject.FindProperty(nameof(ProjectileController.hitLayer));
+        pSpeed      = serializedObject.FindProperty(nameof(ProjectileController.speed));
+        pLifetime   = serializedObject.FindProperty(nameof(ProjectileController.lifetime));
+        pUseGravity = serializedObject.FindProperty(nameof(ProjectileController.useGravity));
 
-        RefreshActionTypes();
-    }
+        // THIS is your managed‐reference list on ProjectileController
+        pComponents = serializedObject.FindProperty(nameof(ProjectileController.components));
+        if (pComponents == null)
+            Debug.LogError("Could not find 'components' on ProjectileController!");
 
-    void RefreshActionTypes()
-    {
-        actionTypes = AppDomain.CurrentDomain.GetAssemblies()
+        // cache all concrete ProjectileComponent types
+        componentTypes = AppDomain.CurrentDomain.GetAssemblies()
             .SelectMany(a => a.GetTypes())
-            .Where(t => t.IsSubclassOf(typeof(ProjectileActionData)) && !t.IsAbstract)
+            .Where(t => t.IsSubclassOf(typeof(ProjectileComponent)) && !t.IsAbstract)
+            .OrderBy(t => t.Name)
             .ToList();
     }
 
@@ -40,31 +42,38 @@ public class ProjectileControllerEditor : Editor
     {
         serializedObject.Update();
 
-        // Default fields
+        // draw the regular fields
         EditorGUILayout.PropertyField(pHitLayer);
         EditorGUILayout.PropertyField(pSpeed);
         EditorGUILayout.PropertyField(pLifetime);
         EditorGUILayout.PropertyField(pUseGravity);
 
         EditorGUILayout.Space();
-        showActions = EditorGUILayout.Foldout(showActions, "On Hit Actions", true);
-        if (showActions)
+        showComponents = EditorGUILayout.Foldout(showComponents, "Projectile Components", true);
+        if (showComponents && pComponents != null)
         {
             EditorGUI.indentLevel++;
-
-            // Draw existing actions
-            for (int i = 0; i < pActions.arraySize; i++)
+            // list existing
+            for (int i = 0; i < pComponents.arraySize; i++)
             {
-                var elem = pActions.GetArrayElementAtIndex(i);
-                string fullTypeName = elem.managedReferenceFullTypename;
-                string afterSpace = fullTypeName.Substring(fullTypeName.LastIndexOf(' ') + 1);
-                string typeName = afterSpace.Contains('.') ? afterSpace.Substring(afterSpace.LastIndexOf('.') + 1) : afterSpace;
+                var elem = pComponents.GetArrayElementAtIndex(i);
+                // derive a friendly type name
+                string full = elem.managedReferenceFullTypename;
+                string nicename = "None";
+                if (!string.IsNullOrEmpty(full))
+                {
+                    var afterSpace = full.Substring(full.IndexOf(' ') + 1);
+                    nicename = afterSpace.Split('.').Last();
+                }
 
                 EditorGUILayout.BeginHorizontal();
-                EditorGUILayout.PropertyField(elem, new GUIContent(typeName), true);
+                EditorGUILayout.PropertyField(elem, new GUIContent(nicename), true);
+                // remove button
                 if (GUILayout.Button("X", GUILayout.Width(20)))
                 {
-                    pActions.DeleteArrayElementAtIndex(i);
+                    // safe remove of managedReference
+                    pComponents.DeleteArrayElementAtIndex(i);
+                    pComponents.DeleteArrayElementAtIndex(i);
                     serializedObject.ApplyModifiedProperties();
                     break;
                 }
@@ -72,19 +81,22 @@ public class ProjectileControllerEditor : Editor
             }
 
             EditorGUILayout.Space();
-            EditorGUILayout.BeginHorizontal();
-            if (EditorGUILayout.DropdownButton(new GUIContent("Add Action"), FocusType.Passive))
+
+            // add-new dropdown
+            if (GUILayout.Button("Add Component"))
             {
                 var menu = new GenericMenu();
-                foreach (var t in actionTypes)
+                foreach (var t in componentTypes)
                 {
-                    // pretty name: split camelcase
-                    string menuName = System.Text.RegularExpressions.Regex.Replace(t.Name, "(?<!^)([A-Z])", " $1");
-                    menu.AddItem(new GUIContent(menuName), false, () => AddAction(t));
+                    // split camelCase for readability
+                    string label = System.Text.RegularExpressions.Regex
+                        .Replace(t.Name, "(?<!^)([A-Z])", " $1");
+                    menu.AddItem(new GUIContent(label), false, () => {
+                        AddComponent(t);
+                    });
                 }
                 menu.ShowAsContext();
             }
-            EditorGUILayout.EndHorizontal();
 
             EditorGUI.indentLevel--;
         }
@@ -92,14 +104,22 @@ public class ProjectileControllerEditor : Editor
         serializedObject.ApplyModifiedProperties();
     }
 
-    private void AddAction(Type actionType)
+    private void AddComponent(Type type)
     {
         serializedObject.Update();
-        int idx = pActions.arraySize;
-        pActions.InsertArrayElementAtIndex(idx);
-        var elem = pActions.GetArrayElementAtIndex(idx);
-        elem.managedReferenceValue = Activator.CreateInstance(actionType);
+
+        // grow the array
+        int idx = pComponents.arraySize;
+        pComponents.arraySize++;
         serializedObject.ApplyModifiedProperties();
+        serializedObject.Update();
+
+        // assign a fresh instance
+        var elem = pComponents.GetArrayElementAtIndex(idx);
+        elem.managedReferenceValue = Activator.CreateInstance(type);
+
+        serializedObject.ApplyModifiedProperties();
+        // mark dirty so scene knows to save
         EditorUtility.SetDirty(target);
     }
 }

@@ -43,7 +43,7 @@ public class SpawnProjectileAction : IWeaponAction
             var proj = UnityEngine.Object.Instantiate(prefab, spawnPos, rot);
             if (proj.TryGetComponent<ProjectileController>(out var pc))
             {
-                pc.Initialize(ctx.WeaponController.gameObject);
+                pc.Initialize(ctx.Player.gameObject, aimDir * pc.speed);
             }
         }
     }

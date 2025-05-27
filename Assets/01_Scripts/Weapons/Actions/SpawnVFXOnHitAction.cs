@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using UnityEngine;
 
 [Serializable]
@@ -7,30 +8,33 @@ public class SpawnHitVFXOnAction : IWeaponAction
     public GameObject hitVFXPrefab;
     public LayerMask targetLayerMask = ~0;
     public float     hitRange      = 2.5f;
+    public float     hitRadius = 0.5f;
     public float     vfxLifetime = 1.5f;
     public Vector3   vfxScale    = Vector3.one;
 
     public void Execute(WeaponContext ctx, InputBindingData b, ActionBindingData a)
     {
-        Vector3 origin = ctx.transform.position;
-        var hits = Physics.OverlapSphere(origin, hitRange, targetLayerMask);
-
-        foreach (var c in hits)
+        var cam = ctx.PlayerCamera;
+        Vector3 origin    = cam.transform.position;
+        Vector3 direction = cam.transform.forward;
+        
+        RaycastHit[] hits = Physics.SphereCastAll(
+                origin,
+                hitRadius,
+                direction,
+                hitRange,
+                targetLayerMask
+            )
+            .OrderBy(h => h.distance)   // closest first
+            .ToArray();
+        
+        foreach (var h in hits)
         {
-            if (c.transform.IsChildOf(ctx.transform)) continue;
+            // skip anything on own body
+            if (h.collider.transform.IsChildOf(ctx.transform)) 
+                continue;
 
-            // compute exact hit point & normal
-            Vector3 dir = (c.transform.position - origin).normalized;
-            if (c.Raycast(new Ray(origin, dir), out var hit, Mathf.Infinity))
-            {
-                SpawnVFXAt(hit.point, hit.normal);
-            }
-            else
-            {
-                var pt = c.ClosestPoint(origin);
-                var n  = (pt - origin).normalized;
-                SpawnVFXAt(pt, n);
-            }
+            SpawnVFXAt(h.point, h.normal);
         }
     }
 

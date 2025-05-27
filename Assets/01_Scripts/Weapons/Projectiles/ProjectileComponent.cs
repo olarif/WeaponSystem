@@ -29,6 +29,5 @@ public abstract class ProjectileComponent
 public enum ComponentResult
 {
     Continue,
-    DestroyProjectile,
-    Stop
+    DestroyProjectile
 }

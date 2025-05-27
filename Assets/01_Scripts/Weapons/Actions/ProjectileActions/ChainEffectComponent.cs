@@ -1,114 +1,128 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
-[System.Serializable]
+[Serializable]
 public class ChainLightningComponent : ProjectileComponent
 {
     [Header("Chain Settings")]
-    public LayerMask targetLayers = -1;
-    public int maxChains = 3;
-    public float chainRange = 8f;
-    public float chainDelay = 0.1f;
-    public GameObject chainEffectPrefab;
-    public DamageType damageType = DamageType.Lightning;
-    public float damage = 10f;
-    [Tooltip("Damage multiplier for each subsequent chain (0.8 = 80% damage)")]
-    public float damageReduction = 0.8f;
+    [Tooltip("Which layers can be chained to")]
+    public LayerMask targetLayers    = -1;
+    [Tooltip("How many extra jumps after the first hit")]
+    public int       maxChains       = 3;
+    [Tooltip("Max distance between chain jumps")]
+    public float     chainRange      = 8f;
+    [Tooltip("Delay before each jump")]
+    public float     chainDelay      = 0.1f;
+    
+    [Header("Bolt VFX")]
+    [Tooltip("A simple bolt prefab (e.g. a small sprite or mesh)")]
+    public GameObject boltPrefab;
+    [Tooltip("Speed at which the bolt travels between targets")]
+    public float      boltSpeed      = 20f;
+    [Tooltip("Destroy the bolt object this many seconds after flight")]
+    public float      boltLifetime   = 1f;
+    
+    [Header("Damage")]
+    public DamageType damageType     = DamageType.Lightning;
+    [Tooltip("Damage dealt to the first target on impact")]
+    public float      initialDamage  = 10f;
+    [Tooltip("Multiply damage by this factor on each subsequent jump")]
+    [Range(0f,1f)]
+    public float      damageFalloff  = 0.8f;
 
-    public override ComponentResult OnCollision(ProjectileRuntimeData data, CollisionInfo collision)
+    public override ComponentResult OnCollision(
+        ProjectileRuntimeData data,
+        CollisionInfo collision)
     {
         if (!isEnabled) return ComponentResult.Continue;
 
-        // Deal damage to the first target
-        GameObject firstTarget = collision.HitObject;
-        if (firstTarget != null && firstTarget.TryGetComponent<IDamageable>(out var damageable))
-        {
-            damageable.TakeDamage(damage, damageType);
-        }
+        // 1) Damage the very first hit
+        var first = collision.HitObject;
+        if (first != null && first.TryGetComponent<IDamageable>(out var dmg))
+            dmg.TakeDamage(initialDamage, damageType);
 
-        // Add first target to hit list
-        if (firstTarget != null && !data.hitTargets.Contains(firstTarget))
-        {
-            data.hitTargets.Add(firstTarget);
-        }
+        // 2) Mark it as hit so we don’t retarget it
+        if (first != null)
+            data.hitTargets.Add(first);
 
-        // Start chaining from the first target
-        CoroutineRunner.Instance.StartRoutine(ProcessChainSequence(data, firstTarget, damage * damageReduction));
+        // 3) Kick off the chain coroutine
+        CoroutineRunner.Instance.StartRoutine(
+            ChainRoutine(
+                data,
+                fromPoint: collision.Point,
+                lastTarget: first,
+                damageToDeal: initialDamage * damageFalloff,
+                chainCount: 0
+            )
+        );
 
+        // 4) Destroy the projectile itself immediately
         return ComponentResult.DestroyProjectile;
     }
 
-    private System.Collections.IEnumerator ProcessChainSequence(ProjectileRuntimeData data, GameObject currentTarget, float currentDamage)
-    {
-        int chainsPerformed = 0;
-        
-        while (chainsPerformed < maxChains && currentTarget != null)
+    private IEnumerator ChainRoutine(
+        ProjectileRuntimeData data,
+        Vector3         fromPoint,
+        GameObject      lastTarget,
+        float           damageToDeal,
+        int             chainCount
+    ) {
+        // Continue jumping until we exhaust maxChains
+        while (chainCount < maxChains)
         {
-            // Find next target from current target's position
-            var nextTarget = FindNextChainTarget(data, currentTarget.transform.position);
-            
-            if (nextTarget == null)
-            {
-                // No more targets found, end the chain
-                break;
-            }
-
-            // Add the next target to hit list immediately to prevent retargeting
-            if (!data.hitTargets.Contains(nextTarget))
-            {
-                data.hitTargets.Add(nextTarget);
-            }
-
-            // Wait for chain delay
             yield return new WaitForSeconds(chainDelay);
 
-            // Create and launch chain effect from current to next target
-            CreateTravelingChainEffect(currentTarget.transform.position, nextTarget.transform.position, nextTarget, currentDamage);
-            
-            // Wait for the effect to travel (based on distance and speed)
-            float travelDistance = Vector3.Distance(currentTarget.transform.position, nextTarget.transform.position);
-            float travelTime = travelDistance / 20f; // Assuming default travel speed of 20
-            yield return new WaitForSeconds(travelTime + 0.1f); // Small buffer
-            
-            // Update for next iteration - IMPORTANT: use nextTarget as the new current
-            currentTarget = nextTarget;
-            currentDamage *= damageReduction;
-            chainsPerformed++;
-        }
-    }
+            // find the next target not yet hit
+            var next = Physics
+                .OverlapSphere(fromPoint, chainRange, targetLayers)
+                .Select(c => c.gameObject)
+                .Where(g => !data.hitTargets.Contains(g))
+                .Where(g => g.TryGetComponent<IDamageable>(out _))
+                .OrderBy(g => Vector3.Distance(fromPoint, g.transform.position))
+                .FirstOrDefault();
 
-    private GameObject FindNextChainTarget(ProjectileRuntimeData data, Vector3 fromPosition)
-    {
-        // Find all potential targets in range
-        var allColliders = Physics.OverlapSphere(fromPosition, chainRange, targetLayers);
-        
-        var potentialTargets = allColliders
-            .Select(c => c.gameObject)
-            .Where(t => !data.hitTargets.Contains(t))
-            .Where(t => t.GetComponent<IDamageable>() != null) // Only target damageable objects
-            .OrderBy(t => Vector3.Distance(fromPosition, t.transform.position))
-            .ToList();
+            if (next == null)
+                yield break; // no more valid targets
 
-        return potentialTargets.Count > 0 ? potentialTargets[0] : null;
-    }
+            data.hitTargets.Add(next);
 
-    private void CreateTravelingChainEffect(Vector3 from, Vector3 to, GameObject target, float damage)
-    {
-        if (chainEffectPrefab != null)
-        {
-            var effect = Object.Instantiate(chainEffectPrefab, from, Quaternion.LookRotation(to - from));
-            
-            // Start the traveling effect
-            var travelComponent = effect.GetComponent<ChainLightningEffectController>();
-            if (travelComponent == null)
+            // spawn & fly the bolt prefab
+            if (boltPrefab != null)
             {
-                travelComponent = effect.AddComponent<ChainLightningEffectController>();
+                var bolt = UnityEngine.Object.Instantiate(
+                    boltPrefab,
+                    fromPoint,
+                    Quaternion.LookRotation(next.transform.position - fromPoint)
+                );
+
+                float distance = Vector3.Distance(fromPoint, next.transform.position);
+                float travelTime = distance / boltSpeed;
+                float elapsed = 0f;
+
+                while (elapsed < travelTime)
+                {
+                    elapsed += Time.deltaTime;
+                    float t = Mathf.Clamp01(elapsed / travelTime);
+                    bolt.transform.position =
+                        Vector3.Lerp(fromPoint, next.transform.position, t);
+                    yield return null;
+                }
+
+                bolt.transform.position = next.transform.position;
+                UnityEngine.Object.Destroy(bolt, boltLifetime);
             }
-            
-            travelComponent.StartTravel(from, to, target, damage, damageType);
-            
-            // Clean up after travel is complete
-            Object.Destroy(effect, 3f);
+
+            // apply damage on arrival
+            if (next.TryGetComponent<IDamageable>(out var dmg2))
+                dmg2.TakeDamage(damageToDeal, damageType);
+
+            // prepare for the next jump
+            fromPoint     = next.transform.position;
+            damageToDeal *= damageFalloff;
+            chainCount++;
         }
     }
 }

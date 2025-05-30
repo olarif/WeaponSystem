@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: ProjectileChainWeapon
   m_EditorClassIdentifier: 
   weaponName: ProjectileWeapon
-  weaponDescription: yurr
+  weaponDescription: 
   rightHandModel: {fileID: 8170218154423182505, guid: 1dd602ee85aba1048aa46c8bb0c254f0, type: 3}
   leftHandModel: {fileID: 1596470492229182116, guid: 490ae74f1f255814e8aca40f179aa439, type: 3}
   pickupPrefab: {fileID: 1467819138738470339, guid: a17f395b542397c4da1a060b9760705f, type: 3}

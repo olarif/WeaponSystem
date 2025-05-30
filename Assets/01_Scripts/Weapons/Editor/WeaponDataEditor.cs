@@ -81,17 +81,38 @@ public class WeaponDataEditor : Editor
             return EditorGUI.GetPropertyHeight(element, true) + 4f;
         };
 
-        _bindingsList.onAddCallback = list => {
+        _bindingsList.onAddCallback = list =>
+        {
+            serializedObject.Update();
+
+            // 1) Grow the array
             int newIndex = _bindingsProperty.arraySize;
             _bindingsProperty.arraySize++;
             serializedObject.ApplyModifiedProperties();
-            
-            var newElement = _bindingsProperty.GetArrayElementAtIndex(newIndex);
-            newElement.FindPropertyRelative("bindingMode").enumValueIndex = 0;
-            newElement.FindPropertyRelative("hand").enumValueIndex = 0;
-            newElement.FindPropertyRelative("holdTime").floatValue = 1f;
-            newElement.FindPropertyRelative("cooldown").floatValue = 0.1f;
-            
+            serializedObject.Update();
+
+            // 2) Grab the brand-new element
+            var newElem = _bindingsProperty.GetArrayElementAtIndex(newIndex);
+
+            // 3) Reset *every* field on it
+            newElem.FindPropertyRelative(nameof(InputBindingData.bindingMode))
+                .enumValueIndex = (int)BindingMode.Press;
+            newElem.FindPropertyRelative(nameof(InputBindingData.actionRef))
+                .objectReferenceValue = null;
+            newElem.FindPropertyRelative(nameof(InputBindingData.hand))
+                .enumValueIndex = (int)Hand.Right;
+            newElem.FindPropertyRelative(nameof(InputBindingData.holdTime))
+                .floatValue = 0f;
+            newElem.FindPropertyRelative(nameof(InputBindingData.cooldown))
+                .floatValue = 0f;
+
+            // 4) Clear out its nested Actions list
+            var actionsProp = newElem.FindPropertyRelative(nameof(InputBindingData.bindings));
+            actionsProp.ClearArray();
+
+            // 5) Make sure the foldout starts closed
+            newElem.isExpanded = false;
+
             serializedObject.ApplyModifiedProperties();
         };
     }

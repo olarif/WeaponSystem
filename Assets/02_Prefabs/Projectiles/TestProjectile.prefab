@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 8691066383530193915}
   - component: {fileID: 409634805264578045}
   m_Layer: 8
-  m_Name: WavyProjectile
+  m_Name: TestProjectile
   m_TagString: Projectile
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -105,51 +105,60 @@ MonoBehaviour:
   lifetime: 5
   useGravity: 0
   components:
-  - rid: 7470862171652751443
-  - rid: 7470862171652751445
-  - rid: 7470862171652751447
-  - rid: 7470862171652751448
+  - rid: 1246412508334391437
+  - rid: 1246412508334391438
+  - rid: 1246412508334391439
+  - rid: 1246412508334391440
+  - rid: 1246412508334391441
   isDestroyed: 0
   timeAlive: 0
   lastPosition: {x: 0, y: 0, z: 0}
   references:
     version: 2
     RefIds:
-    - rid: 7470862171652751443
-      type: {class: FlightPatternComponent, ns: , asm: Assembly-CSharp}
-      data:
-        isEnabled: 1
-        amplitude: 2
-        frequency: 1
-        waveAxis: {x: 1, y: 1, z: 1}
-    - rid: 7470862171652751445
+    - rid: 1246412508334391437
       type: {class: DamageComponent, ns: , asm: Assembly-CSharp}
       data:
         isEnabled: 1
         triggerEvents: 03000000
-        damageAmount: 5
+        damageAmount: 20
         damagePerSecond: 0
         areaOfEffectRadius: 0
         mask:
           serializedVersion: 2
-          m_Bits: 4294967295
-    - rid: 7470862171652751447
+          m_Bits: 64
+    - rid: 1246412508334391438
+      type: {class: FlightPatternComponent, ns: , asm: Assembly-CSharp}
+      data:
+        isEnabled: 1
+        amplitude: 3
+        frequency: 1
+        waveAxis: {x: 1, y: 1, z: 1}
+    - rid: 1246412508334391439
+      type: {class: StickOnHit, ns: , asm: Assembly-CSharp}
+      data:
+        isEnabled: 1
+        delay: 0
+        stickOnCollision: 1
+    - rid: 1246412508334391440
+      type: {class: HomingMissileComponent, ns: , asm: Assembly-CSharp}
+      data:
+        isEnabled: 1
+        targetLayers:
+          serializedVersion: 2
+          m_Bits: 64
+        targetRange: 10
+        retargetInterval: 0.3
+        maxTargetingAngle: 60
+        targetSwitchThreshold: 0.7
+        turnSpeed: 140
+        homingDelay: 0.1
+    - rid: 1246412508334391441
       type: {class: DestroyComponent, ns: , asm: Assembly-CSharp}
       data:
         isEnabled: 1
         delay: 0
         destroyOnCollision: 1
-    - rid: 7470862171652751448
-      type: {class: SpawnPrefabComponent, ns: , asm: Assembly-CSharp}
-      data:
-        isEnabled: 1
-        triggerEvents: 03000000
-        prefab: {fileID: 3077343761403282166, guid: f78aaaec3b393e24ca74cd6de8194347, type: 3}
-        count: 1
-        spreadAngle: 0
-        delay: 0
-        lifetime: 2
-        scale: {x: 0.2, y: 0.2, z: 0.2}
 --- !u!1 &3634619665484577082
 GameObject:
   m_ObjectHideFlags: 0

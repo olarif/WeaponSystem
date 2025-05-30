@@ -138,7 +138,6 @@ GameObject:
   - component: {fileID: 5088094329127707218}
   - component: {fileID: 7844017749525587249}
   - component: {fileID: 3517262453847225028}
-  - component: {fileID: 4030274826223517496}
   - component: {fileID: 2042787069050867587}
   - component: {fileID: 7158501452205813693}
   m_Layer: 6
@@ -251,18 +250,6 @@ MonoBehaviour:
   entityName: Training DUMMY
   _enemyStats: {fileID: 11400000, guid: 758192cf5ae994043adde04cb0dcd73f, type: 2}
   stunTime: 3
---- !u!114 &4030274826223517496
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 948092185269275623}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe8adbd24ee2441bb921d6adeed34343, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!136 &2042787069050867587
 CapsuleCollider:
   m_ObjectHideFlags: 0

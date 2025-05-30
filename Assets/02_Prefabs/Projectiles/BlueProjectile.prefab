@@ -107,13 +107,19 @@ MonoBehaviour:
   components:
   - rid: 7470862171652751436
   - rid: 7470862171652751437
-  - rid: 7470862171652751438
+  - rid: 1246412508334391390
   isDestroyed: 0
   timeAlive: 0
   lastPosition: {x: 0, y: 0, z: 0}
   references:
     version: 2
     RefIds:
+    - rid: 1246412508334391390
+      type: {class: DestroyComponent, ns: , asm: Assembly-CSharp}
+      data:
+        isEnabled: 1
+        delay: 0
+        destroyOnCollision: 1
     - rid: 7470862171652751436
       type: {class: SpawnPrefabComponent, ns: , asm: Assembly-CSharp}
       data:
@@ -132,15 +138,10 @@ MonoBehaviour:
         triggerEvents: 03000000
         damageAmount: 5
         damagePerSecond: 0
+        areaOfEffectRadius: 0
         mask:
           serializedVersion: 2
           m_Bits: 64
-    - rid: 7470862171652751438
-      type: {class: DestroyOnHit, ns: , asm: Assembly-CSharp}
-      data:
-        isEnabled: 1
-        delay: 0
-        destroyOnCollision: 1
 --- !u!1 &3634619665484577082
 GameObject:
   m_ObjectHideFlags: 0

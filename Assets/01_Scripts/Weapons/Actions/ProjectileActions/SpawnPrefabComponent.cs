@@ -9,11 +9,7 @@ public class SpawnPrefabComponent : ProjectileComponent
     [Tooltip("Which event(s) to spawn on")]
     public List<ProjectileEvent> triggerEvents = new List<ProjectileEvent>
     {
-        ProjectileEvent.OnInitialize,
-        ProjectileEvent.OnUpdate,
-        ProjectileEvent.OnFixedUpdate,
         ProjectileEvent.OnCollision,
-        ProjectileEvent.OnDestroy
     };
 
     [Tooltip("Prefab to spawn")]

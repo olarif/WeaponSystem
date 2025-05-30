@@ -28,13 +28,9 @@ MonoBehaviour:
     cooldown: 0
     bindings:
     - triggerPhase: 1
-      tickRate: 0
+      tickRate: 0.1
       action:
-        rid: -2
-    - triggerPhase: 1
-      tickRate: 0
-      action:
-        rid: 1246412484254892299
+        rid: 1246412508334391391
   - bindingMode: 0
     actionRef: {fileID: 2158980376108856071, guid: 6eaff8a1080c3b64bba326ccc7407a63, type: 3}
     hand: 0
@@ -58,8 +54,6 @@ MonoBehaviour:
   references:
     version: 2
     RefIds:
-    - rid: -2
-      type: {class: , ns: , asm: }
     - rid: 1246412484254892297
       type: {class: PlayAnimationAction, ns: , asm: Assembly-CSharp}
       data:
@@ -72,7 +66,7 @@ MonoBehaviour:
         animationType: 1
         triggerName: charging
         booleanValue: 0
-    - rid: 1246412484254892299
+    - rid: 1246412508334391391
       type: {class: PlayAnimationAction, ns: , asm: Assembly-CSharp}
       data:
         animationType: 0

@@ -25,7 +25,7 @@ MonoBehaviour:
     actionRef: {fileID: 2158980376108856071, guid: 6eaff8a1080c3b64bba326ccc7407a63, type: 3}
     hand: 0
     holdTime: 1
-    cooldown: 0.6
+    cooldown: 0.4
     bindings:
     - triggerPhase: 1
       tickRate: 0.6
@@ -42,11 +42,11 @@ MonoBehaviour:
     cooldown: 0
     bindings:
     - triggerPhase: 3
-      tickRate: 0.6
+      tickRate: 0.4
       action:
         rid: 1246412484254892311
     - triggerPhase: 3
-      tickRate: 0.6
+      tickRate: 0.4
       action:
         rid: 1246412484254892328
   references:

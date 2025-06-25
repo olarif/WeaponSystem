@@ -171,7 +171,6 @@ public class ProjectileController : MonoBehaviour
         
         isDestroyed = true;
         
-        // Let components clean up
         foreach (var component in activeComponents)
         {
             component.OnDestroy(RuntimeData);
@@ -188,25 +187,9 @@ public class ProjectileController : MonoBehaviour
         RuntimeData.currentVelocity = velocity;
     }
 
-    public void AddForce(Vector3 force, ForceMode mode = ForceMode.Force)
-    {
-        if (rb != null)
-            rb.AddForce(force, mode);
-    }
-
     public void SetPosition(Vector3 position)
     {
         transform.position = position;
         RuntimeData.currentPosition = position;
-    }
-
-    // Find targets within range
-    public List<GameObject> FindTargetsInRange(float range, LayerMask targetLayers)
-    {
-        var colliders = Physics.OverlapSphere(transform.position, range, targetLayers);
-        return colliders
-            .Where(c => c.gameObject != owner && c.gameObject != gameObject)
-            .Select(c => c.gameObject)
-            .ToList();
     }
 }

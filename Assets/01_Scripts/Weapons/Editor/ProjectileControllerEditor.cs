@@ -7,7 +7,6 @@ using UnityEngine;
 [CustomEditor(typeof(ProjectileController))]
 public class ProjectileControllerEditor : Editor
 {
-    // your serializables
     SerializedProperty pHitLayer;
     SerializedProperty pSpeed;
     SerializedProperty pLifetime;
@@ -25,7 +24,7 @@ public class ProjectileControllerEditor : Editor
         pLifetime   = serializedObject.FindProperty(nameof(ProjectileController.lifetime));
         pUseGravity = serializedObject.FindProperty(nameof(ProjectileController.useGravity));
 
-        // THIS is your managed‐reference list on ProjectileController
+        // managed-reference list on ProjectileController
         pComponents = serializedObject.FindProperty(nameof(ProjectileController.components));
         if (pComponents == null)
             Debug.LogError("Could not find 'components' on ProjectileController!");

@@ -2,8 +2,6 @@
 
 public abstract class EnemyBase : Entity, IDamageable
 {
-    [SerializeField] private EnemyStatsSO _enemyStats;
-    
     protected HealthComponent HealthComponent;
     
     protected StatusEffectManager StatusEffectsManager;

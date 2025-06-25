@@ -1,0 +1,65 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 173e1320fcaa41c78d1bb440de6ba45a, type: 3}
+  m_Name: HomingProjectileWeaponData
+  m_EditorClassIdentifier: 
+  weaponName: ProjectileWeapon
+  weaponDescription: 
+  rightHandModel: {fileID: 4401442088701548692, guid: 4be108bbc2f7d914095452592b95c4d4, type: 3}
+  leftHandModel: {fileID: 1596470492229182116, guid: 490ae74f1f255814e8aca40f179aa439, type: 3}
+  pickupPrefab: {fileID: 1467819138738470339, guid: e9129b49e5b6442429838615662d89e0, type: 3}
+  modelPositionOffset: {x: 0, y: 0, z: 0}
+  modelRotationOffset: {x: 0, y: 0, z: 0}
+  defaultHand: 0
+  inputBindings:
+  - bindingMode: 0
+    actionRef: {fileID: 2158980376108856071, guid: 6eaff8a1080c3b64bba326ccc7407a63, type: 3}
+    hand: 0
+    holdTime: 1
+    cooldown: 0.4
+    bindings:
+    - triggerPhase: 1
+      tickRate: 0.6
+      action:
+        rid: 1246412484254892311
+    - triggerPhase: 1
+      tickRate: 0.6
+      action:
+        rid: 1246412484254892328
+  - bindingMode: 2
+    actionRef: {fileID: 2158980376108856071, guid: 6eaff8a1080c3b64bba326ccc7407a63, type: 3}
+    hand: 0
+    holdTime: 1
+    cooldown: 0
+    bindings:
+    - triggerPhase: 3
+      tickRate: 0.4
+      action:
+        rid: 1246412484254892311
+    - triggerPhase: 3
+      tickRate: 0.4
+      action:
+        rid: 1246412484254892328
+  references:
+    version: 2
+    RefIds:
+    - rid: 1246412484254892311
+      type: {class: SpawnProjectileAction, ns: , asm: Assembly-CSharp}
+      data:
+        prefab: {fileID: 1930107923466689315, guid: d9c1b5273d9f2864aaf6b40c14cba8db, type: 3}
+        maxAimDistance: 1000
+    - rid: 1246412484254892328
+      type: {class: PlayAnimationAction, ns: , asm: Assembly-CSharp}
+      data:
+        animationType: 0
+        triggerName: attack1
+        booleanValue: 1

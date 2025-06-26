@@ -24,7 +24,4 @@ public class InputBindingData
     public float holdTime;
     public float cooldown;
     public List<ActionBindingData> bindings = new();
-    
-    [NonSerialized] public float lastPerformTime = -Mathf.Infinity;
-    [NonSerialized] public BeamController activeBeam;
 }

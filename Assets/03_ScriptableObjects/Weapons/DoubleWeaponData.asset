@@ -57,16 +57,6 @@ MonoBehaviour:
       tickRate: 0
       action:
         rid: 1246412484254892303
-  - bindingMode: 0
-    actionRef: {fileID: -2189319267458262046, guid: 6eaff8a1080c3b64bba326ccc7407a63, type: 3}
-    hand: 1
-    holdTime: 1
-    cooldown: 0.1
-    bindings:
-    - triggerPhase: 1
-      tickRate: 0.1
-      action:
-        rid: 1246412484254892326
   - bindingMode: 3
     actionRef: {fileID: -2189319267458262046, guid: 6eaff8a1080c3b64bba326ccc7407a63, type: 3}
     hand: 1
@@ -77,6 +67,12 @@ MonoBehaviour:
       tickRate: 0.1
       action:
         rid: 1246412484254892326
+  - bindingMode: 0
+    actionRef: {fileID: 0}
+    hand: 0
+    holdTime: 0
+    cooldown: 0
+    bindings: []
   references:
     version: 2
     RefIds:

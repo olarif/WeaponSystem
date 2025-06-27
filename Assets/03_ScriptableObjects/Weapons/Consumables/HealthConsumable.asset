@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: HealthConsumable
   m_EditorClassIdentifier: 
   weaponName: Health
-  weaponDescription: 
+  weaponDescription: Left click to heal 5 health
   rightHandModel: {fileID: 4240378193073885370, guid: 0b38f2db129504d4788123aff1badf5a, type: 3}
   leftHandModel: {fileID: 0}
   pickupPrefab: {fileID: 4433644318165709800, guid: d64b4d738536e954f809ef75578117f3, type: 3}

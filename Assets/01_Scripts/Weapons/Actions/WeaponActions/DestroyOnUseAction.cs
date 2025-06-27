@@ -1,5 +1,8 @@
 ﻿using UnityEngine;
 
+/// <summary>
+/// Destroys the weapon when used.
+/// </summary>
 [System.Serializable]
 public class DestroyOnUseAction : IWeaponAction
 {

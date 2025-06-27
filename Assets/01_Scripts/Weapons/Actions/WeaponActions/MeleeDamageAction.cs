@@ -2,14 +2,22 @@
 using System.Linq;
 using UnityEngine;
 
+/// <summary>
+/// Performs a melee attack that applies damage to targets within a specified range and radius
+/// </summary>
 [Serializable]
 public class MeleeDamageAction : IWeaponAction
 {
+    [Tooltip("Type of damage to apply")]
     public DamageType damageType = DamageType.Physical;
+    [Tooltip("Layers eligible for damage")]
     public LayerMask targetLayerMask = ~0;
-    public float       damage     = 5f;
-    public float       hitRange   = 2.5f;
-    public float       hitRadius  = 2.5f;
+    [Tooltip("Damage amount per hit")]
+    public float damage = 5f;
+    [Tooltip("Maximum distance to check")]
+    public float hitRange = 2.5f;
+    [Tooltip("Radius of the spherecast")]
+    public float hitRadius = 2.5f;
 
     public void Execute(WeaponContext ctx, InputBindingData b, ActionBindingData a)
     {

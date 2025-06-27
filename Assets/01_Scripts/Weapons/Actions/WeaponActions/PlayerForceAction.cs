@@ -1,5 +1,8 @@
 ﻿using UnityEngine;
 
+/// <summary>
+/// Applies a force to the player in a specified direction when executed.
+/// </summary>
 [System.Serializable]
 public class PlayerForceAction : IWeaponAction
 {

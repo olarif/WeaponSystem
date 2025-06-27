@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -8,121 +7,81 @@ using UnityEngine;
 public class ChainLightningComponent : ProjectileComponent
 {
     [Header("Chain Settings")]
-    [Tooltip("Which layers can be chained to")]
-    public LayerMask targetLayers    = -1;
-    [Tooltip("How many extra jumps after the first hit")]
-    public int       maxChains       = 3;
-    [Tooltip("Max distance between chain jumps")]
-    public float     chainRange      = 8f;
-    [Tooltip("Delay before each jump")]
-    public float     chainDelay      = 0.1f;
-    
-    [Header("Bolt VFX")]
-    [Tooltip("A simple bolt prefab (e.g. a small sprite or mesh)")]
-    public GameObject boltPrefab;
-    [Tooltip("Speed at which the bolt travels between targets")]
-    public float      boltSpeed      = 20f;
-    [Tooltip("Destroy the bolt object this many seconds after flight")]
-    public float      boltLifetime   = 1f;
-    
-    [Header("Damage")]
-    public DamageType damageType     = DamageType.Lightning;
-    [Tooltip("Damage dealt to the first target on impact")]
-    public float      initialDamage  = 10f;
-    [Tooltip("Multiply damage by this factor on each subsequent jump")]
-    [Range(0f,1f)]
-    public float      damageFalloff  = 0.8f;
+    public LayerMask targetLayers = -1;
+    public int maxChains = 3;
+    public float chainRange = 8f;
+    public float chainDelay = 0.1f;
 
-    public override ComponentResult OnCollision(
-        ProjectileRuntimeData data,
-        CollisionInfo collision)
+    [Header("Bolt VFX")]
+    public GameObject boltPrefab;
+    public float boltSpeed = 20f;
+    public float boltLifetime = 1f;
+
+    [Header("Damage")]
+    public DamageType damageType = DamageType.Lightning;
+    public float initialDamage = 10f;
+    [Range(0f, 1f)] public float damageFalloff = 0.8f;
+
+    // handle initial hit and start chaining
+    public override ComponentResult OnCollision(ProjectileRuntimeData data, CollisionInfo collision)
     {
         if (!isEnabled) return ComponentResult.Continue;
 
-        // 1) Damage the very first hit
-        var first = collision.HitObject;
-        if (first != null && first.TryGetComponent<IDamageable>(out var dmg))
-            dmg.TakeDamage(initialDamage, damageType);
+        ApplyDamage(collision.HitObject, initialDamage);
+        data.hitTargets.Add(collision.HitObject);
 
-        // 2) Mark it as hit so we don’t retarget it
-        if (first != null)
-            data.hitTargets.Add(first);
-
-        // 3) Kick off the chain coroutine
         CoroutineRunner.Instance.StartRoutine(
-            ChainRoutine(
-                data,
-                fromPoint: collision.Point,
-                lastTarget: first,
-                damageToDeal: initialDamage * damageFalloff,
-                chainCount: 0
-            )
+            ChainRoutine(data, collision.Point, initialDamage * damageFalloff)
         );
 
-        // 4) Destroy the projectile itself immediately
         return ComponentResult.DestroyProjectile;
     }
 
-    private IEnumerator ChainRoutine(
-        ProjectileRuntimeData data,
-        Vector3         fromPoint,
-        GameObject      lastTarget,
-        float           damageToDeal,
-        int             chainCount
-    ) {
-        // Continue jumping until we exhaust maxChains
-        while (chainCount < maxChains)
+    // jump and deal damage between targets
+    private IEnumerator ChainRoutine(ProjectileRuntimeData data, Vector3 origin, float damage)
+    {
+        for (int i = 0; i < maxChains; i++)
         {
             yield return new WaitForSeconds(chainDelay);
 
-            // find the next target not yet hit
-            var next = Physics
-                .OverlapSphere(fromPoint, chainRange, targetLayers)
+            var next = Physics.OverlapSphere(origin, chainRange, targetLayers)
                 .Select(c => c.gameObject)
-                .Where(g => !data.hitTargets.Contains(g))
-                .Where(g => g.TryGetComponent<IDamageable>(out _))
-                .OrderBy(g => Vector3.Distance(fromPoint, g.transform.position))
-                .FirstOrDefault();
+                .FirstOrDefault(g => !data.hitTargets.Contains(g) && g.TryGetComponent<IDamageable>(out _));
 
-            if (next == null)
-                yield break; // no more valid targets
+            if (next == null) break;
 
             data.hitTargets.Add(next);
+            yield return BoltFly(origin, next.transform.position);
+            ApplyDamage(next, damage);
 
-            // spawn & fly the bolt prefab
-            if (boltPrefab != null)
-            {
-                var bolt = UnityEngine.Object.Instantiate(
-                    boltPrefab,
-                    fromPoint,
-                    Quaternion.LookRotation(next.transform.position - fromPoint)
-                );
-
-                float distance = Vector3.Distance(fromPoint, next.transform.position);
-                float travelTime = distance / boltSpeed;
-                float elapsed = 0f;
-
-                while (elapsed < travelTime)
-                {
-                    elapsed += Time.deltaTime;
-                    float t = Mathf.Clamp01(elapsed / travelTime);
-                    bolt.transform.position =
-                        Vector3.Lerp(fromPoint, next.transform.position, t);
-                    yield return null;
-                }
-
-                bolt.transform.position = next.transform.position;
-                UnityEngine.Object.Destroy(bolt, boltLifetime);
-            }
-
-            // apply damage on arrival
-            if (next.TryGetComponent<IDamageable>(out var dmg2))
-                dmg2.TakeDamage(damageToDeal, damageType);
-
-            // prepare for the next jump
-            fromPoint     = next.transform.position;
-            damageToDeal *= damageFalloff;
-            chainCount++;
+            origin = next.transform.position;
+            damage *= damageFalloff;
         }
+    }
+
+    // animate bolt travelling between targets
+    private IEnumerator BoltFly(Vector3 start, Vector3 end)
+    {
+        if (boltPrefab == null) yield break;
+
+        var bolt = GameObject.Instantiate(boltPrefab, start, Quaternion.LookRotation(end - start));
+        float distance = Vector3.Distance(start, end);
+        float progress = 0f;
+
+        while (progress < 1f)
+        {
+            progress += Time.deltaTime * boltSpeed / distance;
+            bolt.transform.position = Vector3.Lerp(start, end, Mathf.Clamp01(progress));
+            yield return null;
+        }
+
+        bolt.transform.position = end;
+        GameObject.Destroy(bolt, boltLifetime);
+    }
+    
+    private void ApplyDamage(GameObject target, float amount)
+    {
+        if (target.TryGetComponent<IDamageable>(out var dmg))
+            dmg.TakeDamage(amount, damageType);
     }
 }

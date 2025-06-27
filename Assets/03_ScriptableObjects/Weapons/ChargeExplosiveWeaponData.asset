@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 173e1320fcaa41c78d1bb440de6ba45a, type: 3}
   m_Name: ChargeExplosiveWeaponData
   m_EditorClassIdentifier: 
-  weaponName: ProjectileWeapon
-  weaponDescription: 
+  weaponName: Charged Explosive Weapon
+  weaponDescription: Hold left click to charge and launch a explosive projectile
   rightHandModel: {fileID: 8425349788470430531, guid: 7dba706ac04eb8641aa1ed832ead84ae, type: 3}
   leftHandModel: {fileID: 1596470492229182116, guid: 490ae74f1f255814e8aca40f179aa439, type: 3}
   pickupPrefab: {fileID: 1467819138738470339, guid: 6bcf32be830be3e4d9089887d96be5bf, type: 3}

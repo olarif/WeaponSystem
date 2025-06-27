@@ -3,7 +3,7 @@ using UnityEngine;
 
 public abstract class Entity : MonoBehaviour
 {
-    [SerializeField] private string entityName = "Entity";
+    //[SerializeField] private string entityName = "Entity";
 
     public virtual void Heal(float amount) { }
     public virtual void Damage(float amount){ }

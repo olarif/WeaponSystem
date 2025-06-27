@@ -1,9 +1,12 @@
 ﻿using UnityEngine;
 
+/// <summary>
+/// Pickup object that equips a weapon when interacted with.
+/// </summary>
 public class WeaponPickup : BaseInteractable
 {
     [Header("Weapon Settings")]
-    [SerializeField] private WeaponDataSO weaponData ;
+    [SerializeField] private WeaponDataSO weaponData;
 
     public override void Interact(WeaponManager weaponManager)
     {

@@ -12,8 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 173e1320fcaa41c78d1bb440de6ba45a, type: 3}
   m_Name: HomingProjectileWeaponData
   m_EditorClassIdentifier: 
-  weaponName: ProjectileWeapon
-  weaponDescription: 
+  weaponName: Homing Missile Weapon
+  weaponDescription: Left click to launch a homing missile projectile that automatically
+    flies towards the nearest enemy in its path
   rightHandModel: {fileID: 4401442088701548692, guid: 4be108bbc2f7d914095452592b95c4d4, type: 3}
   leftHandModel: {fileID: 1596470492229182116, guid: 490ae74f1f255814e8aca40f179aa439, type: 3}
   pickupPrefab: {fileID: 1467819138738470339, guid: e9129b49e5b6442429838615662d89e0, type: 3}
@@ -22,7 +23,7 @@ MonoBehaviour:
   defaultHand: 0
   inputBindings:
   - bindingMode: 0
-    actionRef: {fileID: 0}
+    actionRef: {fileID: 2158980376108856071, guid: 6eaff8a1080c3b64bba326ccc7407a63, type: 3}
     hand: 0
     holdTime: 0
     cooldown: 1
@@ -42,7 +43,7 @@ MonoBehaviour:
       type: {class: PlayAnimationAction, ns: , asm: Assembly-CSharp}
       data:
         animationType: 0
-        triggerName: 
+        triggerName: attack1
         booleanValue: 1
     - rid: 6992692243383975937
       type: {class: SpawnProjectileAction, ns: , asm: Assembly-CSharp}

@@ -2,8 +2,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 /// <summary>
-/// Casts a ray from the centre of the player camera, highlights / unhighlights
-/// objects that implement IInteractable and passes Interact() calls to them.
+/// Raycasts from the player camera to detect and interact with IInteractable objects.
 /// </summary>
 public class Interactor : MonoBehaviour
 {
@@ -21,7 +20,7 @@ public class Interactor : MonoBehaviour
     
     private void Awake()
     {
-        _weaponManager = GetComponent<WeaponManager>();
+        _weaponManager = GetComponent<WeaponManager>(); //cache weapon manager
     }
 
     private void OnEnable()
@@ -44,7 +43,7 @@ public class Interactor : MonoBehaviour
             _interactAction.action.Disable();
         }
 
-        ClearCurrent();
+        ClearCurrent(); // clear any highlighted object
     }
 
     
@@ -57,13 +56,13 @@ public class Interactor : MonoBehaviour
         if (Time.time >= _nextScan)
         {
             _nextScan = Time.time + _scanInterval;
-            CheckForInteractable();
+            CheckForInteractable(); // raycast to find interactables
         }
     }
 
     private void OnInteract(InputAction.CallbackContext _)
     {
-        _currentInteractable?.Interact(_weaponManager);
+        _currentInteractable?.Interact(_weaponManager); // call interact on current interactable
     }
 
     private void CheckForInteractable()
@@ -74,24 +73,21 @@ public class Interactor : MonoBehaviour
         Ray ray = new Ray(_playerCamera.transform.position, _playerCamera.transform.forward);
         bool hitSomething = Physics.Raycast(ray, out RaycastHit hit, _interactRange, _interactableMask);
 
-        // Debug ray
-        Debug.DrawRay(ray.origin,
-                      ray.direction * _interactRange,
-                      hitSomething ? Color.green : Color.red,
-                      0.05f);
+        // draw Debug ray
+        Debug.DrawRay(ray.origin, ray.direction * _interactRange, hitSomething ? Color.green : Color.red, 0.05f);
 
         if (!hitSomething)
         {
-            ClearCurrent();
+            ClearCurrent(); // no hit, clear current interactable
             return;
         }
 
-        // Try exact object, otherwise climb the hierarchy
+        // find IInteractable on hit object or its parent
         IInteractable hitInteractable =
             hit.collider.GetComponent<IInteractable>() ??
             hit.collider.GetComponentInParent<IInteractable>();
 
-        if (hitInteractable == _currentInteractable) return;       // nothing changed
+        if (hitInteractable == _currentInteractable) return;       // same as before -> do nothing
 
         // switch highlight
         _currentInteractable?.Highlight(false, null);
@@ -101,7 +97,7 @@ public class Interactor : MonoBehaviour
 
     private void ClearCurrent()
     {
-        _currentInteractable?.Highlight(false, null);
+        _currentInteractable?.Highlight(false, null); // unhighlight and clear
         _currentInteractable = null;
     }
 }

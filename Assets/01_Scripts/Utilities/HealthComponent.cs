@@ -3,6 +3,9 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
+/// <summary>
+/// Manages health, UI updates, and death events for a GameObject.
+/// </summary>
 public class HealthComponent : MonoBehaviour
 {
     [SerializeField] float _maxHealth = 100;
@@ -12,11 +15,11 @@ public class HealthComponent : MonoBehaviour
     public float GetCurrentHealth => _currentHealth;
     public float GetCurrentHealthPercentage => _currentHealth / _maxHealth;
     
-    public GameObject healthBar;
-    public Slider     slider;
-    public Gradient   gradient;
+    public GameObject healthBar; // UI container for the health slider
+    public Slider slider;        // UI slider showing health
+    public Gradient gradient;    // color gradient for health fill
     
-    public UnityEvent OnDeath;
+    public UnityEvent OnDeath;   //event triggered on death
 
     void Awake()
     {

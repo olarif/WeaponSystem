@@ -9,7 +9,7 @@ public class HomingMissileComponent : ProjectileComponent
     public LayerMask targetLayers = -1;
     [Tooltip("Range to search for targets")]
     public float targetRange = 20f;
-    [Tooltip("How often to re‐acquire target (sec)")]
+    [Tooltip("How often to re-acquire target (sec)")]
     public float retargetInterval = 0.3f;
     [Tooltip("Max angle to consider targets (degrees from forward direction)")]
     public float maxTargetingAngle = 60f;
@@ -22,7 +22,7 @@ public class HomingMissileComponent : ProjectileComponent
     [Tooltip("Delay before homing kicks in (sec)")]
     public float homingDelay = 0.1f;
 
-    // runtime
+    // runtime state
     private GameObject currentTarget;
     private float lastRetargetTime;
     private bool homingActive;
@@ -65,7 +65,7 @@ public class HomingMissileComponent : ProjectileComponent
             FindBestTarget(data);
         }
 
-        if (currentTarget == null) 
+        if (currentTarget == null)
             return;
 
         // Get target center point
@@ -122,8 +122,8 @@ public class HomingMissileComponent : ProjectileComponent
 
             // Calculate targeting score (higher is better)
             // Factors: distance (closer = better), angle (straighter = better)
-            float distanceScore = (targetRange - distance) / targetRange; // 0-1, higher for closer
-            float angleScore = (maxTargetingAngle - angle) / maxTargetingAngle; // 0-1, higher for straighter
+            float distanceScore = (targetRange - distance) / targetRange;
+            float angleScore = (maxTargetingAngle - angle) / maxTargetingAngle;
             
             // Weight angle more heavily for initial targeting
             float totalScore = (distanceScore * 0.4f) + (angleScore * 0.6f);
@@ -134,7 +134,7 @@ public class HomingMissileComponent : ProjectileComponent
                 // Require new target to be meaningfully better (not just marginally)
                 float currentDistance = Vector3.Distance(data.currentPosition, GetTargetCenter(currentTarget));
                 if (distance > currentDistance * targetSwitchThreshold)
-                    continue; // New target not close enough to justify switch
+                    continue;
             }
 
             if (totalScore > bestScore)

@@ -1,101 +1,99 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[Serializable]
+/// <summary>
+/// Spawns configured prefab instances on specified projectile events.
+/// </summary>
+[System.Serializable]
 public class SpawnPrefabComponent : ProjectileComponent
 {
-    [Tooltip("Which event(s) to spawn on")]
+    [Tooltip("Events that trigger spawning (e.g., OnCollision, OnDestroy)")]
     public List<ProjectileEvent> triggerEvents = new List<ProjectileEvent>
     {
-        ProjectileEvent.OnCollision,
+        ProjectileEvent.OnCollision
     };
 
-    [Tooltip("Prefab to spawn")]
+    [Tooltip("Prefab to instantiate")]
     public GameObject prefab;
 
-    [Tooltip("How many")]
+    [Tooltip("Number of copies to spawn")]
     public int count = 1;
 
-    [Tooltip("Cone spread in degrees, if >0")]
+    [Tooltip("Cone spread angle in degrees")]
     public float spreadAngle = 0f;
 
-    [Tooltip("Delay before spawn (seconds)")]
+    [Tooltip("Seconds to wait before spawning")]
     public float delay = 0f;
 
-    [Tooltip("Lifetime of the spawned object")]
+    [Tooltip("Lifetime of spawned instances in seconds")]
     public float lifetime = 2f;
 
-    [Tooltip("Scale of each spawn")]
+    [Tooltip("Local scale applied to each instance")]
     public Vector3 scale = Vector3.one;
 
     public override void Initialize(ProjectileRuntimeData data)
     {
         if (triggerEvents.Contains(ProjectileEvent.OnInitialize))
-            TrySpawn(data);
+            data.projectile.StartCoroutine(SpawnRoutine(data));
     }
 
     public override void UpdateComponent(ProjectileRuntimeData data)
     {
         if (triggerEvents.Contains(ProjectileEvent.OnUpdate))
-            TrySpawn(data);
+            data.projectile.StartCoroutine(SpawnRoutine(data));
     }
 
     public override void FixedUpdateComponent(ProjectileRuntimeData data)
     {
         if (triggerEvents.Contains(ProjectileEvent.OnFixedUpdate))
-            TrySpawn(data);
+            data.projectile.StartCoroutine(SpawnRoutine(data));
     }
 
     public override ComponentResult OnCollision(ProjectileRuntimeData data, CollisionInfo ci)
     {
         if (triggerEvents.Contains(ProjectileEvent.OnCollision))
-            TrySpawn(data, ci.Point);
+            data.projectile.StartCoroutine(SpawnRoutine(data, ci.Point, ci.HitObject.transform.rotation));
         return ComponentResult.Continue;
     }
 
     public override void OnDestroy(ProjectileRuntimeData data)
     {
         if (triggerEvents.Contains(ProjectileEvent.OnDestroy))
-            TrySpawn(data);
+            data.projectile.StartCoroutine(SpawnRoutine(data));
     }
-
-    private void TrySpawn(ProjectileRuntimeData data, Vector3? point = null, Vector3? normal = null)
-    {
-        data.projectile.StartCoroutine( DoSpawn(data, point, normal) );
-    }
-
-    private IEnumerator DoSpawn(
+    
+    /// Coroutine that waits, spawns prefabs, applies spread, scale, and destroys after lifetime.
+    private IEnumerator SpawnRoutine(
         ProjectileRuntimeData data,
-        Vector3? point, Vector3? normal
-    ) {
-        if (delay > 0f) yield return new WaitForSeconds(delay);
+        Vector3? position = null,
+        Quaternion? rotation = null)
+    {
+        // Wait delay if specified
+        if (delay > 0f)
+            yield return new WaitForSeconds(delay);
 
-        Vector3 origin    = point ?? data.currentPosition;
-        Quaternion basis  = Quaternion.identity;
-        if (normal.HasValue)
-            basis = Quaternion.LookRotation(normal.Value);
-        else
-            basis = data.projectile.transform.rotation;
+        Vector3 origin = position ?? data.currentPosition;
+        Quaternion basis = rotation ?? data.projectile.transform.rotation;
 
         for (int i = 0; i < count; i++)
         {
-            Quaternion rot = basis;
+            // Apply random spread
+            Quaternion spawnRot = basis;
             if (spreadAngle > 0f)
             {
-                float h = spreadAngle * .5f;
-                rot = Quaternion.Euler(
-                    UnityEngine.Random.Range(-h,h),
-                    UnityEngine.Random.Range(-h,h),
-                    UnityEngine.Random.Range(-h,h)
-                ) * basis;
+                float half = spreadAngle * 0.5f;
+                spawnRot *= Quaternion.Euler(
+                    Random.Range(-half, half),
+                    Random.Range(-half, half),
+                    Random.Range(-half, half)
+                );
             }
 
-            var go = UnityEngine.Object.Instantiate(prefab, origin, rot);
-            go.transform.localScale = scale;
+            GameObject instance = Object.Instantiate(prefab, origin, spawnRot);
+            instance.transform.localScale = scale;
             if (lifetime > 0f)
-                UnityEngine.Object.Destroy(go, lifetime);
+                Object.Destroy(instance, lifetime);
         }
     }
 }

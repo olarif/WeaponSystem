@@ -1616,96 +1616,8 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 948092185269275623, guid: cdf0ae4dbcb656e4e9ddabd5f7f5d449, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 290833106}
-    - targetCorrespondingSourceObject: {fileID: 948092185269275623, guid: cdf0ae4dbcb656e4e9ddabd5f7f5d449, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 290833105}
-    - targetCorrespondingSourceObject: {fileID: 948092185269275623, guid: cdf0ae4dbcb656e4e9ddabd5f7f5d449, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 290833104}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cdf0ae4dbcb656e4e9ddabd5f7f5d449, type: 3}
---- !u!1 &290833103 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 948092185269275623, guid: cdf0ae4dbcb656e4e9ddabd5f7f5d449, type: 3}
-  m_PrefabInstance: {fileID: 290833102}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &290833104
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 290833103}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe8adbd24ee2441bb921d6adeed34343, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &290833105
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 290833103}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 62ff11d73bd94758895aba9c623e22dc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  entityName: Training DUMMY
-  stunTime: 3
---- !u!114 &290833106
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 290833103}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bb7b65c71da28c24293501884cf4408f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _maxHealth: 10
-  healthBar: {fileID: 0}
-  slider: {fileID: 0}
-  gradient:
-    serializedVersion: 2
-    key0: {r: 1, g: 1, b: 1, a: 1}
-    key1: {r: 1, g: 1, b: 1, a: 1}
-    key2: {r: 0, g: 0, b: 0, a: 0}
-    key3: {r: 0, g: 0, b: 0, a: 0}
-    key4: {r: 0, g: 0, b: 0, a: 0}
-    key5: {r: 0, g: 0, b: 0, a: 0}
-    key6: {r: 0, g: 0, b: 0, a: 0}
-    key7: {r: 0, g: 0, b: 0, a: 0}
-    ctime0: 0
-    ctime1: 65535
-    ctime2: 0
-    ctime3: 0
-    ctime4: 0
-    ctime5: 0
-    ctime6: 0
-    ctime7: 0
-    atime0: 0
-    atime1: 65535
-    atime2: 0
-    atime3: 0
-    atime4: 0
-    atime5: 0
-    atime6: 0
-    atime7: 0
-    m_Mode: 0
-    m_ColorSpace: -1
-    m_NumColorKeys: 2
-    m_NumAlphaKeys: 2
-  OnDeath:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!4 &290833112 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4022019745088602611, guid: cdf0ae4dbcb656e4e9ddabd5f7f5d449, type: 3}
@@ -2670,13 +2582,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 948092185269275623, guid: cdf0ae4dbcb656e4e9ddabd5f7f5d449, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 570223024}
-    - targetCorrespondingSourceObject: {fileID: 948092185269275623, guid: cdf0ae4dbcb656e4e9ddabd5f7f5d449, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 570223023}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cdf0ae4dbcb656e4e9ddabd5f7f5d449, type: 3}
 --- !u!4 &502249107 stripped
 Transform:
@@ -3014,78 +2920,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f87285e2f00713c4ea55142d0b475c31, type: 3}
---- !u!1 &570223020 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 948092185269275623, guid: cdf0ae4dbcb656e4e9ddabd5f7f5d449, type: 3}
-  m_PrefabInstance: {fileID: 489898157}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &570223021 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4022019745088602611, guid: cdf0ae4dbcb656e4e9ddabd5f7f5d449, type: 3}
   m_PrefabInstance: {fileID: 489898157}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &570223023
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 570223020}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 62ff11d73bd94758895aba9c623e22dc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  entityName: Training DUMMY
-  stunTime: 3
---- !u!114 &570223024
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 570223020}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bb7b65c71da28c24293501884cf4408f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _maxHealth: 10
-  healthBar: {fileID: 0}
-  slider: {fileID: 0}
-  gradient:
-    serializedVersion: 2
-    key0: {r: 1, g: 1, b: 1, a: 1}
-    key1: {r: 1, g: 1, b: 1, a: 1}
-    key2: {r: 0, g: 0, b: 0, a: 0}
-    key3: {r: 0, g: 0, b: 0, a: 0}
-    key4: {r: 0, g: 0, b: 0, a: 0}
-    key5: {r: 0, g: 0, b: 0, a: 0}
-    key6: {r: 0, g: 0, b: 0, a: 0}
-    key7: {r: 0, g: 0, b: 0, a: 0}
-    ctime0: 0
-    ctime1: 65535
-    ctime2: 0
-    ctime3: 0
-    ctime4: 0
-    ctime5: 0
-    ctime6: 0
-    ctime7: 0
-    atime0: 0
-    atime1: 65535
-    atime2: 0
-    atime3: 0
-    atime4: 0
-    atime5: 0
-    atime6: 0
-    atime7: 0
-    m_Mode: 0
-    m_ColorSpace: -1
-    m_NumColorKeys: 2
-    m_NumAlphaKeys: 2
-  OnDeath:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!1001 &573511903
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5623,78 +5462,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bcc59605049cf8a4995bf79279008c08, type: 3}
---- !u!1 &1194388911 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 948092185269275623, guid: cdf0ae4dbcb656e4e9ddabd5f7f5d449, type: 3}
-  m_PrefabInstance: {fileID: 2134372669}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1194388912 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4022019745088602611, guid: cdf0ae4dbcb656e4e9ddabd5f7f5d449, type: 3}
   m_PrefabInstance: {fileID: 2134372669}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1194388914
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1194388911}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 62ff11d73bd94758895aba9c623e22dc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  entityName: Training DUMMY
-  stunTime: 3
---- !u!114 &1194388915
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1194388911}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bb7b65c71da28c24293501884cf4408f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _maxHealth: 10
-  healthBar: {fileID: 0}
-  slider: {fileID: 0}
-  gradient:
-    serializedVersion: 2
-    key0: {r: 1, g: 1, b: 1, a: 1}
-    key1: {r: 1, g: 1, b: 1, a: 1}
-    key2: {r: 0, g: 0, b: 0, a: 0}
-    key3: {r: 0, g: 0, b: 0, a: 0}
-    key4: {r: 0, g: 0, b: 0, a: 0}
-    key5: {r: 0, g: 0, b: 0, a: 0}
-    key6: {r: 0, g: 0, b: 0, a: 0}
-    key7: {r: 0, g: 0, b: 0, a: 0}
-    ctime0: 0
-    ctime1: 65535
-    ctime2: 0
-    ctime3: 0
-    ctime4: 0
-    ctime5: 0
-    ctime6: 0
-    ctime7: 0
-    atime0: 0
-    atime1: 65535
-    atime2: 0
-    atime3: 0
-    atime4: 0
-    atime5: 0
-    atime6: 0
-    atime7: 0
-    m_Mode: 0
-    m_ColorSpace: -1
-    m_NumColorKeys: 2
-    m_NumAlphaKeys: 2
-  OnDeath:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!4 &1214708672 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2080083236463441959, guid: 40d47deaca22b9e4cbe24ddd6fc02670, type: 3}
@@ -6994,13 +6766,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 948092185269275623, guid: cdf0ae4dbcb656e4e9ddabd5f7f5d449, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1487877887}
-    - targetCorrespondingSourceObject: {fileID: 948092185269275623, guid: cdf0ae4dbcb656e4e9ddabd5f7f5d449, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1487877886}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cdf0ae4dbcb656e4e9ddabd5f7f5d449, type: 3}
 --- !u!1001 &1459830245
 PrefabInstance:
@@ -7290,73 +7056,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 40d47deaca22b9e4cbe24ddd6fc02670, type: 3}
---- !u!1 &1487877884 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 948092185269275623, guid: cdf0ae4dbcb656e4e9ddabd5f7f5d449, type: 3}
-  m_PrefabInstance: {fileID: 1451370336}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1487877886
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1487877884}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 62ff11d73bd94758895aba9c623e22dc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  entityName: Training DUMMY
-  stunTime: 3
---- !u!114 &1487877887
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1487877884}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bb7b65c71da28c24293501884cf4408f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _maxHealth: 10
-  healthBar: {fileID: 0}
-  slider: {fileID: 0}
-  gradient:
-    serializedVersion: 2
-    key0: {r: 1, g: 1, b: 1, a: 1}
-    key1: {r: 1, g: 1, b: 1, a: 1}
-    key2: {r: 0, g: 0, b: 0, a: 0}
-    key3: {r: 0, g: 0, b: 0, a: 0}
-    key4: {r: 0, g: 0, b: 0, a: 0}
-    key5: {r: 0, g: 0, b: 0, a: 0}
-    key6: {r: 0, g: 0, b: 0, a: 0}
-    key7: {r: 0, g: 0, b: 0, a: 0}
-    ctime0: 0
-    ctime1: 65535
-    ctime2: 0
-    ctime3: 0
-    ctime4: 0
-    ctime5: 0
-    ctime6: 0
-    ctime7: 0
-    atime0: 0
-    atime1: 65535
-    atime2: 0
-    atime3: 0
-    atime4: 0
-    atime5: 0
-    atime6: 0
-    atime7: 0
-    m_Mode: 0
-    m_ColorSpace: -1
-    m_NumColorKeys: 2
-    m_NumAlphaKeys: 2
-  OnDeath:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!4 &1487877893 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4022019745088602611, guid: cdf0ae4dbcb656e4e9ddabd5f7f5d449, type: 3}
@@ -8651,7 +8350,7 @@ PrefabInstance:
     - target: {fileID: 5695700582379048201, guid: d64b4d738536e954f809ef75578117f3, type: 3}
       propertyPath: weaponData
       value: 
-      objectReference: {fileID: 11400000, guid: 19639dbb8deecf44ba6545329d3425ab, type: 2}
+      objectReference: {fileID: 11400000, guid: c02829e51af43564da745090dea86034, type: 2}
     - target: {fileID: 9075270636799307817, guid: d64b4d738536e954f809ef75578117f3, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.437
@@ -10680,13 +10379,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 948092185269275623, guid: cdf0ae4dbcb656e4e9ddabd5f7f5d449, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1194388915}
-    - targetCorrespondingSourceObject: {fileID: 948092185269275623, guid: cdf0ae4dbcb656e4e9ddabd5f7f5d449, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1194388914}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cdf0ae4dbcb656e4e9ddabd5f7f5d449, type: 3}
 --- !u!1001 &2139774234
 PrefabInstance:
@@ -10766,6 +10459,10 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3988114622819602093, guid: 54ac07bbe68e5614194c89b21f61fef2, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4703747562892308649, guid: 54ac07bbe68e5614194c89b21f61fef2, type: 3}
       propertyPath: m_Name
       value: Player
@@ -10817,10 +10514,6 @@ PrefabInstance:
     - target: {fileID: 5486091016685519438, guid: 54ac07bbe68e5614194c89b21f61fef2, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5661979431298084845, guid: 54ac07bbe68e5614194c89b21f61fef2, type: 3}
-      propertyPath: m_IsActive
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6425290199238446812, guid: 54ac07bbe68e5614194c89b21f61fef2, type: 3}
       propertyPath: m_AnchorMax.x

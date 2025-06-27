@@ -1,5 +1,8 @@
 using UnityEngine;
 
+/// <summary>
+/// Billboard component that makes the GameObject always face the camera.
+/// </summary>
 public class Billboard : MonoBehaviour
 {
     private Camera _camera;

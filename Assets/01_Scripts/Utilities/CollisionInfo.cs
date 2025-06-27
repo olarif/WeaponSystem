@@ -1,9 +1,12 @@
 ﻿using UnityEngine;
 
+/// <summary>
+/// Holds collision details: impact point and GameObject hit.
+/// </summary>
 public struct CollisionInfo
 {
     public Vector3 Point;       // impact position
-    public GameObject HitObject;// the thing we collided with
+    public GameObject HitObject;// the object we collided with
     
     public CollisionInfo(RaycastHit hit)
     {

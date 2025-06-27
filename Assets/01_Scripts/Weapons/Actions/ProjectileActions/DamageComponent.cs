@@ -5,82 +5,55 @@ using UnityEngine;
 [Serializable]
 public class DamageComponent : ProjectileComponent
 {
-    [Tooltip("Which event(s) to damage on")]
     public List<ProjectileEvent> triggerEvents = new List<ProjectileEvent>
     {
-        ProjectileEvent.OnCollision
+        ProjectileEvent.OnCollision,
+        ProjectileEvent.OnTick,
+        ProjectileEvent.OnDestroy
     };
 
-    [Tooltip("Instant damage amount")]
-    public float damageAmount = 0f;
-
-    [Tooltip("Damage per second (if you pick OnTick)")]
-    public float damagePerSecond = 0f;
-
-    [Tooltip("If >0, do AOE damage instead of single-target")]
-    public float areaOfEffectRadius = 0f;
-
-    [Tooltip("Layers that can be damaged")]
-    public LayerMask mask = ~0;
+    public float damageAmount = 0f;      // instant damage
+    public float damagePerSecond = 0f;   // ticks damage
+    public float areaOfEffectRadius = 0f; // AOE radius; 0 = single target
+    public LayerMask mask = ~0;          // damageable layers
 
     public override void UpdateComponent(ProjectileRuntimeData data)
     {
         if (triggerEvents.Contains(ProjectileEvent.OnTick) && damagePerSecond > 0f)
-        {
             Deal(data, damagePerSecond * Time.deltaTime, null);
-        }
     }
 
-    public override ComponentResult OnCollision(
-        ProjectileRuntimeData data, CollisionInfo ci)
+    public override ComponentResult OnCollision(ProjectileRuntimeData data, CollisionInfo ci)
     {
-        if (triggerEvents.Contains(ProjectileEvent.OnCollision)
-            && damageAmount > 0f)
-        {
+        if (triggerEvents.Contains(ProjectileEvent.OnCollision) && damageAmount > 0f)
             Deal(data, damageAmount, ci.HitObject);
-        }
         return ComponentResult.Continue;
     }
 
     public override void OnDestroy(ProjectileRuntimeData data)
     {
-        // run on destroy (e.g. explosion)
-        if (triggerEvents.Contains(ProjectileEvent.OnDestroy)
-            && damageAmount > 0f)
-        {
-            // areaOfEffectRadius > 0 → true AOE, otherwise single target
+        if (triggerEvents.Contains(ProjectileEvent.OnDestroy) && damageAmount > 0f)
             Deal(data, damageAmount, areaOfEffectRadius > 0f ? null : data.lastCollision.HitObject);
+    }
+
+    // Applies damage: single target or AOE
+    private void Deal(ProjectileRuntimeData data, float amt, GameObject onlyTarget)
+    {
+        if (onlyTarget != null)
+        {
+            TryDamage(onlyTarget, amt);
+        }
+        else if (areaOfEffectRadius > 0f)
+        {
+            var hits = Physics.OverlapSphere(data.currentPosition, areaOfEffectRadius, mask);
+            foreach (var c in hits)
+                TryDamage(c.gameObject, amt);
         }
     }
 
-    /// <summary>
-    /// If onlyTarget != null, hits that one target. Otherwise, if
-    /// areaOfEffectRadius>0, performs an OverlapSphere AOE.
-    /// </summary>
-    private void Deal(
-        ProjectileRuntimeData data,
-        float amt,
-        GameObject onlyTarget)
+    private void TryDamage(GameObject target, float amt)
     {
-        if (areaOfEffectRadius > 0f && onlyTarget == null)
-        {
-            // AOE
-            var hits = Physics.OverlapSphere(
-                data.currentPosition,
-                areaOfEffectRadius,
-                mask);
-
-            foreach (var c in hits)
-            {
-                if (c.gameObject.TryGetComponent<IDamageable>(out var d))
-                    d.TakeDamage(amt, DamageType.Physical);
-            }
-        }
-        else if (onlyTarget != null)
-        {
-            // Single‐target
-            if (onlyTarget.TryGetComponent<IDamageable>(out var d))
-                d.TakeDamage(amt, DamageType.Physical);
-        }
+        if (target.TryGetComponent<IDamageable>(out var dmg))
+            dmg.TakeDamage(amt, DamageType.Physical);
     }
 }

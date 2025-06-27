@@ -7,6 +7,7 @@ public class WeaponManager : MonoBehaviour
     private InputAction _dropAction;
     
     [SerializeField] Transform weaponHolder;
+    public DisplayWeaponStats displayWeaponStats;
     private GameObject worldPickupPrefab;
     WeaponController equipped;
     WeaponDataSO equippedData;
@@ -41,6 +42,8 @@ public class WeaponManager : MonoBehaviour
         equipped = wc;
         equippedData = pickup.Data;
         worldPickupPrefab = pickup.Data.pickupPrefab;
+        
+        displayWeaponStats.DisplayStats(pickup.Data.weaponName, pickup.Data.weaponDescription);
     }
     
     public void DropWeapon()
@@ -70,8 +73,7 @@ public class WeaponManager : MonoBehaviour
             dropPos = ctx.transform.position + dir * 1f;
         }
         
-        // 2) Spawn the world‐pickup
-        
+
         //rotate to be flat on floor 90 degrees
         var rot = Quaternion.Euler(90, 0, 0);
         
@@ -79,31 +81,32 @@ public class WeaponManager : MonoBehaviour
         if (worldPickup.TryGetComponent<WeaponPickup>(out var wp))
             wp.Initialize(equippedData);
 
-        // 3) Destroy every attached model before killing controller
+        //Destroy every attached model before killing controller
         foreach (var mdl in ctx.WeaponController._models)
         {
             if (mdl != null) Destroy(mdl);
         }
         ctx.WeaponController._models.Clear();
 
-        // Finally destroy the controller GameObject
+        //Destroy the controller GameObject
         Destroy(ctx.WeaponController.gameObject);
 
         equipped     = null;
         equippedData = null;
         ctx.WeaponController = null;
+        displayWeaponStats.ClearStats();
     }
 
     public void DestroyWeapon()
     {
-        // 1) Destroy every attached model before killing controller
+        //Destroy every attached model before killing controller
         foreach (var mdl in ctx.WeaponController._models)
         {
             if (mdl != null) Destroy(mdl);
         }
         ctx.WeaponController._models.Clear();
 
-        // Finally destroy the controller GameObject
+        //Destroy the controller GameObject
         Destroy(ctx.WeaponController.gameObject);
 
         equipped     = null;

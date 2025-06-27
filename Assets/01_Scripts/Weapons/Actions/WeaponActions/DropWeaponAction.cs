@@ -1,9 +1,11 @@
 ﻿using UnityEngine;
 
+/// <summary>
+/// Drops the currently equipped weapon when executed.
+/// </summary>
 [System.Serializable]
 public class DropWeaponAction : IWeaponAction
 {
-    
     public void Execute(WeaponContext ctx, InputBindingData binding, ActionBindingData actionBinding)
     {
         if (ctx == null || ctx.WeaponManager == null) return;

@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 173e1320fcaa41c78d1bb440de6ba45a, type: 3}
   m_Name: MeleeSwordWeaponData
   m_EditorClassIdentifier: 
-  weaponName: Sword
-  weaponDescription: 
+  weaponName: Melee Sword
+  weaponDescription: Left click to perform a close combat sword swing
   rightHandModel: {fileID: 4841816053556224155, guid: 0f4c565822e482b4e8dd9ff05ea03122, type: 3}
   leftHandModel: {fileID: 0}
   pickupPrefab: {fileID: 5291027263261853057, guid: 87ea6d7f2f5c7464fa9a942a85b379ca, type: 3}

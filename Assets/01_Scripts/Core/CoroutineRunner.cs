@@ -1,6 +1,9 @@
 ﻿using System.Collections;
 using UnityEngine;
 
+/// <summary>
+/// Singleton MonoBehaviour for starting and stopping coroutines from anywhere.
+/// </summary>
 public class CoroutineRunner : MonoBehaviour
 {
     private static CoroutineRunner _instance;
@@ -10,6 +13,7 @@ public class CoroutineRunner : MonoBehaviour
         {
             if (_instance == null)
             {
+                //Create new GameObject with this component
                 var go = new GameObject("CoroutineRunner");
                 _instance = go.AddComponent<CoroutineRunner>();
                 DontDestroyOnLoad(go);
@@ -26,14 +30,16 @@ public class CoroutineRunner : MonoBehaviour
             return;
         }
         _instance = this;
-        DontDestroyOnLoad(gameObject);
+        DontDestroyOnLoad(gameObject); //keep instance alive across scenes
     }
     
+    //Start the coroutine
     public Coroutine StartRoutine(IEnumerator coroutine)
     {
         return StartCoroutine(coroutine);
     }
     
+    //Stop the coroutine
     public void StopRoutine(Coroutine coroutine)
     {
         if (coroutine != null)

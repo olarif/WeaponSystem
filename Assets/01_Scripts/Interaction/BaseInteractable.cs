@@ -2,7 +2,6 @@ using UnityEngine;
 
 /// <summary>
 /// Base class that handles outline & world-space prompt for any interactable object.
-/// Child classes implement their own Interact() logic.
 /// </summary>
 public abstract class BaseInteractable : MonoBehaviour, IInteractable
 {

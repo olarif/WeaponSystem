@@ -85,16 +85,16 @@ public class WeaponDataEditor : Editor
         {
             serializedObject.Update();
 
-            // 1) Grow the array
+            // Grow the array
             int newIndex = _bindingsProperty.arraySize;
             _bindingsProperty.arraySize++;
             serializedObject.ApplyModifiedProperties();
             serializedObject.Update();
 
-            // 2) Grab the brand-new element
+            // Grab the new element
             var newElem = _bindingsProperty.GetArrayElementAtIndex(newIndex);
 
-            // 3) Reset *every* field on it
+            // Reset every field on it
             newElem.FindPropertyRelative(nameof(InputBindingData.bindingMode))
                 .enumValueIndex = (int)BindingMode.Press;
             newElem.FindPropertyRelative(nameof(InputBindingData.actionRef))
@@ -106,11 +106,11 @@ public class WeaponDataEditor : Editor
             newElem.FindPropertyRelative(nameof(InputBindingData.cooldown))
                 .floatValue = 0f;
 
-            // 4) Clear out its nested Actions list
+            // Clear out nested actions list
             var actionsProp = newElem.FindPropertyRelative(nameof(InputBindingData.bindings));
             actionsProp.ClearArray();
 
-            // 5) Make sure the foldout starts closed
+            // Make sure the foldout starts closed
             newElem.isExpanded = false;
 
             serializedObject.ApplyModifiedProperties();
@@ -143,7 +143,7 @@ public class WeaponDataEditor : Editor
         serializedObject.ApplyModifiedProperties();
     }
 
-    private void DrawHeader()
+    private new void DrawHeader()
     {
         var weaponData = target as WeaponDataSO;
         string weaponName = string.IsNullOrEmpty(weaponData.weaponName) ? "Unnamed Weapon" : weaponData.weaponName;
@@ -228,7 +228,6 @@ public class WeaponDataEditor : Editor
 
         _bindingsList.DoLayoutList();
         
-        // Summary
         DrawBindingsSummary();
     }
 

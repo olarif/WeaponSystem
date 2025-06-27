@@ -49,7 +49,7 @@ MonoBehaviour:
     - rid: 1246412388835786982
       type: {class: HealAction, ns: , asm: Assembly-CSharp}
       data:
-        amount: 5
+        amountToHeal: 10
     - rid: 1246412388835786983
       type: {class: DestroyOnUseAction, ns: , asm: Assembly-CSharp}
       data: 

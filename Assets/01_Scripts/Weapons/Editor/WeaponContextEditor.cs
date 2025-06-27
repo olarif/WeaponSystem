@@ -34,11 +34,8 @@ public class WeaponContextEditor : Editor
         DrawHeader();
         
         _scrollPosition = EditorGUILayout.BeginScrollView(_scrollPosition);
-
-        // Core references section
-        DrawSection("Core References", DrawCoreReferences);
         
-        // UI references section
+        DrawSection("Core References", DrawCoreReferences);
         DrawSection("UI References", DrawUIReferences);
         
         // Runtime information
@@ -52,7 +49,7 @@ public class WeaponContextEditor : Editor
         serializedObject.ApplyModifiedProperties();
     }
 
-    private void DrawHeader()
+    private new void DrawHeader()
     {
         EditorGUILayout.Space();
         var headerStyle = new GUIStyle(EditorStyles.largeLabel) {

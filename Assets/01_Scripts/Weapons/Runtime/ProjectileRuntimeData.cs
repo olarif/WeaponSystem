@@ -19,7 +19,6 @@ public class ProjectileRuntimeData
     public HashSet<GameObject> hitTargets;
     public CollisionInfo lastCollision;
     
-    // Custom data for components to share information
     public Dictionary<string, object> customData;
     
     // Helper methods

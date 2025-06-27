@@ -55,6 +55,10 @@ MonoBehaviour:
       tickRate: 0.1
       action:
         rid: 1246412484254892325
+    - triggerPhase: 1
+      tickRate: 0.1
+      action:
+        rid: 6992692243383976096
   references:
     version: 2
     RefIds:
@@ -81,3 +85,8 @@ MonoBehaviour:
         animationType: 1
         triggerName: charging
         booleanValue: 0
+    - rid: 6992692243383976096
+      type: {class: PlayerForceAction, ns: , asm: Assembly-CSharp}
+      data:
+        forceAmount: 5
+        forceDirection: {x: 0, y: 0, z: -1}

@@ -39,6 +39,10 @@ MonoBehaviour:
       tickRate: 0
       action:
         rid: 1246412484254892289
+    - triggerPhase: 1
+      tickRate: 0.1
+      action:
+        rid: 6372716864388989148
   references:
     version: 2
     RefIds:
@@ -69,3 +73,14 @@ MonoBehaviour:
         animationType: 0
         triggerName: attack1
         booleanValue: 1
+    - rid: 6372716864388989148
+      type: {class: PlaySoundAction, ns: , asm: Assembly-CSharp}
+      data:
+        soundEvent:
+          Guid:
+            Data1: -1975384998
+            Data2: 1113171487
+            Data3: -893348703
+            Data4: -371083618
+          Path: event:/Knife Swoosh
+        isLooping: 0

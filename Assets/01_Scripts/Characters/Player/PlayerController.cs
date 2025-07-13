@@ -4,171 +4,123 @@ using UnityEngine;
 [RequireComponent(typeof(CharacterController))]
 public class PlayerController : MonoBehaviour
 {
-    private Player _player;  
+    [Header("References")]
     [SerializeField] private PlayerStatsSO _stats;
-    // Player stats
-    
     [SerializeField] public Transform _groundCheck;
+
+    [Header("Component Data")]
+    [SerializeField] private MovementData    movementData    = new MovementData();
+    [SerializeField] private RotationData    rotationData    = new RotationData();
+    [SerializeField] private JumpData        jumpData        = new JumpData();
+    [SerializeField] private GroundCheckData groundCheckData = new GroundCheckData();
     
-    // Components
+    //Components
     private Camera _playerCamera;
     private PlayerInputHandler _input;
     private CharacterController _controller;
-
-    // Movement variables
+    private Player _player;
+    
+    //State Machine
+    private StateMachine _stateMachine;
+    
+    //Control
     private bool _hasControl = true;
-    private Vector3 _moveDirection;
-    private Vector3 _velocity;
-    private float _yVelocity;
-    private float _jumpBufferCounter = 0f;
     
-    // Rotation variables
-    private float _xRotation = 0f;
-
-    public event Action<bool> OnJump;
-    public event Action<bool> OnSprint;
+    //Events
+    public Action<bool> OnJump { get; set; }
+    public Action<bool> OnSprint { get; set; }
     
+    //Properties
     public PlayerStatsSO Stats => _stats;
-    public bool IsGrounded { get; private set; }
-    public bool IsSprinting { get; private set; }
-    public bool IsJumping { get; private set; }
-    public bool IsMoving { get; private set; }
+    public bool IsGrounded     => groundCheckData.IsGrounded;
+    public bool IsSprinting    => movementData.IsSprinting;
+    public bool IsJumping      => jumpData.IsJumping;
+    public bool IsMoving       => movementData.IsMoving;
+    
+    // Component Access
+    public IInputProvider Input        => _input;
+    public Camera         PlayerCamera => _playerCamera;
+    public MovementData   MovementData => movementData;
+    public RotationData   RotationData => rotationData;
+    public JumpData       JumpData     => jumpData;
+    public StateMachine   StateMachine => _stateMachine;
 
     private void Awake()
+    {
+        InitializeComponents();
+        InitializeData();
+        InitializeStateMachine();
+    }
+    
+    private void InitializeComponents()
     {
         _player = GetComponent<Player>();
         _controller = GetComponent<CharacterController>();
         _input = GetComponent<PlayerInputHandler>();
-        _playerCamera = GetComponentInChildren<Camera>();
-        
-        // Initialize player camera rotation
-        _xRotation = _playerCamera.transform.localEulerAngles.x;
-        if (_xRotation > 180f) _xRotation -= 360f;
-    }
+        _playerCamera = Camera.main;
 
-    private void Start()
+        ValidateComponents();
+    }
+    
+    private void ValidateComponents()
     {
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
+        if (_playerCamera == null) { Debug.LogError("PlayerController: Camera not found!"); }
+        
+        if (_input == null)        { Debug.LogError("PlayerController: PlayerInputHandler component not found!"); }
+        
+        if (_controller == null)   { Debug.LogError("PlayerController: CharacterController component not found!"); }
     }
 
+    private void InitializeData()
+    {
+        movementData.Initialize(this, _controller, _stats);
+        rotationData.Initialize(this);
+        jumpData.Initialize(this);
+        groundCheckData.Initialize(_groundCheck, _stats);
+    }
+    
+    private void InitializeStateMachine()
+    {
+        _stateMachine = new StateMachine(this);
+        _stateMachine.OnStateChanged += OnStateChanged;
+        
+        // Initialize with a default idle state
+        _stateMachine.ChangeState(new IdleState(this));
+    }
+    
     private void Update()
     {
         if (!_hasControl) return;
 
-        GatherInput();
-        CheckGround();
-        HandleJump();
-        HandleRotation();
-        HandleMovement();
+        groundCheckData.UpdateGroundCheck();
+        jumpData.UpdateJumpBuffer();
+        
+        _stateMachine.Update();
     }
 
     private void FixedUpdate()
     {
         if (!_hasControl) return;
         
-        ApplyGravity();
-    }
-
-    private void GatherInput()
-    {
-        _moveDirection = new Vector3(_input.MovementInput.x, 0, _input.MovementInput.y).normalized;
-        IsSprinting = _input.SprintInput;
-
-        if (_input.JumpInput)
-        {
-            _jumpBufferCounter = _stats.JumpBufferTime;
-        }
-        else
-        {
-            _jumpBufferCounter -= Time.deltaTime;
-        }
-    }
-
-    private void CheckGround()
-    {
-        IsGrounded = Physics.CheckSphere(_groundCheck.position, _stats.GroundDistance, _stats.GroundLayer);
-
-        // Reset y velocity when grounded and apply downward force
-        if (IsGrounded && _yVelocity < 0)
-        {
-            _yVelocity = -2f;
-        }
-    }
-
-    private void HandleRotation()
-    {
-        if (_playerCamera == null) return;
+        movementData.ApplyGravity();
         
-        //normalize input and apply sens
-        float sensitivity = _stats.RotationSpeed;
-        float verticalRotation = _input.RotationInput.y * sensitivity * Time.deltaTime;
-        float horizontalRotation = _input.RotationInput.x * sensitivity * Time.deltaTime;
-        
-        // Handle vertical rotation (pitch)
-        _xRotation -= verticalRotation;
-        _xRotation = Mathf.Clamp(_xRotation, _stats.MinLookAngle, _stats.MaxLookAngle);
-        _playerCamera.transform.localRotation = Quaternion.Euler(_xRotation, 0, 0);
-
-        // Handle horizontal rotation (yaw)
-        transform.Rotate(Vector3.up * horizontalRotation);
+        _stateMachine.FixedUpdate();
     }
-
-    private void HandleMovement()
+    
+    private void OnStateChanged(State previousState, State newState)
     {
-        IsMoving = _moveDirection.magnitude > 0;
-
-        float targetSpeed = IsSprinting ? _stats.SprintSpeed : _stats.WalkSpeed;
-
-        // Moving in the direction the camera is facing
-        Vector3 move = Quaternion.Euler(0, _playerCamera.transform.eulerAngles.y, 0) * _moveDirection;
-        move.y = 0;
-
-        _velocity = Vector3.Lerp(_velocity, move * targetSpeed, Time.deltaTime * _stats.MoveSmoothTime);
-
-        _controller.Move((_velocity + Vector3.up * _yVelocity) * Time.deltaTime);
-
-        OnSprint?.Invoke(IsSprinting);
-    }
-
-    private void HandleJump()
-    {
-        if (IsGrounded)
-        {
-            if (_jumpBufferCounter > 0f)
-            {
-                _yVelocity = Mathf.Sqrt(_stats.JumpForce * -2f * _stats.Gravity);
-                OnJump?.Invoke(true);
-                _jumpBufferCounter = 0f;
-            }
-            else
-            {
-                OnJump?.Invoke(false);
-            }
-        } 
-        
-        IsJumping = _yVelocity > 0;
-    }
-
-    private void ApplyGravity()
-    {
-        if (!IsGrounded)
-        {
-            // Apply stronger gravity if player releases jump early
-            if (!_input.JumpInput && _yVelocity > 0)
-            {
-                _yVelocity += _stats.Gravity * 2f * Time.deltaTime;
-            }
-            else
-            {
-                _yVelocity += _stats.Gravity * Time.deltaTime;
-            }
-        }
+        string prevName = previousState?.GetType().Name ?? "None";
+        string newName = newState?.GetType().Name ?? "Unknown";
+        Debug.Log($"State changed from {prevName} to {newName}");
     }
 
     public void TakeAwayControl(bool resetVelocity = true)
     {
-        if (resetVelocity) _velocity = Vector3.zero;
+        if (resetVelocity) 
+        {
+            movementData.ResetVelocity();
+            movementData.ResetYVelocity();
+        }
         _hasControl = false;
     }
 
@@ -179,13 +131,13 @@ public class PlayerController : MonoBehaviour
     
     public void ResetVelocity()
     {
-        _velocity = Vector3.zero;
-        _yVelocity = 0f;
+        movementData.ResetVelocity();
+        movementData.ResetYVelocity();
     }
     
     public void ApplyForce(Vector3 force)
     {
-        _velocity += force;
+        movementData.ApplyForce(force);
     }
 
     public void Die()

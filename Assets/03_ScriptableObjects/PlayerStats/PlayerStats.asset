@@ -21,6 +21,12 @@ MonoBehaviour:
   WalkSpeed: 6
   SprintSpeed: 9
   MoveSmoothTime: 8
+  AirControl: 1
+  AirAcceleration: 15
+  MaxAirSpeed: 15
+  AirFriction: 0.1
+  EnableStrafeJumping: 1
+  StrafeJumpMultiplier: 1.2
   Gravity: -20
   JumpForce: 3
   JumpBufferTime: 0.1

@@ -20,15 +20,20 @@ MonoBehaviour:
     m_Bits: 8
   WalkSpeed: 6
   SprintSpeed: 9
-  MoveSmoothTime: 8
-  AirControl: 1
-  AirAcceleration: 15
-  MaxAirSpeed: 15
-  AirFriction: 0.1
-  EnableStrafeJumping: 1
-  StrafeJumpMultiplier: 1.2
+  Acceleration: 20
+  Deceleration: 30
+  DirectionChangeSpeed: 30
+  StopThreshold: 0.1
+  SprintBufferTime: 0.1
+  SprintReleaseDelay: 0.05
+  AirControl: 10
+  AirAcceleration: 1
+  MaxAirSpeed: 9
+  AirFriction: 0.2
+  EnableStrafeJumping: 0
+  StrafeJumpMultiplier: 1.1
   Gravity: -20
-  JumpForce: 3
+  JumpForce: 2.5
   JumpBufferTime: 0.1
   GroundDistance: 0.3
   RotationSpeed: 15

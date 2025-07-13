@@ -304,14 +304,13 @@ public class MovementData
     
     private void OnLeftGround()
     {
-        Debug.Log($"Left ground with velocity: {velocity.magnitude:F2}");
+        //Debug.Log($"Left ground with velocity: {velocity.magnitude:F2}");
         lastGroundVelocity = velocity;
     }
     
     private void OnLanded()
     {
-        Debug.Log($"Landed with velocity: {velocity.magnitude:F2}");
-        
+        //Debug.Log($"Landed with velocity: {velocity.magnitude:F2}");
         // velocity *= 0.9f;
     }
     

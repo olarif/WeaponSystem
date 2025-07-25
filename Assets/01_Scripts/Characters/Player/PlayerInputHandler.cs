@@ -14,20 +14,26 @@ public class PlayerInputHandler : MonoBehaviour, IInputProvider
     [Header("Action Name References")]
     [SerializeField] private string movementAction = "Movement";
     [SerializeField] private string rotationAction = "Rotation";
-    [SerializeField] private string jumpAction     = "Jump";
-    [SerializeField] private string sprintAction   = "Sprint";
+    [SerializeField] private string jumpAction = "Jump";
+    [SerializeField] private string sprintAction = "Sprint";
+    [SerializeField] private string crouchAction = "Crouch";
+    [SerializeField] private string dashAction = "Dash";
     
-    //Input properties
+    // Input properties
     public Vector2 MovementInput { get; private set; }
     public Vector2 RotationInput { get; private set; }
-    public bool    JumpInput     { get; private set; }
-    public bool    SprintInput   { get; private set; }
+    public bool JumpInput { get; private set; }
+    public bool SprintInput { get; private set; }
+    public bool CrouchInput { get; private set; }
+    public bool DashInput { get; private set; }
 
     // Cached Input Actions
     private InputAction _movementInputAction;
     private InputAction _rotationInputAction;
     private InputAction _jumpInputAction;
     private InputAction _sprintInputAction;
+    private InputAction _crouchInputAction;
+    private InputAction _dashInputAction;
     
     public bool IsInputEnabled { get; private set; } = true;
     
@@ -46,8 +52,10 @@ public class PlayerInputHandler : MonoBehaviour, IInputProvider
     {
         _movementInputAction = _actions.FindAction(movementAction, true);
         _rotationInputAction = _actions.FindAction(rotationAction, true);
-        _jumpInputAction     = _actions.FindAction(jumpAction,     true);
-        _sprintInputAction   = _actions.FindAction(sprintAction,   true);
+        _jumpInputAction = _actions.FindAction(jumpAction, true);
+        _sprintInputAction = _actions.FindAction(sprintAction, true);
+        _crouchInputAction = _actions.FindAction(crouchAction, true);
+        _dashInputAction = _actions.FindAction(dashAction, true);
         
         ValidateInputActions();
     }
@@ -56,8 +64,10 @@ public class PlayerInputHandler : MonoBehaviour, IInputProvider
     {
         if (_movementInputAction == null) Debug.LogError($"Movement action '{movementAction}' not found!");
         if (_rotationInputAction == null) Debug.LogError($"Rotation action '{rotationAction}' not found!");
-        if (_jumpInputAction     == null) Debug.LogError($"Jump action '{jumpAction}' not found!");
-        if (_sprintInputAction   == null) Debug.LogError($"Sprint action '{sprintAction}' not found!");
+        if (_jumpInputAction == null) Debug.LogError($"Jump action '{jumpAction}' not found!");
+        if (_sprintInputAction == null) Debug.LogError($"Sprint action '{sprintAction}' not found!");
+        if (_crouchInputAction == null) Debug.LogError($"Crouch action '{crouchAction}' not found!");
+        if (_dashInputAction == null) Debug.LogError($"Dash action '{dashAction}' not found!");
     }
     
     private void OnEnable()
@@ -90,6 +100,8 @@ public class PlayerInputHandler : MonoBehaviour, IInputProvider
         
         JumpInput = _jumpInputAction?.triggered == true;
         SprintInput = _sprintInputAction?.ReadValue<float>() > 0.5f;
+        CrouchInput = _crouchInputAction?.ReadValue<float>() > 0.5f;
+        DashInput = _dashInputAction?.triggered == true;
     }
     
     public void EnableInput()
@@ -110,5 +122,7 @@ public class PlayerInputHandler : MonoBehaviour, IInputProvider
         RotationInput = Vector2.zero;
         JumpInput = false;
         SprintInput = false;
+        CrouchInput = false;
+        DashInput = false;
     }
 }

@@ -3,7 +3,6 @@
 [System.Serializable]
 public class GroundCheckData
 {
-    
     private Transform _groundCheck;
     private PlayerStatsSO _stats;
     
@@ -11,8 +10,8 @@ public class GroundCheckData
 
     public void Initialize(Transform groundCheck, PlayerStatsSO stats)
     {
-        this._groundCheck = groundCheck;
-        this._stats = stats;
+        _groundCheck = groundCheck;
+        _stats = stats;
     }
 
     public void UpdateGroundCheck()

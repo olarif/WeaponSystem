@@ -13,7 +13,7 @@ public class StateMachine
     {
         _controller = controller;
     }
-    
+
     public void ChangeState(State newState)
     {
         if (_currentState != null && !_currentState.CanTransitionTo(newState.GetType()))
@@ -30,7 +30,13 @@ public class StateMachine
         OnStateChanged?.Invoke(previousState, newState);
     }
     
-    public void Update() => _currentState?.Update();
+    public void Update()
+    {
+        _currentState?.Update();
+        
+        Debug.Log( $"Current State: {_currentState?.GetType().Name ?? "None"}");
+    }
+
     public void FixedUpdate() => _currentState?.FixedUpdate();
     
     public bool IsInState<T>() where T : State => _currentState is T;

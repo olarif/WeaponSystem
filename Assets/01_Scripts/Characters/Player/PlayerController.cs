@@ -11,7 +11,6 @@ public class PlayerController : MonoBehaviour
     [Header("Component Data")]
     [SerializeField] private MovementData    movementData    = new MovementData();
     [SerializeField] private RotationData    rotationData    = new RotationData();
-    [SerializeField] private JumpData        jumpData        = new JumpData();
     [SerializeField] private GroundCheckData groundCheckData = new GroundCheckData();
     
     //Components
@@ -33,8 +32,6 @@ public class PlayerController : MonoBehaviour
     //Properties
     public PlayerStatsSO Stats => _stats;
     public bool IsGrounded     => groundCheckData.IsGrounded;
-    public bool IsSprinting    => movementData.IsSprinting;
-    public bool IsJumping      => jumpData.IsJumping;
     public bool IsMoving       => movementData.IsMoving;
     
     // Component Access
@@ -42,7 +39,6 @@ public class PlayerController : MonoBehaviour
     public Camera         PlayerCamera => _playerCamera;
     public MovementData   MovementData => movementData;
     public RotationData   RotationData => rotationData;
-    public JumpData       JumpData     => jumpData;
     public StateMachine   StateMachine => _stateMachine;
 
     private void Awake()
@@ -65,9 +61,7 @@ public class PlayerController : MonoBehaviour
     private void ValidateComponents()
     {
         if (_playerCamera == null) { Debug.LogError("PlayerController: Camera not found!"); }
-        
         if (_input == null)        { Debug.LogError("PlayerController: PlayerInputHandler component not found!"); }
-        
         if (_controller == null)   { Debug.LogError("PlayerController: CharacterController component not found!"); }
     }
 
@@ -75,7 +69,6 @@ public class PlayerController : MonoBehaviour
     {
         movementData.Initialize(this, _controller, _stats);
         rotationData.Initialize(this);
-        jumpData.Initialize(this);
         groundCheckData.Initialize(_groundCheck, _stats);
     }
     
@@ -84,8 +77,8 @@ public class PlayerController : MonoBehaviour
         _stateMachine = new StateMachine(this);
         _stateMachine.OnStateChanged += OnStateChanged;
         
-        // Initialize with a default idle state
-        _stateMachine.ChangeState(new IdleState(this));
+        // Start in grounded state
+        _stateMachine.ChangeState(new GroundedState(this));
     }
     
     private void Update()
@@ -93,25 +86,46 @@ public class PlayerController : MonoBehaviour
         if (!_hasControl) return;
 
         groundCheckData.UpdateGroundCheck();
-        jumpData.UpdateJumpBuffer();
+        
+        // Update static cooldowns
+        DashState.UpdateCooldown();
+        
+        // Handle landing resets
+        if (IsGrounded && !wasGroundedLastFrame)
+        {
+            OnLanded();
+        }
         
         _stateMachine.Update();
+        
+        wasGroundedLastFrame = IsGrounded;
     }
 
     private void FixedUpdate()
     {
         if (!_hasControl) return;
         
-        movementData.ApplyGravity();
-        
         _stateMachine.FixedUpdate();
+    }
+    
+    private bool wasGroundedLastFrame = true;
+    
+    private void OnLanded()
+    {
+        // Change this line:
+        JumpState.ResetJumpsOnLanding();
+    
+        if (_stats.ResetDashOnLand)
+        {
+            DashState.ResetDashOnLand();
+        }
     }
     
     private void OnStateChanged(State previousState, State newState)
     {
         string prevName = previousState?.GetType().Name ?? "None";
         string newName = newState?.GetType().Name ?? "Unknown";
-        Debug.Log($"State changed from {prevName} to {newName}");
+        //Debug.Log($"State changed from {prevName} to {newName}");
     }
 
     public void TakeAwayControl(bool resetVelocity = true)

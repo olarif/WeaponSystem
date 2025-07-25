@@ -12,9 +12,8 @@ public class Player : Entity
     {
         _inputHandler = GetComponent<PlayerInputHandler>();
         _playerController = GetComponent<PlayerController>();
-        
-        _health = GetComponentInChildren<HealthComponent>();
-        _stamina = GetComponentInChildren<StaminaComponent>();
+        _health = GetComponent<HealthComponent>();
+        _stamina = GetComponent<StaminaComponent>();
     }
     
     public override void Heal(float amount) => _health.Heal(amount);

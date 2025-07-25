@@ -18,29 +18,44 @@ MonoBehaviour:
   GroundLayer:
     serializedVersion: 2
     m_Bits: 8
+  maxHealth: 100
+  maxStamina: 100
+  jumpStaminaCost: 8
+  airJumpStaminaCost: 5
+  dashStaminaCost: 15
+  sprintStaminaCost: 10
+  allowJumpWithoutStamina: 0
+  allowDashWithoutStamina: 0
+  staminaRegenRate: 25
+  staminaRegenDelay: 1
+  healthRegenRate: 2
+  healthRegenDelay: 5
   walkSpeed: 5
   sprintSpeed: 8
   crouchSpeed: 2.5
   groundResponsiveness: 15
   stopSpeed: 15
-  airAcceleration: 8
-  airResponsiveness: 3
+  airAcceleration: 3
+  airResponsiveness: 4
   maxAirSpeed: 8
   airFriction: 0.5
-  gravity: -20
-  jumpForce: 4
-  fallGravityMultiplier: 2.5
+  gravity: -9.81
+  jumpForce: 5
+  fallGravityMultiplier: 3
+  lowJumpMultiplier: 6
   terminalVelocity: -20
-  maxAirJumps: 1
+  maxAirJumps: 2
   jumpBufferTime: 0.1
+  maxJumpHoldTime: 0.15
+  canAutoJump: 0
   dashForce: 10
   dashDuration: 0.15
   dashCooldown: 1
   airDashUpwardForce: 2
   resetDashOnLand: 1
-  standingHeight: 0.3
-  crouchHeight: 0.15
-  groundDistance: 0.4
+  standingHeight: 1.6
+  crouchHeight: 0.8
+  groundDistance: 0.1
   rotationSpeed: 30
   minLookAngle: -80
   maxLookAngle: 80

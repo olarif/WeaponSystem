@@ -136,7 +136,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4022019745088602611}
   - component: {fileID: 5088094329127707218}
-  - component: {fileID: 7844017749525587249}
+  - component: {fileID: 2293210813798480637}
   - component: {fileID: 3517262453847225028}
   - component: {fileID: 2042787069050867587}
   - component: {fileID: 7158501452205813693}
@@ -187,7 +187,7 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &7844017749525587249
+--- !u!114 &2293210813798480637
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -196,25 +196,23 @@ MonoBehaviour:
   m_GameObject: {fileID: 948092185269275623}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bb7b65c71da28c24293501884cf4408f, type: 3}
+  m_Script: {fileID: 11500000, guid: 1c885d681dfd477caa448955f13a057c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _maxHealth: 20
-  healthBar: {fileID: 8835934665048783798}
-  slider: {fileID: 5243017694440901816}
-  gradient:
+  _healthBarContainer: {fileID: 8835934665048783798}
+  _gradient:
     serializedVersion: 2
     key0: {r: 1, g: 0, b: 0, a: 1}
-    key1: {r: 1, g: 0.9013662, b: 0, a: 1}
-    key2: {r: 0.23492157, g: 1, b: 0, a: 0}
+    key1: {r: 1, g: 0, b: 0, a: 1}
+    key2: {r: 0, g: 0, b: 0, a: 0}
     key3: {r: 0, g: 0, b: 0, a: 0}
     key4: {r: 0, g: 0, b: 0, a: 0}
     key5: {r: 0, g: 0, b: 0, a: 0}
     key6: {r: 0, g: 0, b: 0, a: 0}
     key7: {r: 0, g: 0, b: 0, a: 0}
-    ctime0: 16191
-    ctime1: 39321
-    ctime2: 65535
+    ctime0: 771
+    ctime1: 65535
+    ctime2: 0
     ctime3: 0
     ctime4: 0
     ctime5: 0
@@ -230,7 +228,7 @@ MonoBehaviour:
     atime7: 0
     m_Mode: 0
     m_ColorSpace: -1
-    m_NumColorKeys: 3
+    m_NumColorKeys: 2
     m_NumAlphaKeys: 2
   OnDeath:
     m_PersistentCalls:
@@ -247,8 +245,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62ff11d73bd94758895aba9c623e22dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  entityName: Training DUMMY
-  _enemyStats: {fileID: 11400000, guid: 758192cf5ae994043adde04cb0dcd73f, type: 2}
+  EnemyStats: {fileID: 11400000, guid: 758192cf5ae994043adde04cb0dcd73f, type: 2}
   stunTime: 3
 --- !u!136 &2042787069050867587
 CapsuleCollider:
@@ -619,17 +616,6 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 9124907883358559718, guid: d0d7675fa1f903843b0a2ec5ce294e7c, type: 3}
   m_PrefabInstance: {fileID: 4429263001661526073}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &5243017694440901816 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8481711775248292993, guid: d0d7675fa1f903843b0a2ec5ce294e7c, type: 3}
-  m_PrefabInstance: {fileID: 4429263001661526073}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8835934665048783798}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 67db9e8f0e2ae9c40bc1e2b64352a6b4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &8835934665048783798 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5181511187155266447, guid: d0d7675fa1f903843b0a2ec5ce294e7c, type: 3}

@@ -1557,6 +1557,10 @@ PrefabInstance:
       propertyPath: m_IncludeLayers.m_Bits
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3517262453847225028, guid: cdf0ae4dbcb656e4e9ddabd5f7f5d449, type: 3}
+      propertyPath: EnemyStats
+      value: 
+      objectReference: {fileID: 11400000, guid: 323b277973bc84f4b8ebbb1716925220, type: 2}
     - target: {fileID: 4022019745088602611, guid: cdf0ae4dbcb656e4e9ddabd5f7f5d449, type: 3}
       propertyPath: m_LocalScale.x
       value: 2.0253
@@ -2636,6 +2640,10 @@ PrefabInstance:
     - target: {fileID: 1474361813790737554, guid: a544af670527dd94d87901859fc93922, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6524104883894769732, guid: a544af670527dd94d87901859fc93922, type: 3}
+      propertyPath: damage
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 8514112044729372468, guid: a544af670527dd94d87901859fc93922, type: 3}
       propertyPath: m_Name
@@ -6619,7 +6627,7 @@ Transform:
   m_GameObject: {fileID: 1446900247}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -2, z: -7.846}
+  m_LocalPosition: {x: -0.5, y: 1, z: -8}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -10451,6 +10459,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1642865417309058630, guid: 54ac07bbe68e5614194c89b21f61fef2, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2990323918407676844, guid: 54ac07bbe68e5614194c89b21f61fef2, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -10477,7 +10489,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5486091016685519438, guid: 54ac07bbe68e5614194c89b21f61fef2, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1
+      value: 0.85
       objectReference: {fileID: 0}
     - target: {fileID: 5486091016685519438, guid: 54ac07bbe68e5614194c89b21f61fef2, type: 3}
       propertyPath: m_LocalPosition.z
@@ -10579,6 +10591,10 @@ PrefabInstance:
     - target: {fileID: 1474361813790737554, guid: a544af670527dd94d87901859fc93922, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6524104883894769732, guid: a544af670527dd94d87901859fc93922, type: 3}
+      propertyPath: damage
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 8514112044729372468, guid: a544af670527dd94d87901859fc93922, type: 3}
       propertyPath: m_Name

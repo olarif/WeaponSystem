@@ -13,24 +13,34 @@ public class DashState : State
         // Check cooldown
         if (dashCooldown > 0f)
         {
-            // Can't dash, return to appropriate state
             ReturnToAppropriateState();
             return;
         }
         
-        // Calculate dash direction
+        // Check stamina if required
+        if (!PlayerStats.AllowDashWithoutStamina && !Controller.StaminaComponent.CanAfford(PlayerStats.DashStaminaCost))
+        {
+            ReturnToAppropriateState();
+            return;
+        }
+    
+        // Use stamina if required
+        if (!PlayerStats.AllowDashWithoutStamina)
+        {
+            Controller.StaminaComponent.TryUse(PlayerStats.DashStaminaCost);
+        }
+        
         dashDirection = GetDashDirection();
+        Vector3 dashForce = dashDirection * PlayerStats.DashForce;
         
-        // Apply dash velocity
-        Controller.MovementData.SetVelocity(dashDirection * PlayerStats.DashForce);
-        
-        // Add upward component for air dashes
+        // Add upward force for air dashes
         if (!Controller.IsGrounded && PlayerStats.AirDashUpwardForce > 0f)
         {
-            Controller.MovementData.SetYVelocity(
-                Mathf.Max(Controller.MovementData.YVelocity, PlayerStats.AirDashUpwardForce)
-            );
+            dashForce.y = PlayerStats.AirDashUpwardForce;
         }
+        
+        // Apply the force (handled by HorizontalMovementData and VerticalMovementData)
+        Controller.ApplyForce(dashForce);
         
         // Set timers
         dashTimer = PlayerStats.DashDuration;
@@ -41,19 +51,22 @@ public class DashState : State
     
     public override void Update()
     {
-        // Update dash timer
         dashTimer -= Time.deltaTime;
         
-        // Don't allow other inputs during dash
         CheckTransitions();
         
-        Controller.MovementData.ApplyMovement();
+        // Handle rotation during dash
         Controller.RotationData.UpdateRotation();
+        
+        // Don't update horizontal movement during dash
+        
+        Controller.VerticalMovement.ApplyGravity();
+        Controller.ApplyMovement();
     }
     
     public override void FixedUpdate()
     {
-        Controller.MovementData.ApplyGravity();
+        
     }
     
     private Vector3 GetDashDirection()

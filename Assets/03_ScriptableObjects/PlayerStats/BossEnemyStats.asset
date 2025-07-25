@@ -10,8 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5fb348ff3495467d96f301bd29083aab, type: 3}
-  m_Name: EnemyStats
+  m_Name: BossEnemyStats
   m_EditorClassIdentifier: 
-  maxHealth: 20
-  healthRegenRate: 2
-  healthRegenDelay: 3
+  maxHealth: 100
+  healthRegenRate: 0
+  healthRegenDelay: 0

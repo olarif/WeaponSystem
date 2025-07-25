@@ -15,12 +15,10 @@ public class DamageInflicter : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            Debug.Log("Player collided with damage inflicter!");
-            
             other.GetComponent<PlayerController>().ResetVelocity();
             other.GetComponent<PlayerController>().ApplyForce(Vector3.back * impactForce);
             
-            HealthComponent healthComponent = other.GetComponentInChildren<HealthComponent>();
+            PlayerHealthComponent healthComponent = other.GetComponent<PlayerHealthComponent>();
             if (healthComponent != null)
             {
                 //apply damage to the player

@@ -2,7 +2,8 @@
 
 public abstract class EnemyBase : Entity, IDamageable
 {
-    protected HealthComponent HealthComponent;
+    public EnemyStatsSO EnemyStats;
+    protected EnemyHealthComponent HealthComponent;
     
     protected StatusEffectManager StatusEffectsManager;
     protected Animator Animator;
@@ -10,7 +11,7 @@ public abstract class EnemyBase : Entity, IDamageable
     protected void Awake()
     {
         Animator = GetComponent<Animator>();
-        HealthComponent = GetComponent<HealthComponent>();
+        HealthComponent = GetComponent<EnemyHealthComponent>();
         StatusEffectsManager = GetComponent<StatusEffectManager>();
     }
     

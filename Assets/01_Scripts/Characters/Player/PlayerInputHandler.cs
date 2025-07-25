@@ -22,11 +22,12 @@ public class PlayerInputHandler : MonoBehaviour, IInputProvider
     // Input properties
     public Vector2 MovementInput { get; private set; }
     public Vector2 RotationInput { get; private set; }
-    public bool JumpInput { get; private set; }
+    public bool JumpPressed { get; private set; }
+    public bool JumpHeld { get; private set; }
     public bool SprintInput { get; private set; }
     public bool CrouchInput { get; private set; }
     public bool DashInput { get; private set; }
-
+    
     // Cached Input Actions
     private InputAction _movementInputAction;
     private InputAction _rotationInputAction;
@@ -98,7 +99,8 @@ public class PlayerInputHandler : MonoBehaviour, IInputProvider
             rawRotation.y * mouseSensitivityMultiplier * (invertY ? -1f : 1f)
         );
         
-        JumpInput = _jumpInputAction?.triggered == true;
+        JumpPressed = _jumpInputAction?.triggered == true;
+        JumpHeld = _jumpInputAction?.ReadValue<float>() > 0.5f;
         SprintInput = _sprintInputAction?.ReadValue<float>() > 0.5f;
         CrouchInput = _crouchInputAction?.ReadValue<float>() > 0.5f;
         DashInput = _dashInputAction?.triggered == true;
@@ -120,7 +122,8 @@ public class PlayerInputHandler : MonoBehaviour, IInputProvider
     {
         MovementInput = Vector2.zero;
         RotationInput = Vector2.zero;
-        JumpInput = false;
+        JumpPressed = false;
+        JumpHeld = false;
         SprintInput = false;
         CrouchInput = false;
         DashInput = false;

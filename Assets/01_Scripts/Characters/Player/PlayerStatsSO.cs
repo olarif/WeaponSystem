@@ -7,6 +7,26 @@ public class PlayerStatsSO : ScriptableObject
     public LayerMask PlayerLayer;
     public LayerMask GroundLayer;
     
+    [Header("Max Health & Stamina")]
+    [SerializeField] private float maxHealth = 100f;
+    [SerializeField] private float maxStamina = 100f;
+    
+    [Header("Stamina Costs")]
+    [SerializeField] private float jumpStaminaCost = 10f;
+    [SerializeField] private float airJumpStaminaCost = 10f;
+    [SerializeField] private float dashStaminaCost = 20f;
+    [SerializeField] private float sprintStaminaCost = 5f;
+    [SerializeField] private bool allowJumpWithoutStamina = false;
+    [SerializeField] private bool allowDashWithoutStamina = false;
+
+    [Header("Stamina Regeneration")]
+    [SerializeField] private float staminaRegenRate = 5f;
+    [SerializeField] private float staminaRegenDelay = 2f;
+
+    [Header("Health Regeneration")]
+    [SerializeField] private float healthRegenRate = 2f;
+    [SerializeField] private float healthRegenDelay = 5f;
+
     [Header("Basic Movement")]
     [SerializeField] private float walkSpeed = 5f;
     [SerializeField] private float sprintSpeed = 8f;
@@ -30,7 +50,9 @@ public class PlayerStatsSO : ScriptableObject
     [SerializeField] private float terminalVelocity = -20f;
     [SerializeField] private int maxAirJumps = 1;
     [SerializeField] private float jumpBufferTime = 0.1f;
-    
+    [SerializeField] private float maxJumpHoldTime = 0.4f;
+    [SerializeField] private bool canAutoJump = false;
+
     [Header("Dash System")]
     [SerializeField] private float dashForce = 15f;
     [SerializeField] private float dashDuration = 0.2f;
@@ -51,6 +73,23 @@ public class PlayerStatsSO : ScriptableObject
     [SerializeField] private float maxLookAngle = 80f;
     
     // Properties
+    
+    public float MaxHealth => maxHealth;
+    public float MaxStamina => maxStamina;
+    
+    public float DashStaminaCost => dashStaminaCost;
+    public float JumpStaminaCost => jumpStaminaCost;
+    public float AirJumpStaminaCost => airJumpStaminaCost;
+    public float SprintStaminaCost => sprintStaminaCost;
+    public bool AllowJumpWithoutStamina => allowJumpWithoutStamina;
+    public bool AllowDashWithoutStamina => allowDashWithoutStamina;
+
+    public float StaminaRegenRate => staminaRegenRate;
+    public float StaminaRegenDelay => staminaRegenDelay;
+
+    public float HealthRegenRate => healthRegenRate;
+    public float HealthRegenDelay => healthRegenDelay;
+
     public float WalkSpeed => walkSpeed;
     public float SprintSpeed => sprintSpeed;
     public float CrouchSpeed => crouchSpeed;
@@ -70,6 +109,8 @@ public class PlayerStatsSO : ScriptableObject
     public float TerminalVelocity => terminalVelocity;
     public int MaxAirJumps => maxAirJumps;
     public float JumpBufferTime => jumpBufferTime;
+    public float MaxJumpHoldTime => maxJumpHoldTime;
+    public bool CanAutoJump => canAutoJump;
     
     public float DashForce => dashForce;
     public float DashDuration => dashDuration;

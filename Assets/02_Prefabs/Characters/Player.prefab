@@ -344,8 +344,8 @@ Transform:
   m_GameObject: {fileID: 1700727885990169044}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.029999811, z: 0}
-  m_LocalScale: {x: 3.3333333, y: 3.3333333, z: 3.3333333}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6516896155402873318}
@@ -1818,9 +1818,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _stats: {fileID: 11400000, guid: a2f569af9fa6e5f43ae1768e66875f91, type: 2}
   _groundCheck: {fileID: 8541762879989110627}
-  movementData:
-    velocity: {x: 0, y: 0, z: 0}
-    yVelocity: 0
+  horizontalMovement:
+    _horizontalVelocity: {x: 0, y: 0, z: 0}
+    _externalForces: {x: 0, y: 0, z: 0}
+  verticalMovement:
+    _yVelocity: 0
+    _jumpBufferCounter: 0
+    _hasUsedGroundJump: 0
+    _remainingAirJumps: 0
+    _jumpHoldTimer: 0
+    _airJumpInputConsumed: 0
   rotationData:
     xRotation: 0
 --- !u!114 &2936630561395967600
@@ -1909,21 +1916,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb7b65c71da28c24293501884cf4408f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _maxHealth: 10
-  healthBar: {fileID: 6887147308204399625}
-  slider: {fileID: 2871451783324962056}
-  gradient:
+  _healthBarContainer: {fileID: 6887147308204399625}
+  _gradient:
     serializedVersion: 2
     key0: {r: 1, g: 0, b: 0, a: 1}
-    key1: {r: 0.9528302, g: 0.811254, b: 0.1033731, a: 1}
-    key2: {r: 0.23492157, g: 1, b: 0, a: 0}
+    key1: {r: 0.98965144, g: 1, b: 0.36320752, a: 1}
+    key2: {r: 0.08395338, g: 1, b: 0, a: 0}
     key3: {r: 0, g: 0, b: 0, a: 0}
     key4: {r: 0, g: 0, b: 0, a: 0}
     key5: {r: 0, g: 0, b: 0, a: 0}
     key6: {r: 0, g: 0, b: 0, a: 0}
     key7: {r: 0, g: 0, b: 0, a: 0}
-    ctime0: 17540
-    ctime1: 40670
+    ctime0: 0
+    ctime1: 31611
     ctime2: 65535
     ctime3: 0
     ctime4: 0
@@ -1944,19 +1949,7 @@ MonoBehaviour:
     m_NumAlphaKeys: 2
   OnDeath:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 8702927785412193553}
-        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
-        m_MethodName: Die
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &8908514509472759177
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1969,13 +1962,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8f8f65df3d72474f83745cbbe6f434eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _maxStamina: 100
-  staminaBar: {fileID: 4411781876089680940}
-  slider: {fileID: 6971543080100108497}
-  gradient:
+  _staminaBarContainer: {fileID: 4411781876089680940}
+  _gradient:
     serializedVersion: 2
-    key0: {r: 0.14509805, g: 0.23529413, b: 0.9921569, a: 1}
-    key1: {r: 0.1448469, g: 0.23465036, b: 0.990566, a: 1}
+    key0: {r: 0.3254717, g: 0.6040791, b: 1, a: 1}
+    key1: {r: 0, g: 0.054581404, b: 1, a: 1}
     key2: {r: 0, g: 0, b: 0, a: 0}
     key3: {r: 0, g: 0, b: 0, a: 0}
     key4: {r: 0, g: 0, b: 0, a: 0}
@@ -2002,7 +1993,7 @@ MonoBehaviour:
     m_ColorSpace: -1
     m_NumColorKeys: 2
     m_NumAlphaKeys: 2
-  OnStaminaDepleted:
+  OnDepleted:
     m_PersistentCalls:
       m_Calls: []
 --- !u!1 &4924386666994653705
@@ -2870,9 +2861,9 @@ MonoBehaviour:
   m_HandleRect: {fileID: 0}
   m_Direction: 0
   m_MinValue: 0
-  m_MaxValue: 10
+  m_MaxValue: 100
   m_WholeNumbers: 0
-  m_Value: 10
+  m_Value: 100
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []

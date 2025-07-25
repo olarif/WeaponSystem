@@ -13,10 +13,18 @@ public class AirState : State
     {
         CheckTransitions();
         
-        Controller.MovementData.ApplyMovement();
-        Controller.MovementData.UpdateAirMovement();
         Controller.RotationData.UpdateRotation();
-        Controller.MovementData.ApplyGravity();
+        Controller.HorizontalMovement.UpdateAirMovement();
+        
+        // Handle air jumping
+        if (Controller.Input.JumpPressed && Controller.VerticalMovement.CanJump())
+        {
+            Controller.VerticalMovement.ExecuteJump();
+            Controller.OnJump?.Invoke(true);
+        }
+        
+        Controller.VerticalMovement.ApplyGravity();
+        Controller.ApplyMovement();
     }
     
     public override void FixedUpdate()
@@ -26,15 +34,8 @@ public class AirState : State
     
     private void CheckTransitions()
     {
-        // Jump (multi-jump)
-        if (Controller.Input.JumpInput)
-        {
-            Controller.StateMachine.ChangeState(new JumpState(Controller));
-            return;
-        }
-        
         // Air dash
-        if (Controller.Input.DashInput)
+        if (Controller.Input.DashInput && DashState.CanDash())
         {
             Controller.StateMachine.ChangeState(new DashState(Controller));
             return;

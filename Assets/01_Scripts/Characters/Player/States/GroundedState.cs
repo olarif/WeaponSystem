@@ -14,15 +14,28 @@ public class GroundedState : State
     
     public override void Update()
     {
-        UpdateSprintEvents();
         CheckTransitions();
 
-        float targetSpeed = GetTargetSpeed();
-        Controller.MovementData.UpdateGroundMovement(targetSpeed);
-        
         Controller.RotationData.UpdateRotation();
-        Controller.MovementData.ApplyMovement();
-        Controller.MovementData.ApplyGravity();
+        
+        float targetSpeed = GetTargetSpeed();
+        Controller.HorizontalMovement.UpdateGroundMovement(targetSpeed);
+        
+        // Handle sprinting stamina consumption
+        if (Controller.Input.SprintInput && Controller.StaminaComponent.CanSprint)
+        {
+            Controller.StaminaComponent.TryUse(PlayerStats.SprintStaminaCost * Time.deltaTime);
+            UpdateSprintEvents();
+        }
+
+        if ((Controller.Input.JumpPressed || Controller.Input.JumpHeld) && Controller.VerticalMovement.CanJump())
+        {
+            Controller.VerticalMovement.ExecuteJump();
+            Controller.OnJump?.Invoke(true);
+        }
+        
+        Controller.VerticalMovement.ApplyGravity();
+        Controller.ApplyMovement();
     }
     
     public override void FixedUpdate()
@@ -32,14 +45,19 @@ public class GroundedState : State
     
     private float GetTargetSpeed()
     {
-        return Controller.Input.SprintInput ? PlayerStats.SprintSpeed : PlayerStats.WalkSpeed;
+        if (Controller.Input.CrouchInput)
+            return PlayerStats.CrouchSpeed;
+        else if (Controller.Input.SprintInput && Controller.StaminaComponent.CanSprint)
+            return PlayerStats.SprintSpeed;
+        else
+            return PlayerStats.WalkSpeed;
     }
     
     private void UpdateSprintEvents()
     {
         bool isSprintingNow = Controller.Input.SprintInput;
         
-        if (isSprintingNow && !_wasSprintingLastFrame)
+        if (isSprintingNow && !_wasSprintingLastFrame && Controller.StaminaComponent.CanSprint)
         {
             Controller.OnSprint?.Invoke(true);
         }
@@ -53,22 +71,15 @@ public class GroundedState : State
     
     private void CheckTransitions()
     {
-        // Jump takes priority
-        if (Controller.Input.JumpInput)
-        {
-            Controller.StateMachine.ChangeState(new JumpState(Controller));
-            return;
-        }
-        
         // Dash
-        if (Controller.Input.DashInput)
+        if (Controller.Input.DashInput && DashState.CanDash())
         {
             Controller.StateMachine.ChangeState(new DashState(Controller));
             return;
         }
         
-        // Crouch
-        if (Controller.Input.CrouchInput)
+        // Crouch (only if we can fit)
+        if (Controller.Input.CrouchInput && !IsAlreadyCrouching())
         {
             Controller.StateMachine.ChangeState(new CrouchState(Controller));
             return;
@@ -80,6 +91,13 @@ public class GroundedState : State
             Controller.StateMachine.ChangeState(new AirState(Controller));
             return;
         }
+    }
+    
+    private bool IsAlreadyCrouching()
+    {
+        // Check if we're already at crouch height
+        CharacterController cc = Controller.GetComponent<CharacterController>();
+        return Mathf.Approximately(cc.height, PlayerStats.CrouchHeight);
     }
     
     public override void Exit()

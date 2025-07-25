@@ -13,7 +13,7 @@ public class HealAction : IWeaponAction
         if (ctx == null || ctx.Player == null) return;
 
         // Heal the player
-        ctx.Player.GetComponentInChildren<HealthComponent>().Heal(amountToHeal);
+        ctx.Player.HealthComponent.TryHeal(amountToHeal);
         
         Debug.Log($"Healed {ctx.Player.name} for {amountToHeal} health.");
     }

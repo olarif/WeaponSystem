@@ -28,7 +28,7 @@ public abstract class BaseInteractable : MonoBehaviour, IInteractable
         if (renderer != null && renderer.materials.Length >= 2)
         {
             _outlineMaterial         = new Material(renderer.materials[1]);
-            var mats                 = renderer.materials;
+            var mats          = renderer.materials;
             mats[1]                  = _outlineMaterial;
             renderer.materials       = mats;
         }

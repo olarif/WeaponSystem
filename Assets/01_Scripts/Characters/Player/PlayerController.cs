@@ -8,9 +8,10 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private PlayerStatsSO _stats;
     [SerializeField] public Transform _groundCheck;
 
-    [Header("Component Data")]
-    [SerializeField] private MovementData    movementData    = new MovementData();
-    [SerializeField] private RotationData    rotationData    = new RotationData();
+    [Header("Movement Data")]
+    [SerializeField] private HorizontalMovementData horizontalMovement = new HorizontalMovementData();
+    [SerializeField] private VerticalMovementData verticalMovement = new VerticalMovementData();
+    [SerializeField] private RotationData rotationData = new RotationData();
     [SerializeField] private GroundCheckData groundCheckData = new GroundCheckData();
     
     //Components
@@ -18,34 +19,54 @@ public class PlayerController : MonoBehaviour
     private PlayerInputHandler _input;
     private CharacterController _controller;
     private Player _player;
+    private StaminaComponent _staminaComponent;
+    private PlayerHealthComponent _healthComponent;
     
     //State Machine
     private StateMachine _stateMachine;
     
     //Control
     private bool _hasControl = true;
+    private bool _wasGroundedLastFrame = true;
     
     //Events
-    public Action<bool> OnJump { get; set; }
-    public Action<bool> OnSprint { get; set; }
+    public System.Action<bool> OnJump { get; set; }
+    public System.Action<bool> OnSprint { get; set; }
     
     //Properties
     public PlayerStatsSO Stats => _stats;
-    public bool IsGrounded     => groundCheckData.IsGrounded;
-    public bool IsMoving       => movementData.IsMoving;
+    public bool IsGrounded => groundCheckData.IsGrounded;
+    public bool IsMoving => horizontalMovement.IsMoving;
     
     // Component Access
-    public IInputProvider Input        => _input;
-    public Camera         PlayerCamera => _playerCamera;
-    public MovementData   MovementData => movementData;
-    public RotationData   RotationData => rotationData;
-    public StateMachine   StateMachine => _stateMachine;
+    public IInputProvider Input => _input;
+    public Camera PlayerCamera => _playerCamera;
+    public HorizontalMovementData HorizontalMovement => horizontalMovement;
+    public VerticalMovementData VerticalMovement => verticalMovement;
+    public RotationData RotationData => rotationData;
+    public StateMachine StateMachine => _stateMachine;
+    public CharacterController Controller => _controller;
+    public Player Player => _player;
+    public StaminaComponent StaminaComponent => _staminaComponent;
+    public PlayerHealthComponent HealthComponent => _healthComponent;
 
     private void Awake()
     {
         InitializeComponents();
         InitializeData();
         InitializeStateMachine();
+        
+        _staminaComponent = GetComponent<StaminaComponent>();
+        if (_staminaComponent != null)
+        {
+            _staminaComponent.OnDepleted.AddListener(HandleStaminaDepleted);
+        }
+        
+        _healthComponent = GetComponent<PlayerHealthComponent>();
+        if (_healthComponent != null)
+        {
+            _healthComponent.OnDeath.AddListener(HandleHealthDepleted);
+        }
     }
     
     private void InitializeComponents()
@@ -60,14 +81,15 @@ public class PlayerController : MonoBehaviour
     
     private void ValidateComponents()
     {
-        if (_playerCamera == null) { Debug.LogError("PlayerController: Camera not found!"); }
-        if (_input == null)        { Debug.LogError("PlayerController: PlayerInputHandler component not found!"); }
-        if (_controller == null)   { Debug.LogError("PlayerController: CharacterController component not found!"); }
+        if (_playerCamera == null) Debug.LogError("PlayerController: Camera not found!");
+        if (_input == null) Debug.LogError("PlayerController: PlayerInputHandler component not found!");
+        if (_controller == null) Debug.LogError("PlayerController: CharacterController component not found!");
     }
 
     private void InitializeData()
     {
-        movementData.Initialize(this, _controller, _stats);
+        horizontalMovement.Initialize(this, _controller, _stats);
+        verticalMovement.Initialize(this);
         rotationData.Initialize(this);
         groundCheckData.Initialize(_groundCheck, _stats);
     }
@@ -76,8 +98,6 @@ public class PlayerController : MonoBehaviour
     {
         _stateMachine = new StateMachine(this);
         _stateMachine.OnStateChanged += OnStateChanged;
-        
-        // Start in grounded state
         _stateMachine.ChangeState(new GroundedState(this));
     }
     
@@ -86,54 +106,57 @@ public class PlayerController : MonoBehaviour
         if (!_hasControl) return;
 
         groundCheckData.UpdateGroundCheck();
+        verticalMovement.UpdateJumpBuffer();
+        horizontalMovement.UpdateExternalForces();
         
-        // Update static cooldowns
+        // Static cooldowns
         DashState.UpdateCooldown();
         
-        // Handle landing resets
-        if (IsGrounded && !wasGroundedLastFrame)
+        // Handle landing
+        if (IsGrounded && !_wasGroundedLastFrame)
         {
             OnLanded();
         }
         
         _stateMachine.Update();
         
-        wasGroundedLastFrame = IsGrounded;
+        _wasGroundedLastFrame = IsGrounded;
     }
 
     private void FixedUpdate()
     {
         if (!_hasControl) return;
-        
         _stateMachine.FixedUpdate();
     }
     
-    private bool wasGroundedLastFrame = true;
-    
     private void OnLanded()
     {
-        // Change this line:
-        JumpState.ResetJumpsOnLanding();
-    
+        verticalMovement.OnLanded();
+        
         if (_stats.ResetDashOnLand)
         {
             DashState.ResetDashOnLand();
         }
     }
     
-    private void OnStateChanged(State previousState, State newState)
+    // Movement Application - calculated by states
+    public void ApplyMovement()
     {
-        string prevName = previousState?.GetType().Name ?? "None";
-        string newName = newState?.GetType().Name ?? "Unknown";
-        //Debug.Log($"State changed from {prevName} to {newName}");
+        Vector3 horizontalVelocity = horizontalMovement.GetTotalHorizontalVelocity();
+        Vector3 verticalVelocity = Vector3.up * verticalMovement.YVelocity;
+        Vector3 totalMovement = horizontalVelocity + verticalVelocity;
+        
+        _controller.Move(totalMovement * Time.deltaTime);
     }
-
+    
+    // Control Methods
     public void TakeAwayControl(bool resetVelocity = true)
     {
         if (resetVelocity) 
         {
-            movementData.ResetVelocity();
-            movementData.ResetYVelocity();
+            horizontalMovement.ResetVelocity();
+            horizontalMovement.ResetExternalForces();
+            verticalMovement.ResetYVelocity();
         }
         _hasControl = false;
     }
@@ -145,18 +168,48 @@ public class PlayerController : MonoBehaviour
     
     public void ResetVelocity()
     {
-        movementData.ResetVelocity();
-        movementData.ResetYVelocity();
+        horizontalMovement.ResetVelocity();
+        horizontalMovement.ResetExternalForces();
+        verticalMovement.ResetYVelocity();
     }
     
     public void ApplyForce(Vector3 force)
     {
-        movementData.ApplyForce(force);
+        // Split force into horizontal and vertical components
+        Vector3 horizontalForce = new Vector3(force.x, 0, force.z);
+        float verticalForce = force.y;
+        
+        if (horizontalForce.magnitude > 0)
+            horizontalMovement.ApplyForce(horizontalForce);
+            
+        if (verticalForce != 0)
+            verticalMovement.SetYVelocity(verticalForce);
+    }
+
+    private void OnStateChanged(State previousState, State newState)
+    {
+        string prevName = previousState?.GetType().Name ?? "None";
+        string newName = newState?.GetType().Name ?? "Unknown";
+        //Debug.Log($"State changed from {prevName} to {newName}");
     }
 
     public void Die()
     {
         Debug.Log("Player died! Resetting game...");
         GameManager.Instance.ResetGame();
+    }
+    
+    private void HandleStaminaDepleted()
+    {
+        // Handle stamina depletion logic here
+        OnSprint?.Invoke(false);
+        Debug.Log("Stamina depleted!");
+    }
+    
+    private void HandleHealthDepleted()
+    {
+        // Handle health depletion logic here
+        Debug.Log("Health depleted!");
+        Die();
     }
 }

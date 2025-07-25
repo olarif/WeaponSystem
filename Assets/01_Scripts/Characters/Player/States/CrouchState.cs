@@ -7,36 +7,39 @@ public class CrouchState : State
     public override void Enter()
     {
         //Debug.Log("Started crouching");
+        SetCharacterHeight(PlayerStats.CrouchHeight);
     }
     
     public override void Update()
     {
         CheckTransitions();
         
-        Controller.MovementData.ApplyMovement();
         Controller.RotationData.UpdateRotation();
-        Controller.MovementData.UpdateGroundMovement(PlayerStats.CrouchSpeed);
+        Controller.HorizontalMovement.UpdateGroundMovement(PlayerStats.CrouchSpeed);
         
-        // Adjust character height
-        Controller.MovementData.SetCharacterHeight(PlayerStats.CrouchHeight);
+        // Handle jumping while crouchedHeldHeldInPressedGHeldPreHPressed_controller.Input.JumpRessPressed || _controller.Input.JumpHeld_controller.Input.
+        if (Controller.Input.JumpPressed && Controller.VerticalMovement.CanJump())
+        {
+            Controller.VerticalMovement.ExecuteJump();
+            Controller.OnJump?.Invoke(true);
+            // Jump out of crouch
+            Controller.StateMachine.ChangeState(new GroundedState(Controller));
+            return;
+        }
+        
+        Controller.VerticalMovement.ApplyGravity();
+        Controller.ApplyMovement();
     }
     
     public override void FixedUpdate()
     {
-        Controller.MovementData.ApplyGravity();
+
     }
     
     private void CheckTransitions()
     {
-        // Jump while crouching
-        if (Controller.Input.JumpInput)
-        {
-            Controller.StateMachine.ChangeState(new JumpState(Controller));
-            return;
-        }
-        
         // Dash while crouching
-        if (Controller.Input.DashInput)
+        if (Controller.Input.DashInput && DashState.CanDash())
         {
             Controller.StateMachine.ChangeState(new DashState(Controller));
             return;
@@ -70,10 +73,20 @@ public class CrouchState : State
         return !Physics.CheckCapsule(bottom, top, radius, PlayerStats.GroundLayer);
     }
     
+    private void SetCharacterHeight(float height)
+    {
+        CharacterController cc = Controller.GetComponent<CharacterController>();
+        Vector3 center = cc.center;
+        
+        // Adjust center to keep feet on ground
+        center.y = height / 2f;
+        cc.height = height;
+        cc.center = center;
+    }
+    
     public override void Exit()
     {
-        Debug.Log("Stopped crouching");
-        // Reset character height
-        Controller.MovementData.SetCharacterHeight(PlayerStats.StandingHeight);
+        //Debug.Log("Stopped crouching");
+        SetCharacterHeight(PlayerStats.StandingHeight);
     }
 }

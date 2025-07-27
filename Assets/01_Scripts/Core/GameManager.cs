@@ -33,6 +33,11 @@ public class GameManager : MonoBehaviour
         {
             Application.Quit();
         }
+
+        if (Input.GetKeyDown(KeyCode.Tab))
+        {
+            ConsoleManager.Instance.ToggleConsole();
+        }
     }
 
     public void ResetGame()

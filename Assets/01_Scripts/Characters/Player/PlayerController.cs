@@ -5,8 +5,9 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     [Header("References")]
-    [SerializeField] private PlayerStatsSO _stats;
+    [SerializeField] private PlayerStatsSO playerStats;
     [SerializeField] public Transform _groundCheck;
+    private PlayerStatsSO _runtimeStats;
 
     [Header("Movement Data")]
     [SerializeField] private HorizontalMovementData horizontalMovement = new HorizontalMovementData();
@@ -34,7 +35,7 @@ public class PlayerController : MonoBehaviour
     public System.Action<bool> OnSprint { get; set; }
     
     //Properties
-    public PlayerStatsSO Stats => _stats;
+    public PlayerStatsSO Stats => _runtimeStats;
     public bool IsGrounded => groundCheckData.IsGrounded;
     public bool IsMoving => horizontalMovement.IsMoving;
     
@@ -52,6 +53,8 @@ public class PlayerController : MonoBehaviour
 
     private void Awake()
     {
+        _runtimeStats = Instantiate(playerStats);
+        
         InitializeComponents();
         InitializeData();
         InitializeStateMachine();
@@ -88,10 +91,10 @@ public class PlayerController : MonoBehaviour
 
     private void InitializeData()
     {
-        horizontalMovement.Initialize(this, _controller, _stats);
+        horizontalMovement.Initialize(this, _controller, playerStats);
         verticalMovement.Initialize(this);
         rotationData.Initialize(this);
-        groundCheckData.Initialize(_groundCheck, _stats);
+        groundCheckData.Initialize(_groundCheck, playerStats);
     }
     
     private void InitializeStateMachine()
@@ -133,7 +136,7 @@ public class PlayerController : MonoBehaviour
     {
         verticalMovement.OnLanded();
         
-        if (_stats.ResetDashOnLand)
+        if (playerStats.ResetDashOnLand)
         {
             DashState.ResetDashOnLand();
         }

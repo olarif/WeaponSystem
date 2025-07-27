@@ -110,7 +110,7 @@ public class PlayerStatsSO : ScriptableObject
     public int MaxAirJumps => maxAirJumps;
     public float JumpBufferTime => jumpBufferTime;
     public float MaxJumpHoldTime => maxJumpHoldTime;
-    public bool CanAutoJump => canAutoJump;
+    //public bool CanAutoJump => canAutoJump;
     
     public float DashForce => dashForce;
     public float DashDuration => dashDuration;
@@ -129,4 +129,10 @@ public class PlayerStatsSO : ScriptableObject
     
     public int TotalJumps => 1 + maxAirJumps;
    
+    
+    public bool CanAutoJump 
+    { 
+        get => canAutoJump; 
+        set => canAutoJump = value; 
+    }
 }

@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 2301062206024712320}
   - component: {fileID: 8885805350735326409}
   - component: {fileID: 3248754415215771040}
-  m_Layer: 9
+  m_Layer: 10
   m_Name: BaseWeaponPickup
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -66,8 +66,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b88cf96657cf7e4984b4367c854ec2c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _buttonPrompt: E
-  _promptOffset: {x: 0, y: 0, z: -0.5}
-  _canvasPrefab: {fileID: 730092786535789121, guid: a2a0ef90109541640a73095e17b3ec76, type: 3}
-  _outlineMaterial: {fileID: 2100000, guid: 8ddd0ea21bb16c94985b0abe8f8b9f5f, type: 2}
+  promptText: E to pickup
+  uiOffset: {x: 0, y: 0, z: -0.2}
+  uiPrefab: {fileID: 730092786535789121, guid: a2a0ef90109541640a73095e17b3ec76, type: 3}
+  useOutline: 1
+  highlightColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   weaponData: {fileID: 0}

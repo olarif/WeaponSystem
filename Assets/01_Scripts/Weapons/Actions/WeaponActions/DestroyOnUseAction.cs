@@ -16,6 +16,6 @@ public class DestroyOnUseAction : IWeaponAction
     private void Destroy(WeaponContext ctx)
     {
         if (ctx.WeaponManager != null)
-            ctx.WeaponManager.DestroyWeapon();
+            ctx.WeaponManager.DestroyCurrentWeapon();
     }
 }

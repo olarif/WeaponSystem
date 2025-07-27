@@ -3,116 +3,139 @@ using UnityEngine.InputSystem;
 
 public class WeaponManager : MonoBehaviour
 {
-    private PlayerInput _actions;
-    private InputAction _dropAction;
+    [Header("References")]
+    [SerializeField] private Transform weaponHolder;
+    [SerializeField] private DisplayWeaponStats displayWeaponStats;
+    [SerializeField] private InputActionReference dropWeaponAction;
     
-    [SerializeField] Transform weaponHolder;
-    public DisplayWeaponStats displayWeaponStats;
-    private GameObject worldPickupPrefab;
-    WeaponController equipped;
-    WeaponDataSO equippedData;
-    WeaponContext ctx;
-
-    public bool CanEquipWeapon => equipped == null;
+    [Header("Drop Settings")]
+    [SerializeField] private float dropDistance = 2f;
+    [SerializeField] private float fallbackDistance = 1f;
+    
+    private WeaponController equippedWeapon;
+    private WeaponDataSO equippedData;
+    private WeaponContext weaponContext;
+    
+    public bool CanEquipWeapon => equippedWeapon == null;
+    public bool HasWeaponEquipped => equippedWeapon != null;
+    public WeaponDataSO EquippedWeaponData => equippedData;
+    
     private void Awake()
     {
-        _actions = new PlayerInput();
-        _dropAction = _actions.Player.DropWeapon;
-        _dropAction.Enable();
-        _dropAction.performed += OnDropPerformed;
-    }
-    private void OnEnable() => _actions.Enable();
-    private void OnDisable() => _actions.Disable();
-    
-    private void OnDropPerformed(InputAction.CallbackContext context) { DropWeapon(); }
-    
-    public void EquipFromPickup(WeaponPickup pickup)
-    {
-        if (!CanEquipWeapon) return;
-
-        var go = new GameObject("WeaponController_" + pickup.Data.weaponName);
-        go.transform.SetParent(weaponHolder, false);
-
-        var wc  = go.AddComponent<WeaponController>();
-        ctx = GetComponent<WeaponContext>();
-        
-        ctx.WeaponManager    = this;
-        wc.Initialize(pickup.Data, ctx);
-
-        equipped = wc;
-        equippedData = pickup.Data;
-        worldPickupPrefab = pickup.Data.pickupPrefab;
-        
-        displayWeaponStats.DisplayStats(pickup.Data.weaponName, pickup.Data.weaponDescription);
+        weaponContext = GetComponent<WeaponContext>();
+        if (weaponContext != null)
+            weaponContext.WeaponManager = this;
     }
     
-    public void DropWeapon()
+    private void OnEnable()
     {
-        if (equipped == null) return;
-        
-        Vector3 dropPos;
-        var cam = ctx.PlayerCamera;
-        var ori = cam.transform.position;
-        var dir = cam.transform.forward;
-        const float maxDist = 2f;      // how far in front of camera
-        const float downDist = 5f;     // how far to search downward
-        
-        if (Physics.Raycast(ori, dir, out var hitFwd, maxDist))
+        if (dropWeaponAction?.action != null)
         {
-            // if we hit a wall/ground, use that point
-            dropPos = hitFwd.point;
+            dropWeaponAction.action.performed += _ => TryDropWeapon();
+            dropWeaponAction.action.Enable();
         }
-        else if (Physics.Raycast(ori + dir * maxDist, Vector3.down, out var hitDown, downDist))
+    }
+    
+    private void OnDisable()
+    {
+        if (dropWeaponAction?.action != null)
         {
-            // else drop straight down at the end of forward ray
-            dropPos = hitDown.point;
+            dropWeaponAction.action.performed -= _ => TryDropWeapon();
+            dropWeaponAction.action.Disable();
         }
-        else
+    }
+    
+    public bool TryEquipWeapon(WeaponDataSO weaponData)
+    {
+        if (!CanEquipWeapon || weaponData == null) return false;
+        
+        var weaponObject = new GameObject($"WeaponController_{weaponData.weaponName}");
+        weaponObject.transform.SetParent(weaponHolder, false);
+        
+        var weaponController = weaponObject.AddComponent<WeaponController>();
+        weaponController.Initialize(weaponData, weaponContext);
+        
+        equippedWeapon = weaponController;
+        equippedData = weaponData;
+        weaponContext.WeaponController = weaponController;
+        
+        displayWeaponStats?.DisplayStats(weaponData.weaponName, weaponData.weaponDescription);
+        return true;
+    }
+    
+    public bool EquipFromPickup(WeaponPickup pickup)
+    {
+        return pickup?.Data != null && TryEquipWeapon(pickup.Data);
+    }
+    
+    public bool TryDropWeapon()
+    {
+        if (!HasWeaponEquipped) return false;
+        
+        Vector3 dropPos = CalculateDropPosition();
+        var droppedWeapon = Instantiate(equippedData.pickupPrefab, dropPos, Quaternion.Euler(90, 0, 0));
+        
+        if (droppedWeapon.TryGetComponent<WeaponPickup>(out var pickup))
+            pickup.Initialize(equippedData);
+        
+        DestroyCurrentWeapon();
+        return true;
+    }
+    
+    public void DestroyCurrentWeapon()
+    {
+        if (!HasWeaponEquipped) return;
+        
+        // Clean up models
+        if (weaponContext?.WeaponController?._models != null)
         {
-            // fallback to a fixed offset off the player’s feet
-            dropPos = ctx.transform.position + dir * 1f;
+            foreach (var model in weaponContext.WeaponController._models)
+                if (model != null) Destroy(model);
+            weaponContext.WeaponController._models.Clear();
         }
         
-
-        //rotate to be flat on floor 90 degrees
-        var rot = Quaternion.Euler(90, 0, 0);
+        // Clean up controller
+        if (equippedWeapon?.gameObject != null)
+            Destroy(equippedWeapon.gameObject);
         
-        var worldPickup = Instantiate(worldPickupPrefab, dropPos, rot);
-        if (worldPickup.TryGetComponent<WeaponPickup>(out var wp))
-            wp.Initialize(equippedData);
-
-        //Destroy every attached model before killing controller
-        foreach (var mdl in ctx.WeaponController._models)
-        {
-            if (mdl != null) Destroy(mdl);
-        }
-        ctx.WeaponController._models.Clear();
-
-        //Destroy the controller GameObject
-        Destroy(ctx.WeaponController.gameObject);
-
-        equipped     = null;
+        // Clear references
+        equippedWeapon = null;
         equippedData = null;
-        ctx.WeaponController = null;
-        displayWeaponStats.ClearStats();
-    }
-
-    public void DestroyWeapon()
-    {
-        //Destroy every attached model before killing controller
-        foreach (var mdl in ctx.WeaponController._models)
-        {
-            if (mdl != null) Destroy(mdl);
-        }
-        ctx.WeaponController._models.Clear();
-
-        //Destroy the controller GameObject
-        Destroy(ctx.WeaponController.gameObject);
-
-        equipped     = null;
-        equippedData = null;
-        ctx.WeaponController = null;
+        if (weaponContext != null)
+            weaponContext.WeaponController = null;
+        
+        displayWeaponStats?.ClearStats();
     }
     
-    private void OnDestroy() { _dropAction.performed -= OnDropPerformed; }
+    public bool ReplaceWeapon(WeaponDataSO newWeapon, bool dropCurrent = true)
+    {
+        if (HasWeaponEquipped)
+        {
+            if (dropCurrent) TryDropWeapon();
+            else DestroyCurrentWeapon();
+        }
+        return TryEquipWeapon(newWeapon);
+    }
+    
+    private Vector3 CalculateDropPosition()
+    {
+        if (weaponContext?.PlayerCamera == null)
+            return transform.position + transform.forward * fallbackDistance;
+        
+        var camera = weaponContext.PlayerCamera;
+        var origin = camera.transform.position;
+        var forward = camera.transform.forward;
+        
+        // Try dropping in front of player
+        if (Physics.Raycast(origin, forward, out var hit, dropDistance))
+            return hit.point;
+        
+        // Try dropping down from forward position
+        var endPoint = origin + forward * dropDistance;
+        if (Physics.Raycast(endPoint, Vector3.down, out hit, 5f))
+            return hit.point;
+        
+        // Fallback
+        return transform.position + forward * fallbackDistance;
+    }
 }

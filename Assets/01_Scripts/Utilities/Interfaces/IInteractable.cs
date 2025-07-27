@@ -2,7 +2,8 @@ using UnityEngine;
 
 public interface IInteractable
 {
-    void Interact(WeaponManager weaponManager);
-    void Interact();
-    void Highlight(bool isHighlighted, Camera playerCamera);
+    string GetPromptText();
+    void CanInteract(WeaponManager weaponManager);
+    void OnInteract();
+    void Highlight(bool isHighlighted);
 }

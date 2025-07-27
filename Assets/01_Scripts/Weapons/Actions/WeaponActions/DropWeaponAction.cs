@@ -16,6 +16,6 @@ public class DropWeaponAction : IWeaponAction
     private void DropWeapon(WeaponContext ctx)
     {
         if (ctx.WeaponManager != null)
-            ctx.WeaponManager.DropWeapon();
+            ctx.WeaponManager.TryDropWeapon();
     }
 }

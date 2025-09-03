@@ -1,13 +1,15 @@
 using System;
+using FishNet.Object;
 using UnityEngine;
 
 [RequireComponent(typeof(CharacterController))]
-public class PlayerController : MonoBehaviour
+public class PlayerController : NetworkBehaviour
 {
     [Header("References")]
     [SerializeField] private PlayerStatsSO playerStats;
+    [SerializeField] private Camera _playerCamera;
     [SerializeField] public Transform _groundCheck;
-    private PlayerStatsSO _runtimeStats;
+    //private PlayerStatsSO _runtimeStats;
 
     [Header("Movement Data")]
     [SerializeField] private HorizontalMovementData horizontalMovement = new HorizontalMovementData();
@@ -16,7 +18,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private GroundCheckData groundCheckData = new GroundCheckData();
     
     //Components
-    private Camera _playerCamera;
+    
     private PlayerInputHandler _input;
     private CharacterController _controller;
     private Player _player;
@@ -35,7 +37,7 @@ public class PlayerController : MonoBehaviour
     public System.Action<bool> OnSprint { get; set; }
     
     //Properties
-    public PlayerStatsSO Stats => _runtimeStats;
+    public PlayerStatsSO Stats => playerStats;
     public bool IsGrounded => groundCheckData.IsGrounded;
     public bool IsMoving => horizontalMovement.IsMoving;
     
@@ -53,7 +55,7 @@ public class PlayerController : MonoBehaviour
 
     private void Awake()
     {
-        _runtimeStats = Instantiate(playerStats);
+        //_runtimeStats = Instantiate(playerStats);
         
         InitializeComponents();
         InitializeData();
@@ -72,12 +74,80 @@ public class PlayerController : MonoBehaviour
         }
     }
     
+    public override void OnStartClient()
+    {
+        base.OnStartClient();
+        
+        // Only setup camera and input for the local player (owner)
+        if (IsOwner)
+        {
+            SetupLocalPlayer();
+        }
+        else
+        {
+            SetupRemotePlayer();
+        }
+    }
+    
+    private void SetupLocalPlayer()
+    {
+        // Find camera in children and enable it for local player only
+        //_playerCamera = GetComponentInChildren<Camera>();
+        if (_playerCamera != null)
+        {
+            _playerCamera.gameObject.SetActive(true);
+            
+            // Enable audio listener for local player only
+            AudioListener audioListener = _playerCamera.GetComponent<AudioListener>();
+            if (audioListener != null)
+            {
+                audioListener.enabled = true;
+            }
+        }
+        else
+        {
+            Debug.LogError($"No camera found in children of {gameObject.name}");
+        }
+        
+        // Enable input for local player
+        if (_input != null)
+        {
+            _input.EnableInput();
+        }
+        
+        Debug.Log($"Local player setup complete for {gameObject.name}");
+    }
+    
+    private void SetupRemotePlayer()
+    {
+        // Find camera in children and disable it for remote players
+        //_playerCamera = GetComponentInChildren<Camera>();
+        if (_playerCamera != null)
+        {
+            _playerCamera.gameObject.SetActive(false);
+            
+            // Disable audio listener for remote players
+            AudioListener audioListener = _playerCamera.GetComponent<AudioListener>();
+            if (audioListener != null)
+            {
+                audioListener.enabled = false;
+            }
+        }
+        
+        // Disable input for remote players
+        if (_input != null)
+        {
+            _input.DisableInput();
+        }
+        
+        Debug.Log($"Remote player setup complete for {gameObject.name}");
+    }
+    
     private void InitializeComponents()
     {
         _player = GetComponent<Player>();
         _controller = GetComponent<CharacterController>();
         _input = GetComponent<PlayerInputHandler>();
-        _playerCamera = Camera.main;
 
         ValidateComponents();
     }

@@ -20,13 +20,13 @@ MonoBehaviour:
     m_Bits: 8
   maxHealth: 100
   maxStamina: 100
-  jumpStaminaCost: 8
-  airJumpStaminaCost: 5
-  dashStaminaCost: 15
-  sprintStaminaCost: 10
+  jumpStaminaCost: 5
+  airJumpStaminaCost: 3
+  dashStaminaCost: 8
+  sprintStaminaCost: 4
   allowJumpWithoutStamina: 0
   allowDashWithoutStamina: 0
-  staminaRegenRate: 25
+  staminaRegenRate: 30
   staminaRegenDelay: 1
   healthRegenRate: 2
   healthRegenDelay: 5

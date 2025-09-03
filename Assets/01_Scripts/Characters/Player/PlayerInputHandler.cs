@@ -1,8 +1,9 @@
 using System;
+using FishNet.Object;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class PlayerInputHandler : MonoBehaviour, IInputProvider
+public class PlayerInputHandler : NetworkBehaviour, IInputProvider
 {
     [Header("Input Action Asset")] 
     private PlayerInput _actions;
@@ -69,6 +70,23 @@ public class PlayerInputHandler : MonoBehaviour, IInputProvider
         if (_sprintInputAction == null) Debug.LogError($"Sprint action '{sprintAction}' not found!");
         if (_crouchInputAction == null) Debug.LogError($"Crouch action '{crouchAction}' not found!");
         if (_dashInputAction == null) Debug.LogError($"Dash action '{dashAction}' not found!");
+    }
+    
+    public override void OnStartClient()
+    {
+        base.OnStartClient();
+        
+        // Only enable input for the owner (local player)
+        if (IsOwner)
+        {
+            EnableInput();
+            Debug.Log($"Input enabled for local player {gameObject.name}");
+        }
+        else
+        {
+            DisableInput();
+            Debug.Log($"Input disabled for remote player {gameObject.name}");
+        }
     }
     
     private void OnEnable()

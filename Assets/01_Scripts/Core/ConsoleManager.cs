@@ -26,7 +26,7 @@ public class ConsoleManager : MonoBehaviour
             Destroy(gameObject);
         }
         
-        _playerController = FindObjectOfType<PlayerController>();
+        _playerController = FindFirstObjectByType<PlayerController>();
         
         _isConsoleOpen = false;
         CloseConsole();

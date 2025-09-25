@@ -1759,6 +1759,7 @@ GameObject:
   - component: {fileID: 8702927785412193553}
   - component: {fileID: 2936630561395967600}
   - component: {fileID: 3014660506397291689}
+  - component: {fileID: 5656958599290252230}
   - component: {fileID: 6927247644890983188}
   - component: {fileID: 2873557358281202462}
   - component: {fileID: 2557401385163451293}
@@ -1766,6 +1767,7 @@ GameObject:
   - component: {fileID: 1168653487335530528}
   - component: {fileID: 5379068212966757308}
   - component: {fileID: 7959349117924053583}
+  - component: {fileID: 7814886739583211282}
   m_Layer: 7
   m_Name: Player
   m_TagString: Player
@@ -1834,6 +1836,8 @@ MonoBehaviour:
   playerStats: {fileID: 11400000, guid: a2f569af9fa6e5f43ae1768e66875f91, type: 2}
   _playerCamera: {fileID: 7501203885588139405}
   _groundCheck: {fileID: 8541762879989110627}
+  bodyRoot: {fileID: 193701364753732739}
+  handsRoot: {fileID: 1632592011314291671}
   horizontalMovement:
     _horizontalVelocity: {x: 0, y: 0, z: 0}
     _externalForces: {x: 0, y: 0, z: 0}
@@ -1881,11 +1885,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c07426d241e0efe4c9f92b48a9d01c9b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _componentIndexCache: 255
+  _addedNetworkObject: {fileID: 5379068212966757308}
+  _networkObjectCache: {fileID: 0}
   weaponHolder: {fileID: 6273145791461920623}
   displayWeaponStats: {fileID: 5703311216864472113}
   dropWeaponAction: {fileID: 2828846653340322401, guid: 6eaff8a1080c3b64bba326ccc7407a63, type: 3}
   dropDistance: 2
   fallbackDistance: 1
+--- !u!114 &5656958599290252230
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4703747562892308649}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 72bc7552ed304ddfbeb48eee2065619e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NetworkWeaponManager
+  _componentIndexCache: 255
+  _addedNetworkObject: {fileID: 5379068212966757308}
+  _networkObjectCache: {fileID: 0}
 --- !u!114 &6927247644890983188
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2135,6 +2157,26 @@ MonoBehaviour:
     X: 0
     Y: 0
     Z: 0
+--- !u!114 &7814886739583211282
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4703747562892308649}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1be1cc5bb81f43ddae81870a243f216f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SimpleNetworkProjectileSpawner
+  _componentIndexCache: 255
+  _addedNetworkObject: {fileID: 5379068212966757308}
+  _networkObjectCache: {fileID: 0}
+  projectilePrefabs:
+  - {fileID: 1930107923466689315, guid: 6b45f06f2495ddf4583930a0fc1a3bec, type: 3}
+  - {fileID: 1930107923466689315, guid: 86ebdaff25f482b4f9f8a1ff3fdb20c6, type: 3}
+  - {fileID: 1930107923466689315, guid: d8c850415f138194491b59753950cc26, type: 3}
+  - {fileID: 1930107923466689315, guid: d9c1b5273d9f2864aaf6b40c14cba8db, type: 3}
 --- !u!1 &4924386666994653705
 GameObject:
   m_ObjectHideFlags: 0
@@ -2385,7 +2427,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &4185082057565808854
 Transform:
   m_ObjectHideFlags: 0
@@ -2491,7 +2533,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &8305054697157756128
 Transform:
   m_ObjectHideFlags: 0
@@ -3502,7 +3544,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &7288800560399101664
 Transform:
   m_ObjectHideFlags: 0
@@ -4044,6 +4086,11 @@ PrefabInstance:
       addedObject: {fileID: 3716498927079672410}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 632378816fd547441a4db7979fd1b45f, type: 3}
+--- !u!1 &1632592011314291671 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6973657840320857960, guid: 632378816fd547441a4db7979fd1b45f, type: 3}
+  m_PrefabInstance: {fileID: 8534120166000567487}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1902449575439774580 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7784914906353506251, guid: 632378816fd547441a4db7979fd1b45f, type: 3}

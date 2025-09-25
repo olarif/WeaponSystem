@@ -35,18 +35,18 @@ MonoBehaviour:
     - triggerPhase: 1
       tickRate: 0.1
       action:
-        rid: 6992692243383975937
+        rid: 5058665566421647561
   references:
     version: 2
     RefIds:
+    - rid: 5058665566421647561
+      type: {class: NetworkedSpawnProjectileAction, ns: , asm: Assembly-CSharp}
+      data:
+        prefab: {fileID: 1930107923466689315, guid: d9c1b5273d9f2864aaf6b40c14cba8db, type: 3}
+        maxAimDistance: 1000
     - rid: 6992692243383975936
       type: {class: PlayAnimationAction, ns: , asm: Assembly-CSharp}
       data:
         animationType: 0
         triggerName: attack1
         booleanValue: 1
-    - rid: 6992692243383975937
-      type: {class: SpawnProjectileAction, ns: , asm: Assembly-CSharp}
-      data:
-        prefab: {fileID: 1930107923466689315, guid: d9c1b5273d9f2864aaf6b40c14cba8db, type: 3}
-        maxAimDistance: 1000

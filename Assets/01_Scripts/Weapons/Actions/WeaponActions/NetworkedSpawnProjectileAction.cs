@@ -1,11 +1,12 @@
 ﻿using System;
 using UnityEngine;
+using FishNet.Object;
 
 /// <summary>
 /// Spawns a projectile at the fire points of the weapon
 /// </summary>
 [Serializable]
-public class SpawnProjectileAction : IWeaponAction
+public class NetworkedSpawnProjectileAction : IWeaponAction
 {
     [Tooltip("Projectile prefab to spawn")]
     public GameObject prefab;
@@ -15,8 +16,10 @@ public class SpawnProjectileAction : IWeaponAction
     
     public void Execute(WeaponContext ctx, InputBindingData binding, ActionBindingData actionBinding)
     {
+        var networkObject = ctx.Player.GetComponent<NetworkObject>();
+        if (networkObject != null && !networkObject.IsOwner) return;
+        
         Camera cam = ctx.PlayerCamera != null ? ctx.PlayerCamera : Camera.main;
-        // Create ray from screen center
         Ray aimRay = cam.ScreenPointToRay(new Vector2(Screen.width * 0.5f, Screen.height * 0.5f));
         Vector3 aimPoint;
 
@@ -29,6 +32,9 @@ public class SpawnProjectileAction : IWeaponAction
         {
             aimPoint = aimRay.origin + aimRay.direction * maxAimDistance;
         }
+        
+        // Get the network spawner
+        var spawner = ctx.Player.GetComponent<SimpleNetworkProjectileSpawner>();
 
         // Spawn a projectile from each fire point
         foreach (Transform fp in ctx.GetFirePointsFor(binding.hand))
@@ -37,11 +43,20 @@ public class SpawnProjectileAction : IWeaponAction
             Vector3 spawnDir = (aimPoint - spawnPos).normalized;
             Quaternion rot = Quaternion.LookRotation(spawnDir, fp.up);
 
-            // Instantiate and initialize
-            var go = GameObject.Instantiate(prefab, spawnPos, rot);
-            if (go.TryGetComponent<ProjectileController>(out var pc))
+            if (spawner != null)
             {
-                pc.Initialize(ctx.Player.gameObject, spawnDir * pc.speed);
+                var projectileController = prefab.GetComponent<ProjectileController>();
+                float speed = projectileController != null ? projectileController.speed : 15f;
+                spawner.SpawnNetworkedProjectile(prefab, spawnPos, rot, spawnDir * speed);
+            }
+            else
+            {
+                // Fallback to local spawning
+                var go = GameObject.Instantiate(prefab, spawnPos, rot);
+                if (go.TryGetComponent<ProjectileController>(out var pc))
+                {
+                    pc.Initialize(ctx.Player.gameObject, spawnDir * pc.speed);
+                }
             }
         }
     }

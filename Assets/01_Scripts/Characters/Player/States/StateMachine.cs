@@ -34,7 +34,7 @@ public class StateMachine
     {
         _currentState?.Update();
         
-        Debug.Log( $"Current State: {_currentState?.GetType().Name ?? "None"}");
+        //Debug.Log( $"Current State: {_currentState?.GetType().Name ?? "None"}");
     }
 
     public void FixedUpdate() => _currentState?.FixedUpdate();

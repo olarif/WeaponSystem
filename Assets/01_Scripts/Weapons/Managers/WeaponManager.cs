@@ -1,7 +1,8 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using FishNet.Object;
 
-public class WeaponManager : MonoBehaviour
+public class WeaponManager : NetworkBehaviour
 {
     [Header("References")]
     [SerializeField] private Transform weaponHolder;
@@ -15,6 +16,7 @@ public class WeaponManager : MonoBehaviour
     private WeaponController equippedWeapon;
     private WeaponDataSO equippedData;
     private WeaponContext weaponContext;
+    private NetworkWeaponManager networkManager;
     
     public bool CanEquipWeapon => equippedWeapon == null;
     public bool HasWeaponEquipped => equippedWeapon != null;
@@ -25,10 +27,14 @@ public class WeaponManager : MonoBehaviour
         weaponContext = GetComponent<WeaponContext>();
         if (weaponContext != null)
             weaponContext.WeaponManager = this;
+        
+        networkManager = GetComponent<NetworkWeaponManager>();
     }
     
     private void OnEnable()
     {
+        if (!IsOwner) return;
+        
         if (dropWeaponAction?.action != null)
         {
             dropWeaponAction.action.performed += _ => TryDropWeapon();
@@ -38,6 +44,8 @@ public class WeaponManager : MonoBehaviour
     
     private void OnDisable()
     {
+        if (!IsOwner) return;
+        
         if (dropWeaponAction?.action != null)
         {
             dropWeaponAction.action.performed -= _ => TryDropWeapon();
@@ -47,6 +55,7 @@ public class WeaponManager : MonoBehaviour
     
     public bool TryEquipWeapon(WeaponDataSO weaponData)
     {
+        if (!IsOwner) return false;
         if (!CanEquipWeapon || weaponData == null) return false;
         
         var weaponObject = new GameObject($"WeaponController_{weaponData.weaponName}");
@@ -58,6 +67,7 @@ public class WeaponManager : MonoBehaviour
         equippedWeapon = weaponController;
         equippedData = weaponData;
         weaponContext.WeaponController = weaponController;
+        networkManager?.OnWeaponPickedUp(weaponData);
         
         displayWeaponStats?.DisplayStats(weaponData.weaponName, weaponData.weaponDescription);
         return true;
@@ -70,6 +80,7 @@ public class WeaponManager : MonoBehaviour
     
     public bool TryDropWeapon()
     {
+        if (!IsOwner) return false;
         if (!HasWeaponEquipped) return false;
         
         Vector3 dropPos = CalculateDropPosition();
@@ -79,6 +90,9 @@ public class WeaponManager : MonoBehaviour
             pickup.Initialize(equippedData);
         
         DestroyCurrentWeapon();
+        
+        networkManager?.OnWeaponDropped();
+        
         return true;
     }
     

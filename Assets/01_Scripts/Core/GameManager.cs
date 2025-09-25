@@ -1,5 +1,6 @@
 ﻿using Unity.VisualScripting;
 using UnityEngine;
+using FishNet;
 
 public class GameManager : MonoBehaviour
 {
@@ -26,17 +27,14 @@ public class GameManager : MonoBehaviour
         //Cursor.lockState = CursorLockMode.Locked;
         //Cursor.visible = false;
     }
+    
+    
 
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             Application.Quit();
-        }
-
-        if (Input.GetKeyDown(KeyCode.Tab))
-        {
-            ConsoleManager.Instance.ToggleConsole();
         }
     }
 

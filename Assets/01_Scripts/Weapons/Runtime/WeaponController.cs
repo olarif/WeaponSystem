@@ -59,8 +59,16 @@ public class WeaponController : MonoBehaviour
             SetupBinding(inputBinding);
         }
     }
+    
+    public void InitializeVisualOnly(WeaponDataSO sourceData, WeaponContext context)
+    {
+        ctx = context;
+        data = Instantiate(sourceData);
+        
+        AttachModel();
+    }
 
-    private void AttachModel()
+    public void AttachModel()
     {
         ctx.FirePoints.Clear();
         foreach (var mdl in _models) 

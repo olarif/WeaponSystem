@@ -9,8 +9,9 @@ public class PlayerController : NetworkBehaviour
     [SerializeField] private PlayerStatsSO playerStats;
     [SerializeField] private Camera _playerCamera;
     [SerializeField] public Transform _groundCheck;
-    //private PlayerStatsSO _runtimeStats;
-
+    [SerializeField] private GameObject bodyRoot;
+    [SerializeField] private GameObject handsRoot;
+    
     [Header("Movement Data")]
     [SerializeField] private HorizontalMovementData horizontalMovement = new HorizontalMovementData();
     [SerializeField] private VerticalMovementData verticalMovement = new VerticalMovementData();
@@ -18,7 +19,6 @@ public class PlayerController : NetworkBehaviour
     [SerializeField] private GroundCheckData groundCheckData = new GroundCheckData();
     
     //Components
-    
     private PlayerInputHandler _input;
     private CharacterController _controller;
     private Player _player;
@@ -78,7 +78,6 @@ public class PlayerController : NetworkBehaviour
     {
         base.OnStartClient();
         
-        // Only setup camera and input for the local player (owner)
         if (IsOwner)
         {
             SetupLocalPlayer();
@@ -91,8 +90,6 @@ public class PlayerController : NetworkBehaviour
     
     private void SetupLocalPlayer()
     {
-        // Find camera in children and enable it for local player only
-        //_playerCamera = GetComponentInChildren<Camera>();
         if (_playerCamera != null)
         {
             _playerCamera.gameObject.SetActive(true);
@@ -103,6 +100,10 @@ public class PlayerController : NetworkBehaviour
             {
                 audioListener.enabled = true;
             }
+            
+            int localLayer = LayerMask.NameToLayer("LocalPlayer");
+            if (localLayer >= 0)
+                _playerCamera.cullingMask &= ~(1 << localLayer);
         }
         else
         {
@@ -115,13 +116,17 @@ public class PlayerController : NetworkBehaviour
             _input.EnableInput();
         }
         
+        if (bodyRoot != null)
+            SetLayerRecursively(bodyRoot, LayerMask.NameToLayer("LocalPlayer"));
+        
         Debug.Log($"Local player setup complete for {gameObject.name}");
+        
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
     
     private void SetupRemotePlayer()
     {
-        // Find camera in children and disable it for remote players
-        //_playerCamera = GetComponentInChildren<Camera>();
         if (_playerCamera != null)
         {
             _playerCamera.gameObject.SetActive(false);
@@ -141,6 +146,19 @@ public class PlayerController : NetworkBehaviour
         }
         
         Debug.Log($"Remote player setup complete for {gameObject.name}");
+    }
+    
+    private void SetLayerRecursively(GameObject obj, int newLayer)
+    {
+        if (obj == null) return;
+
+        obj.layer = newLayer;
+
+        foreach (Transform child in obj.transform)
+        {
+            if (child == null) continue;
+            SetLayerRecursively(child.gameObject, newLayer);
+        }
     }
     
     private void InitializeComponents()
@@ -215,6 +233,8 @@ public class PlayerController : NetworkBehaviour
     // Movement Application - calculated by states
     public void ApplyMovement()
     {
+        if (!_controller.enabled) return;
+        
         Vector3 horizontalVelocity = horizontalMovement.GetTotalHorizontalVelocity();
         Vector3 verticalVelocity = Vector3.up * verticalMovement.YVelocity;
         Vector3 totalMovement = horizontalVelocity + verticalVelocity;

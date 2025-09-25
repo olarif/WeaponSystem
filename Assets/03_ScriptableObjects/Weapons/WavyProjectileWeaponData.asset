@@ -28,13 +28,13 @@ MonoBehaviour:
     cooldown: 0.6
     bindings:
     - triggerPhase: 1
-      tickRate: 0.6
+      tickRate: 0.1
       action:
-        rid: 1246412484254892311
+        rid: 5058665566421647504
     - triggerPhase: 1
-      tickRate: 0.6
+      tickRate: 0.1
       action:
-        rid: 1246412484254892328
+        rid: 5058665566421647505
   - bindingMode: 2
     actionRef: {fileID: 2158980376108856071, guid: 6eaff8a1080c3b64bba326ccc7407a63, type: 3}
     hand: 0
@@ -44,22 +44,39 @@ MonoBehaviour:
     - triggerPhase: 3
       tickRate: 0.6
       action:
-        rid: 1246412484254892311
+        rid: -2
     - triggerPhase: 3
       tickRate: 0.6
       action:
         rid: 1246412484254892328
+    - triggerPhase: 3
+      tickRate: 0.6
+      action:
+        rid: 5058665566421647491
   references:
     version: 2
     RefIds:
-    - rid: 1246412484254892311
-      type: {class: SpawnProjectileAction, ns: , asm: Assembly-CSharp}
-      data:
-        prefab: {fileID: 1930107923466689315, guid: 0665aa37e4c451c49b4826034d59678a, type: 3}
-        maxAimDistance: 1000
+    - rid: -2
+      type: {class: , ns: , asm: }
     - rid: 1246412484254892328
       type: {class: PlayAnimationAction, ns: , asm: Assembly-CSharp}
       data:
         animationType: 0
         triggerName: attack1
         booleanValue: 1
+    - rid: 5058665566421647491
+      type: {class: NetworkedSpawnProjectileAction, ns: , asm: Assembly-CSharp}
+      data:
+        prefab: {fileID: 1930107923466689315, guid: 6b45f06f2495ddf4583930a0fc1a3bec, type: 3}
+        maxAimDistance: 1000
+    - rid: 5058665566421647504
+      type: {class: PlayAnimationAction, ns: , asm: Assembly-CSharp}
+      data:
+        animationType: 0
+        triggerName: attack1
+        booleanValue: 1
+    - rid: 5058665566421647505
+      type: {class: NetworkedSpawnProjectileAction, ns: , asm: Assembly-CSharp}
+      data:
+        prefab: {fileID: 1930107923466689315, guid: 6b45f06f2495ddf4583930a0fc1a3bec, type: 3}
+        maxAimDistance: 1000

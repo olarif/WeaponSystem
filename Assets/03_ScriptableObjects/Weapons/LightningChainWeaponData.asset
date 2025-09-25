@@ -31,11 +31,11 @@ MonoBehaviour:
     - triggerPhase: 1
       tickRate: 0.6
       action:
-        rid: 1246412484254892311
-    - triggerPhase: 1
-      tickRate: 0.6
-      action:
         rid: 1246412484254892328
+    - triggerPhase: 1
+      tickRate: 0.1
+      action:
+        rid: 5058665566421647562
   - bindingMode: 2
     actionRef: {fileID: 2158980376108856071, guid: 6eaff8a1080c3b64bba326ccc7407a63, type: 3}
     hand: 0
@@ -45,22 +45,27 @@ MonoBehaviour:
     - triggerPhase: 3
       tickRate: 0.4
       action:
-        rid: 1246412484254892311
+        rid: 1246412484254892328
     - triggerPhase: 3
       tickRate: 0.4
       action:
-        rid: 1246412484254892328
+        rid: 5058665566421647563
   references:
     version: 2
     RefIds:
-    - rid: 1246412484254892311
-      type: {class: SpawnProjectileAction, ns: , asm: Assembly-CSharp}
-      data:
-        prefab: {fileID: 1930107923466689315, guid: d8c850415f138194491b59753950cc26, type: 3}
-        maxAimDistance: 1000
     - rid: 1246412484254892328
       type: {class: PlayAnimationAction, ns: , asm: Assembly-CSharp}
       data:
         animationType: 0
         triggerName: attack1
         booleanValue: 1
+    - rid: 5058665566421647562
+      type: {class: NetworkedSpawnProjectileAction, ns: , asm: Assembly-CSharp}
+      data:
+        prefab: {fileID: 1930107923466689315, guid: d8c850415f138194491b59753950cc26, type: 3}
+        maxAimDistance: 1000
+    - rid: 5058665566421647563
+      type: {class: NetworkedSpawnProjectileAction, ns: , asm: Assembly-CSharp}
+      data:
+        prefab: {fileID: 1930107923466689315, guid: d8c850415f138194491b59753950cc26, type: 3}
+        maxAimDistance: 1000

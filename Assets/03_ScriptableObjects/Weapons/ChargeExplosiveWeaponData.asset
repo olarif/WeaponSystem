@@ -30,11 +30,11 @@ MonoBehaviour:
     - triggerPhase: 1
       tickRate: 0.1
       action:
-        rid: 1246412484254892311
+        rid: 5058665566421647521
     - triggerPhase: 1
       tickRate: 0.1
       action:
-        rid: 1246412484254892318
+        rid: 5058665566421647522
   - bindingMode: 0
     actionRef: {fileID: 2158980376108856071, guid: 6eaff8a1080c3b64bba326ccc7407a63, type: 3}
     hand: 0
@@ -62,17 +62,6 @@ MonoBehaviour:
   references:
     version: 2
     RefIds:
-    - rid: 1246412484254892311
-      type: {class: SpawnProjectileAction, ns: , asm: Assembly-CSharp}
-      data:
-        prefab: {fileID: 1930107923466689315, guid: 86ebdaff25f482b4f9f8a1ff3fdb20c6, type: 3}
-        maxAimDistance: 1000
-    - rid: 1246412484254892318
-      type: {class: PlayAnimationAction, ns: , asm: Assembly-CSharp}
-      data:
-        animationType: 0
-        triggerName: attack1
-        booleanValue: 1
     - rid: 1246412484254892323
       type: {class: PlayAnimationAction, ns: , asm: Assembly-CSharp}
       data:
@@ -85,6 +74,17 @@ MonoBehaviour:
         animationType: 1
         triggerName: charging
         booleanValue: 0
+    - rid: 5058665566421647521
+      type: {class: PlayAnimationAction, ns: , asm: Assembly-CSharp}
+      data:
+        animationType: 0
+        triggerName: attack1
+        booleanValue: 1
+    - rid: 5058665566421647522
+      type: {class: NetworkedSpawnProjectileAction, ns: , asm: Assembly-CSharp}
+      data:
+        prefab: {fileID: 1930107923466689315, guid: 86ebdaff25f482b4f9f8a1ff3fdb20c6, type: 3}
+        maxAimDistance: 1000
     - rid: 6992692243383976096
       type: {class: PlayerForceAction, ns: , asm: Assembly-CSharp}
       data:
